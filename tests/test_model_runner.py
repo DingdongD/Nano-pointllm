@@ -155,3 +155,30 @@ def test_run_dispatch():
 
     runner.run([seq], is_prefill=False)
     assert decode_called[0]
+
+
+def test_prefill_kv_has_full_prompt_length(monkeypatch):
+    """prefill 后每个 seq 的 kv_seq_len 应等于其 prompt token 数，而不是 1。"""
+    runner = PointLLMModelRunner(hf_model=_make_mock_hf_model())
+
+    def fake_prefill(model, input_ids, attention_mask, point_clouds=None, **kw):
+        B, L = input_ids.shape
+        cache = _make_fake_cache(B, L)   # shape [B, H, max_len, D]
+        from nanopointllm.engine.types import PrefillOutput
+        return PrefillOutput(
+            logits=torch.randn(B, 1, VOCAB),
+            past_key_values=cache,
+            prompt_len=L,
+        )
+
+    monkeypatch.setattr("nanopointllm.engine.model_runner.hf_prefill", fake_prefill)
+
+    prompt_len = 8
+    seqs = [_seq_with_point_cloud(prompt_len), _seq_with_point_cloud(prompt_len)]
+    runner.run_prefill(seqs)
+
+    for seq in seqs:
+        # kv_seq_len 应等于 prompt_len（8），而不是 1
+        assert seq.kv_seq_len == prompt_len, (
+            f"Expected kv_seq_len={prompt_len}, got {seq.kv_seq_len}"
+        )

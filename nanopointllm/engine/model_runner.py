@@ -89,6 +89,24 @@ def _split_batched_cache(
         seq.past_key_values = new_cache
 
 
+def _split_prefill_cache(prefill_cache, seqs: list[PointLLMSequence]) -> None:
+    """
+    从 prefill 的 batched DynamicCache [B, H, max_len, D] 中
+    切出每个序列的 KV（右侧 seq.num_tokens 行，因为使用了 left-padding）。
+    """
+    from transformers.cache_utils import DynamicCache
+    num_layers = len(prefill_cache.key_cache)
+    for i, seq in enumerate(seqs):
+        L = seq.num_tokens
+        new_cache = DynamicCache()
+        for layer_idx in range(num_layers):
+            k = prefill_cache.key_cache[layer_idx][i:i+1, :, -L:, :]
+            v = prefill_cache.value_cache[layer_idx][i:i+1, :, -L:, :]
+            new_cache.key_cache.append(k.contiguous())
+            new_cache.value_cache.append(v.contiguous())
+        seq.past_key_values = new_cache
+
+
 def _batch_hf_decode(
     model: nn.Module,
     input_ids: torch.Tensor,
@@ -194,11 +212,7 @@ class PointLLMModelRunner:
         )
 
         # 分配 per-sequence KV cache（从 batch DynamicCache 切片）
-        _split_batched_cache(
-            prefill_out.past_key_values,
-            seqs,
-            orig_kv_lens=[0] * B,
-        )
+        _split_prefill_cache(prefill_out.past_key_values, seqs)
 
         # Greedy 采样
         logits = prefill_out.logits   # [B, 1, V]
