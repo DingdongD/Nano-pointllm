@@ -79,7 +79,13 @@ class PointLLMSequence:
             return 0
         cache = self.past_key_values
         if hasattr(cache, "get_seq_length"):
-            return int(cache.get_seq_length())
+            seq_len = int(cache.get_seq_length())
+            if seq_len > 0:
+                return seq_len
+        # Fallback: support legacy key_cache / value_cache list attribute
+        # (used by tests and older transformers versions)
+        if hasattr(cache, "key_cache") and cache.key_cache:
+            return int(cache.key_cache[0].shape[-2])
         if isinstance(cache, (tuple, list)) and len(cache) > 0:
             k0 = cache[0][0]
             return int(k0.shape[-2])
