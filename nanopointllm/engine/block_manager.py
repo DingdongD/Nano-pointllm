@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import hashlib
 import struct
-from collections import deque
 
 import numpy as np
 
@@ -37,7 +36,7 @@ class BlockManager:
         self.block_size = block_size
         self.blocks: list[Block] = [Block(i) for i in range(num_blocks)]
         self.hash_to_block_id: dict[int, int] = {}
-        self.free_block_ids: deque[int] = deque(range(num_blocks))
+        self.free_block_ids: set[int] = set(range(num_blocks))
         self.used_block_ids: set[int] = set()
 
     @classmethod
@@ -52,14 +51,17 @@ class BlockManager:
         block = self.blocks[block_id]
         assert block.ref_count == 0
         block.reset()
-        self.free_block_ids.remove(block_id)
+        self.free_block_ids.discard(block_id)
         self.used_block_ids.add(block_id)
         return block
 
     def _deallocate_block(self, block_id: int) -> None:
         assert self.blocks[block_id].ref_count == 0
+        block = self.blocks[block_id]
+        if block.hash != -1:
+            self.hash_to_block_id.pop(block.hash, None)
         self.used_block_ids.discard(block_id)
-        self.free_block_ids.append(block_id)
+        self.free_block_ids.add(block_id)
 
     def _num_blocks_for(self, seq: PointLLMSequence) -> int:
         return (seq.num_tokens + self.block_size - 1) // self.block_size
@@ -96,7 +98,7 @@ class BlockManager:
                     self._allocate_block(bid)
             else:
                 cache_miss = True
-                bid = self.free_block_ids[0]
+                bid = next(iter(self.free_block_ids))
                 block = self._allocate_block(bid)
                 if h_new != -1:
                     block.update(h_new, chunk)
@@ -128,7 +130,7 @@ class BlockManager:
         n_tokens = seq.num_tokens
         n_blocks_needed = (n_tokens + self.block_size - 1) // self.block_size
         if n_blocks_needed > len(seq.block_table):
-            bid = self.free_block_ids[0]
+            bid = next(iter(self.free_block_ids))
             self._allocate_block(bid)
             seq.block_table.append(bid)
         # 如果前一个 block 刚好满了，写入 hash
