@@ -50,6 +50,7 @@ class PointLLMSequence:
 
     @property
     def last_token(self) -> int:
+        assert self.token_ids, "PointLLMSequence.last_token called on empty token_ids"
         return self.token_ids[-1]
 
     @property
@@ -71,6 +72,7 @@ class PointLLMSequence:
     def append_token(self, token_id: int) -> None:
         self.token_ids.append(token_id)
 
+    @property
     def kv_seq_len(self) -> int:
         """当前 KV cache 对应的序列长度。"""
         if self.past_key_values is None:

@@ -40,3 +40,14 @@ def test_sequence_with_point_clouds():
     seq = PointLLMSequence(token_ids=[1, 2, 3], point_clouds=pc)
     assert seq.point_clouds is not None
     assert seq.inputs_embeds_cached is None  # not encoded yet
+
+
+def test_last_token_empty_raises():
+    seq = PointLLMSequence(token_ids=[])
+    with pytest.raises(AssertionError):
+        _ = seq.last_token
+
+
+def test_kv_seq_len_none():
+    seq = PointLLMSequence(token_ids=[1, 2, 3])
+    assert seq.kv_seq_len == 0
