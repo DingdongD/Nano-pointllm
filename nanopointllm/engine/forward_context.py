@@ -13,6 +13,7 @@ class ForwardContext:
     slot_mapping: torch.Tensor          # [total_new_tokens] int32; -1 = skip (padding)
     block_tables: Optional[torch.Tensor]  # [B, max_num_blocks] int32; decode only
     context_lens: Optional[torch.Tensor]  # [B] int32; decode only
+    position_ids: Optional[torch.Tensor] = None  # [B, 1] int64; decode only
 
 
 _ctx: threading.local = threading.local()

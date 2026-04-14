@@ -12,11 +12,44 @@ import torch.nn as nn
 from nanopointllm.engine.forward_context import (
     ForwardContext,
     clear_forward_context,
+    get_forward_context,
     set_forward_context,
 )
 from nanopointllm.engine.kv_pool import KVPool
 from nanopointllm.engine.sequence import PointLLMSequence
 from nanopointllm.models.pointllm_wrapper import PointLLMWrapper
+
+
+def _install_position_ids_patch() -> None:
+    """
+    PointLLMLlamaModel.forward() calls super().forward() without position_ids,
+    so LlamaModel always defaults to position 0 for decode tokens.  We patch
+    LlamaModel.forward (class-level, once) to read position_ids from the
+    active ForwardContext and inject them transparently.
+    """
+    try:
+        from transformers.models.llama.modeling_llama import LlamaModel
+    except ImportError:
+        return  # non-Llama model; no-op
+
+    if getattr(LlamaModel, "_paged_position_ids_patched", False):
+        return  # already installed
+
+    _orig = LlamaModel.forward
+
+    def _forward_with_ctx_positions(self, *args, **kwargs):
+        ctx = get_forward_context()
+        if (
+            ctx is not None
+            and not ctx.is_prefill
+            and ctx.position_ids is not None
+            and "position_ids" not in kwargs
+        ):
+            kwargs["position_ids"] = ctx.position_ids
+        return _orig(self, *args, **kwargs)
+
+    LlamaModel.forward = _forward_with_ctx_positions
+    LlamaModel._paged_position_ids_patched = True
 
 
 class PagedModelRunner:
@@ -27,6 +60,7 @@ class PagedModelRunner:
         self.block_manager = block_manager
         self.wrapper       = PointLLMWrapper(hf_model)
         self.block_size    = kv_pool.block_size
+        _install_position_ids_patch()
 
     # ── Point cloud encoding (mirrors PointLLMModelRunner) ──────────────────
 
@@ -188,20 +222,12 @@ class PagedModelRunner:
             dtype=torch.int32, device=device,
         )
 
-        # PointLLMLlamaForCausalLM.forward() has no position_ids param, so we
-        # inject it into the inner LlamaModel via a one-shot pre-hook.
-        def _inject_positions(module, args, kwargs):
-            kwargs["position_ids"] = positions
-            return args, kwargs
-
-        hook = self.hf_model.model.register_forward_pre_hook(
-            _inject_positions, with_kwargs=True,
-        )
         set_forward_context(ForwardContext(
             is_prefill=False,
             slot_mapping=slot_mapping,
             block_tables=block_tables,
             context_lens=context_lens,
+            position_ids=positions,
         ))
         try:
             out = self.hf_model(
@@ -211,7 +237,6 @@ class PagedModelRunner:
                 return_dict=True,
             )
         finally:
-            hook.remove()
             clear_forward_context()
 
         logits = out.logits
