@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 import torch
@@ -9,11 +9,11 @@ import torch
 
 @dataclass
 class ForwardContext:
-    is_prefill: bool
-    slot_mapping: torch.Tensor          # [total_new_tokens] int32; -1 = skip (padding)
-    block_tables: Optional[torch.Tensor]  # [B, max_num_blocks] int32; decode only
-    context_lens: Optional[torch.Tensor]  # [B] int32; decode only
-    position_ids: Optional[torch.Tensor] = None  # [B, 1] int64; decode only
+    slot_mapping:  torch.Tensor            # [total_tokens] int32; -1 = skip (cached prefix)
+    block_tables:  Optional[torch.Tensor]  # [total_seqs, max_blocks] int32
+    context_lens:  Optional[torch.Tensor]  # [total_seqs] int32 — full KV length per seq
+    position_ids:  Optional[torch.Tensor] = None  # [1, total_tokens] int64
+    seq_lens:      list[int] = field(default_factory=list)  # new query tokens per seq
 
 
 _ctx: threading.local = threading.local()

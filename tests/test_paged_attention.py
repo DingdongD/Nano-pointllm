@@ -76,7 +76,7 @@ def test_prefill_parity_vs_dense_sdpa():
         torch.arange(6, dtype=torch.int32),
         torch.arange(8, 14, dtype=torch.int32),
     ])
-    ctx = ForwardContext(is_prefill=True, slot_mapping=slots, block_tables=None, context_lens=None)
+    ctx = ForwardContext(slot_mapping=slots, block_tables=None, context_lens=None, seq_lens=[S, S])
     set_forward_context(ctx)
 
     try:
@@ -134,10 +134,10 @@ def test_decode_parity_vs_full_context_sdpa():
     context_lens  = torch.tensor([S_ctx + 1], dtype=torch.int32)  # 5 tokens total
 
     decode_ctx = ForwardContext(
-        is_prefill=False,
         slot_mapping=decode_slots,
         block_tables=block_tables,
         context_lens=context_lens,
+        seq_lens=[1] * B,
     )
     set_forward_context(decode_ctx)
     try:

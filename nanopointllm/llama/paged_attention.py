@@ -154,7 +154,7 @@ class PagedLlamaAttention(nn.Module):
         v_store = v.transpose(1, 2).reshape(B * S, Hkv, D).contiguous()
         store_kvcache(k_store, v_store, self.k_cache, self.v_cache, ctx.slot_mapping)
 
-        if ctx.is_prefill:
+        if ctx.block_tables is None:
             k_exp = k.repeat_interleave(self.num_kv_groups, dim=1)
             v_exp = v.repeat_interleave(self.num_kv_groups, dim=1)
             attn_out = F.scaled_dot_product_attention(

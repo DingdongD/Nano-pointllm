@@ -181,12 +181,13 @@ class PagedModelRunner:
 
         dummy_ids = torch.zeros(B, max_len, dtype=torch.long, device=device)
 
+        seq_lens_list = [seq.num_tokens for seq in seqs]
         set_forward_context(ForwardContext(
-            is_prefill=True,
             slot_mapping=slot_mapping,
             block_tables=None,
             context_lens=None,
             position_ids=position_ids,
+            seq_lens=seq_lens_list,
         ))
         try:
             out = self.hf_model(
@@ -232,11 +233,11 @@ class PagedModelRunner:
         )
 
         set_forward_context(ForwardContext(
-            is_prefill=False,
             slot_mapping=slot_mapping,
             block_tables=block_tables,
             context_lens=context_lens,
             position_ids=positions,
+            seq_lens=[1] * B,
         ))
         try:
             out = self.hf_model(

@@ -45,14 +45,14 @@ def test_forward_context_thread_local():
     """set/get/clear ForwardContext round-trips correctly."""
     slot_map = torch.zeros(4, dtype=torch.int32)
     ctx = ForwardContext(
-        is_prefill=True,
         slot_mapping=slot_map,
         block_tables=None,
         context_lens=None,
+        seq_lens=[4],
     )
     set_forward_context(ctx)
     got = get_forward_context()
     assert got is ctx
-    assert got.is_prefill is True
+    assert got.seq_lens == [4]
     clear_forward_context()
     assert get_forward_context() is None
