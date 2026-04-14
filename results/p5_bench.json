@@ -1,0 +1,70 @@
+{
+  "padded_results": [
+    {
+      "batch_size": 1,
+      "mode": "padded",
+      "prefill_ms_mean": 74.16,
+      "decode_mean_per_step_ms": 26.244,
+      "tokens_per_sec": 38.1,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 2,
+      "mode": "padded",
+      "prefill_ms_mean": 141.92,
+      "decode_mean_per_step_ms": 13.852,
+      "tokens_per_sec": 72.2,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 4,
+      "mode": "padded",
+      "prefill_ms_mean": 268.72,
+      "decode_mean_per_step_ms": 7.499,
+      "tokens_per_sec": 133.3,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 8,
+      "mode": "padded",
+      "prefill_ms_mean": 455.87,
+      "decode_mean_per_step_ms": 4.677,
+      "tokens_per_sec": 213.8,
+      "actual_decode_steps": 32
+    }
+  ],
+  "paged_results": [
+    {
+      "batch_size": 1,
+      "mode": "paged",
+      "prefill_ms_mean": 69.95,
+      "decode_mean_per_step_ms": 27.472,
+      "tokens_per_sec": 36.4,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 2,
+      "mode": "paged",
+      "prefill_ms_mean": 132.16,
+      "decode_mean_per_step_ms": 16.512,
+      "tokens_per_sec": 60.6,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 4,
+      "mode": "paged",
+      "prefill_ms_mean": 252.11,
+      "decode_mean_per_step_ms": 10.487,
+      "tokens_per_sec": 95.4,
+      "actual_decode_steps": 31
+    },
+    {
+      "batch_size": 8,
+      "mode": "paged",
+      "prefill_ms_mean": 431.6,
+      "decode_mean_per_step_ms": 7.711,
+      "tokens_per_sec": 129.7,
+      "actual_decode_steps": 32
+    }
+  ]
+}
