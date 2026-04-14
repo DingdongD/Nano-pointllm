@@ -188,6 +188,15 @@ class PagedModelRunner:
             dtype=torch.int32, device=device,
         )
 
+        # PointLLMLlamaForCausalLM.forward() has no position_ids param, so we
+        # inject it into the inner LlamaModel via a one-shot pre-hook.
+        def _inject_positions(module, args, kwargs):
+            kwargs["position_ids"] = positions
+            return args, kwargs
+
+        hook = self.hf_model.model.register_forward_pre_hook(
+            _inject_positions, with_kwargs=True,
+        )
         set_forward_context(ForwardContext(
             is_prefill=False,
             slot_mapping=slot_mapping,
@@ -197,12 +206,12 @@ class PagedModelRunner:
         try:
             out = self.hf_model(
                 input_ids=input_ids,
-                position_ids=positions,
                 attention_mask=None,
                 use_cache=False,
                 return_dict=True,
             )
         finally:
+            hook.remove()
             clear_forward_context()
 
         logits = out.logits
