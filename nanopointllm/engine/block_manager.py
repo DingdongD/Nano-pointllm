@@ -43,7 +43,7 @@ class BlockManager:
     def compute_hash(cls, token_ids: list[int], prefix: int = -1) -> int:
         h = hashlib.shake_128()
         if prefix != -1:
-            h.update(struct.pack("<q", prefix))
+            h.update(struct.pack("<Q", prefix))
         h.update(np.array(token_ids, dtype=np.int64).tobytes())
         return int.from_bytes(h.digest(8), "little")
 
