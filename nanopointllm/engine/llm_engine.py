@@ -1,5 +1,8 @@
 """
-PointLLMLLMEngine：把 Scheduler + PointLLMModelRunner 串成完整推理循环。
+PointLLMLLMEngine：把 Scheduler + ModelRunner 串成完整推理循环。
+
+当 num_kvcache_blocks 未指定时使用 PointLLMModelRunner（padded KV，原有行为）。
+当 num_kvcache_blocks 指定时使用 PagedModelRunner（物理 KV 池，分页 decode）。
 
 典型用法（离线 batch）::
 
@@ -17,7 +20,6 @@ from typing import Any, Optional
 
 import torch.nn as nn
 
-from nanopointllm.engine.model_runner import PointLLMModelRunner
 from nanopointllm.engine.scheduler import Scheduler
 from nanopointllm.engine.sequence import PointLLMSequence
 from nanopointllm.sampling_params import SamplingParams
@@ -31,19 +33,31 @@ class PointLLMLLMEngine:
         eos_token_id: int,
         max_num_seqs: int = 8,
         max_num_batched_tokens: int = 4096,
-        # 分页 KV 参数（可选；Task 7 接入 BlockManager 时使用）
         num_kvcache_blocks: Optional[int] = None,
         kvcache_block_size: int = 16,
     ) -> None:
-        self.runner = PointLLMModelRunner(hf_model=hf_model)
-
-        block_manager = None
         if num_kvcache_blocks is not None:
+            import torch
             from nanopointllm.engine.block_manager import BlockManager
+            from nanopointllm.engine.kv_pool import allocate_kv_pool
+            from nanopointllm.engine.paged_model_runner import PagedModelRunner
+            from nanopointllm.llama.inject_paged import inject_paged_attention
+
+            device = next(hf_model.parameters()).device
+            dtype  = next(hf_model.parameters()).dtype
             block_manager = BlockManager(
                 num_blocks=num_kvcache_blocks,
                 block_size=kvcache_block_size,
             )
+            kv_pool = allocate_kv_pool(
+                hf_model, num_kvcache_blocks, kvcache_block_size, device, dtype,
+            )
+            inject_paged_attention(hf_model, kv_pool)
+            self.runner = PagedModelRunner(hf_model, kv_pool, block_manager)
+        else:
+            from nanopointllm.engine.model_runner import PointLLMModelRunner
+            block_manager = None
+            self.runner = PointLLMModelRunner(hf_model=hf_model)
 
         self.scheduler = Scheduler(
             max_num_seqs=max_num_seqs,
@@ -70,7 +84,7 @@ class PointLLMLLMEngine:
         return seq
 
     def step(self) -> None:
-        """执行一轮调度（prefill 或 decode）并更新序列状态。"""
+        """Execute one scheduling round (prefill or decode) and update sequences."""
         seqs, is_prefill = self.scheduler.schedule()
         token_ids = self.runner.run(seqs, is_prefill)
         self.scheduler.postprocess(seqs, token_ids)
@@ -80,14 +94,14 @@ class PointLLMLLMEngine:
         requests: list[dict],
     ) -> list[PointLLMSequence]:
         """
-        批量推理接口：提交所有请求后循环 step 直到全部完成。
+        Batch inference: submit all requests then loop step() until done.
 
         Args:
-            requests: list of dict，每个 dict 传给 add_request：
+            requests: list of dict passed to add_request:
                       {"token_ids": [...], "point_clouds": Tensor, "sampling_params": ...}
 
         Returns:
-            list[PointLLMSequence]，与 requests 顺序对应，seq.is_finished==True
+            list[PointLLMSequence] in request order, all is_finished==True
         """
         seqs = [self.add_request(**req) for req in requests]
         while not self.is_finished():
