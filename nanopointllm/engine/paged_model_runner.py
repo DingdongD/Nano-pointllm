@@ -86,6 +86,12 @@ class PagedModelRunner:
         pos = seq.num_tokens - 1
         blk = pos // self.block_size
         off = pos  % self.block_size
+        if blk >= len(seq.block_table):
+            raise RuntimeError(
+                f"KV pool exhausted: seq needs block {blk} but block_table has "
+                f"{len(seq.block_table)} blocks (num_tokens={seq.num_tokens}, "
+                f"block_size={self.block_size})"
+            )
         return seq.block_table[blk] * self.block_size + off
 
     # ── Prefill ──────────────────────────────────────────────────────────────
