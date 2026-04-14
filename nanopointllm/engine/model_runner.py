@@ -22,6 +22,35 @@ from nanopointllm.models.pointllm_wrapper import PointLLMWrapper
 # 内部工具：padded KV 合并 / 拆分
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _cache_num_layers(cache) -> int:
+    """transformers ≥5.5: DynamicCache.layers; <5.5: DynamicCache.key_cache."""
+    if hasattr(cache, "key_cache"):
+        return len(cache.key_cache)
+    return len(cache.layers)
+
+
+def _cache_get_kv(cache, layer_idx):
+    """Return (key, value) tensors for layer_idx."""
+    if hasattr(cache, "key_cache"):
+        return cache.key_cache[layer_idx], cache.value_cache[layer_idx]
+    layer = cache.layers[layer_idx]
+    return layer.keys, layer.values
+
+
+def _cache_append_layer(cache, k: torch.Tensor, v: torch.Tensor) -> None:
+    """Append a (k, v) pair as a new layer to cache."""
+    if hasattr(cache, "key_cache"):
+        cache.key_cache.append(k)
+        cache.value_cache.append(v)
+        return
+    from transformers.cache_utils import DynamicLayer
+    layer = DynamicLayer()
+    layer.lazy_initialization(k, v)
+    layer.keys = k
+    layer.values = v
+    cache.layers.append(layer)
+
+
 def _build_batched_cache(seqs: list[PointLLMSequence]):
     """
     把多个序列的 DynamicCache（各自 kv_len 可不同）left-pad 成
@@ -33,15 +62,14 @@ def _build_batched_cache(seqs: list[PointLLMSequence]):
 
     kv_lens = [seq.kv_seq_len for seq in seqs]
     max_kv_len = max(kv_lens)
-    num_layers = len(seqs[0].past_key_values.key_cache)
+    num_layers = _cache_num_layers(seqs[0].past_key_values)
     B = len(seqs)
 
     batched_cache = DynamicCache()
     for layer_idx in range(num_layers):
         k_list, v_list = [], []
         for seq in seqs:
-            k = seq.past_key_values.key_cache[layer_idx]   # [1, H, kv_len, D]
-            v = seq.past_key_values.value_cache[layer_idx]
+            k, v = _cache_get_kv(seq.past_key_values, layer_idx)  # [1, H, kv_len, D]
             seq_len = k.shape[-2]
             pad_len = max_kv_len - seq_len
             if pad_len > 0:
@@ -51,8 +79,7 @@ def _build_batched_cache(seqs: list[PointLLMSequence]):
                 v = torch.cat([pad_v, v], dim=-2)
             k_list.append(k)
             v_list.append(v)
-        batched_cache.key_cache.append(torch.cat(k_list, dim=0))   # [B, H, max_kv_len, D]
-        batched_cache.value_cache.append(torch.cat(v_list, dim=0))
+        _cache_append_layer(batched_cache, torch.cat(k_list, dim=0), torch.cat(v_list, dim=0))
 
     # attention_mask: [B, max_kv_len + 1]（+1 for new token）
     # 1 = valid，0 = padding
@@ -77,15 +104,15 @@ def _split_batched_cache(
     """
     from transformers.cache_utils import DynamicCache
 
-    num_layers = len(batched_cache.key_cache)
+    num_layers = _cache_num_layers(batched_cache)
     for i, (seq, kv_len) in enumerate(zip(seqs, orig_kv_lens)):
         new_cache = DynamicCache()
         for layer_idx in range(num_layers):
+            k, v = _cache_get_kv(batched_cache, layer_idx)
             # 取 right side: 新 kv_len = kv_len + 1
-            k = batched_cache.key_cache[layer_idx][i:i+1, :, -(kv_len+1):, :]
-            v = batched_cache.value_cache[layer_idx][i:i+1, :, -(kv_len+1):, :]
-            new_cache.key_cache.append(k.contiguous())
-            new_cache.value_cache.append(v.contiguous())
+            _cache_append_layer(new_cache,
+                                k[i:i+1, :, -(kv_len+1):, :].contiguous(),
+                                v[i:i+1, :, -(kv_len+1):, :].contiguous())
         seq.past_key_values = new_cache
 
 
@@ -95,15 +122,15 @@ def _split_prefill_cache(prefill_cache, seqs: list[PointLLMSequence]) -> None:
     切出每个序列的 KV（右侧 seq.num_tokens 行，因为使用了 left-padding）。
     """
     from transformers.cache_utils import DynamicCache
-    num_layers = len(prefill_cache.key_cache)
+    num_layers = _cache_num_layers(prefill_cache)
     for i, seq in enumerate(seqs):
         L = seq.num_tokens
         new_cache = DynamicCache()
         for layer_idx in range(num_layers):
-            k = prefill_cache.key_cache[layer_idx][i:i+1, :, -L:, :]
-            v = prefill_cache.value_cache[layer_idx][i:i+1, :, -L:, :]
-            new_cache.key_cache.append(k.contiguous())
-            new_cache.value_cache.append(v.contiguous())
+            k, v = _cache_get_kv(prefill_cache, layer_idx)
+            _cache_append_layer(new_cache,
+                                k[i:i+1, :, -L:, :].contiguous(),
+                                v[i:i+1, :, -L:, :].contiguous())
         seq.past_key_values = new_cache
 
 
@@ -181,7 +208,11 @@ class PointLLMModelRunner:
             if seq.inputs_embeds_cached is not None:
                 emb = seq.inputs_embeds_cached                            # [L, H]
             else:
-                ids = torch.tensor([seq.token_ids], dtype=torch.long)
+                try:
+                    device = next(self.wrapper.inner.parameters()).device
+                except StopIteration:
+                    device = torch.device("cpu")
+                ids = torch.tensor([seq.token_ids], dtype=torch.long, device=device)
                 emb = self.wrapper.get_input_embeddings()(ids).squeeze(0)
 
             pad_len = max_len - L
@@ -233,7 +264,7 @@ class PointLLMModelRunner:
         input_ids = torch.tensor(
             [[seq.last_token] for seq in seqs],
             dtype=torch.long,
-            device=batched_cache.key_cache[0].device,
+            device=_cache_get_kv(batched_cache, 0)[0].device,
         )   # [B, 1]
         attention_mask = attention_mask.to(device=input_ids.device)
 
