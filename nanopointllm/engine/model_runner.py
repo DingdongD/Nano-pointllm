@@ -169,23 +169,45 @@ class PointLLMModelRunner:
     def _encode_point_clouds_batch(self, seqs: list[PointLLMSequence]) -> None:
         """
         对所有尚未编码的序列编码点云，缓存 inputs_embeds 到 seq.inputs_embeds_cached。
+
+        若所有待编码序列的点云形状相同，则将其堆叠为 [B, N, C] 一次性送入 backbone，
+        避免串行循环中重复执行 FPS 的 Python-level for 循环（512 次迭代 × B）。
+        形状不同时退化为逐条编码。
         """
         pending = [
             seq for seq in seqs
             if seq.point_clouds is not None and seq.inputs_embeds_cached is None
         ]
-        for seq in pending:
-            features = self.wrapper.encode_point_clouds(seq.point_clouds)
-            input_ids = torch.tensor([seq.token_ids], dtype=torch.long)
-            # 移到 backbone 权重所在 device
-            try:
-                param = next(self.wrapper.inner.parameters())
-                device = param.device
-                input_ids = input_ids.to(device)
-            except (StopIteration, TypeError, AttributeError):
-                pass
-            embeds = self.wrapper.prepare_inputs_embeds(input_ids, features)  # [1, L, H]
-            seq.inputs_embeds_cached = embeds.squeeze(0)   # [L, H]
+        if not pending:
+            return
+
+        try:
+            param = next(self.wrapper.inner.parameters())
+            device = param.device if isinstance(param, torch.Tensor) else torch.device("cpu")
+        except (StopIteration, TypeError, AttributeError):
+            device = torch.device("cpu")
+
+        # 归一化为 [N, C]，检查是否可以批量堆叠
+        def _to_2d(pc: torch.Tensor) -> torch.Tensor:
+            return pc.squeeze(0) if pc.dim() == 3 else pc
+
+        pcs_2d = [_to_2d(seq.point_clouds).to(device) for seq in pending]
+        shapes = {pc.shape for pc in pcs_2d}
+
+        if len(shapes) == 1:
+            # 全部相同形状 → 单次 backbone forward [B, N, C]
+            stacked = torch.stack(pcs_2d)          # [B, N, C]
+            all_features = self.wrapper.encode_point_clouds(stacked)  # list[B × Tensor]
+        else:
+            # 形状不一致 → 逐条编码（fallback）
+            all_features = [
+                self.wrapper.encode_point_clouds(pc)[0] for pc in pcs_2d
+            ]
+
+        for seq, feat in zip(pending, all_features):
+            ids = torch.tensor([seq.token_ids], dtype=torch.long, device=device)
+            embeds = self.wrapper.prepare_inputs_embeds(ids, [feat])  # [1, L, H]
+            seq.inputs_embeds_cached = embeds.squeeze(0)              # [L, H]
 
     @torch.inference_mode()
     def run_prefill(self, seqs: list[PointLLMSequence]) -> list[int]:
