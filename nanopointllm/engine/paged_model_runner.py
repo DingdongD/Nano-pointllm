@@ -41,7 +41,6 @@ def _install_position_ids_patch() -> None:
         ctx = get_forward_context()
         if (
             ctx is not None
-            and not ctx.is_prefill
             and ctx.position_ids is not None
             and "position_ids" not in kwargs
         ):
@@ -142,7 +141,7 @@ class PagedModelRunner:
         except StopIteration:
             device = torch.device("cpu")
 
-        embeds_list, attn_masks, slot_maps = [], [], []
+        embeds_list, attn_masks, slot_maps, pos_ids_list = [], [], [], []
         for seq in seqs:
             L       = seq.num_tokens
             pad_len = max_len - L
@@ -160,16 +159,25 @@ class PagedModelRunner:
                     torch.zeros(pad_len, dtype=torch.long, device=device),
                     torch.ones(L,        dtype=torch.long, device=device),
                 ])
+                # Left-padding: real tokens must be encoded at positions [0..L-1],
+                # not at [pad_len..pad_len+L-1] (LlamaModel default without explicit ids).
+                pos = torch.cat([
+                    torch.zeros(pad_len, dtype=torch.long, device=device),
+                    torch.arange(L,      dtype=torch.long, device=device),
+                ])
             else:
                 mask = torch.ones(L, dtype=torch.long, device=device)
+                pos  = torch.arange(L, dtype=torch.long, device=device)
 
             embeds_list.append(emb)
             attn_masks.append(mask)
             slot_maps.append(self._prefill_slot_mapping(seq, max_len, pad_len, device))
+            pos_ids_list.append(pos)
 
         inputs_embeds  = torch.stack(embeds_list)
         attention_mask = torch.stack(attn_masks)
         slot_mapping   = torch.stack(slot_maps).reshape(-1)
+        position_ids   = torch.stack(pos_ids_list)  # [B, max_len]
 
         dummy_ids = torch.zeros(B, max_len, dtype=torch.long, device=device)
 
@@ -178,6 +186,7 @@ class PagedModelRunner:
             slot_mapping=slot_mapping,
             block_tables=None,
             context_lens=None,
+            position_ids=position_ids,
         ))
         try:
             out = self.hf_model(

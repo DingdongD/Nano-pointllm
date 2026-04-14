@@ -29,53 +29,6 @@ from nanopointllm.parity.engine_test_utils import (
 from nanopointllm.sampling_params import SamplingParams
 
 
-def run_case(
-    name: str,
-    model,
-    eos_token_id: int,
-    all_token_ids: list[list[int]],
-    all_point_clouds: list,
-    max_new_tokens: int,
-    device: torch.device,
-    num_kvcache_blocks: int = 512,
-    kvcache_block_size: int = 16,
-) -> bool:
-    B = len(all_token_ids)
-    sp = SamplingParams(max_tokens=max_new_tokens)
-    engine = PointLLMLLMEngine(
-        model,
-        eos_token_id=eos_token_id,
-        max_num_seqs=B,
-        max_num_batched_tokens=4096,
-        num_kvcache_blocks=num_kvcache_blocks,
-        kvcache_block_size=kvcache_block_size,
-    )
-    requests = [
-        {"token_ids": ids, "point_clouds": pc, "sampling_params": sp}
-        for ids, pc in zip(all_token_ids, all_point_clouds)
-    ]
-    try:
-        seqs = engine.generate(requests)
-    except Exception:
-        print(f"  [{name}] ENGINE ERROR:")
-        traceback.print_exc()
-        return False
-
-    ok = True
-    for i, (seq, ids, pc) in enumerate(zip(seqs, all_token_ids, all_point_clouds)):
-        generated = seq.token_ids[seq.num_prompt_tokens:]
-        ref = hf_greedy_generate(model, ids, pc, max_new_tokens, device)
-        if generated != ref:
-            print(f"  [{name}] seq {i} MISMATCH:")
-            print(f"    engine : {generated}")
-            print(f"    hf_ref : {ref}")
-            ok = False
-
-    status = "PASS" if ok else "FAIL"
-    print(f"  {name}: {status}")
-    return ok
-
-
 def main() -> None:
     ap = argparse.ArgumentParser(description="P5 parity: paged engine vs HF greedy")
     ap.add_argument("--model_path", required=True)
@@ -103,17 +56,66 @@ def main() -> None:
         return make_fake_point_cloud(device, dtype)
 
     cases = [
-        ("single  (B=1, 1 pc)",           [pt_ids],               [pc()]),
-        ("batch_4 (B=4, 4 pc)",           [pt_ids] * 4,           [pc() for _ in range(4)]),
-        ("batch_8 (B=8, 8 pc)",           [pt_ids] * 8,           [pc() for _ in range(8)]),
-        ("mixed_4 (B=4, 2pc+2text)",      [pt_ids, pt_ids, txt_ids, txt_ids], [pc(), pc(), None, None]),
+        ("single  (B=1, 1 pc)",      [pt_ids],                                  [pc()]),
+        ("batch_4 (B=4, 4 pc)",      [pt_ids] * 4,                              [pc() for _ in range(4)]),
+        ("batch_8 (B=8, 8 pc)",      [pt_ids] * 8,                              [pc() for _ in range(8)]),
+        ("mixed_4 (B=4, 2pc+2text)", [pt_ids, pt_ids, txt_ids, txt_ids],        [pc(), pc(), None, None]),
     ]
+
+    # ── Step 1: compute all HF references BEFORE patching the model ────────
+    # inject_paged_attention (called inside PointLLMLLMEngine.__init__) permanently
+    # replaces LlamaAttention layers with PagedLlamaAttention.  We must generate
+    # all reference outputs while the model is still in its original state.
+    print("=== HF GREEDY REFERENCE (unpatched model) ===")
+    all_refs: list[list[list[int]]] = []
+    for name, token_ids_list, pcs in cases:
+        case_refs = [
+            hf_greedy_generate(model, ids, p, args.max_new_tokens, device)
+            for ids, p in zip(token_ids_list, pcs)
+        ]
+        all_refs.append(case_refs)
+        print(f"  {name}: {len(case_refs)} ref(s) computed")
+    print()
+
+    # ── Step 2: create ONE engine (patches model once) and run all cases ───
+    max_batch = max(len(ids_list) for _, ids_list, _ in cases)
+    engine = PointLLMLLMEngine(
+        model,
+        eos_token_id=eos,
+        max_num_seqs=max_batch,
+        max_num_batched_tokens=4096,
+        num_kvcache_blocks=args.num_kvcache_blocks,
+        kvcache_block_size=args.kvcache_block_size,
+    )
 
     print("=== PARITY (paged engine) ===")
     all_ok = True
-    for name, token_ids_list, pcs in cases:
-        ok = run_case(name, model, eos, token_ids_list, pcs, args.max_new_tokens, device,
-                      args.num_kvcache_blocks, args.kvcache_block_size)
+    sp = SamplingParams(max_tokens=args.max_new_tokens)
+
+    for (name, token_ids_list, pcs), case_refs in zip(cases, all_refs):
+        requests = [
+            {"token_ids": ids, "point_clouds": p, "sampling_params": sp}
+            for ids, p in zip(token_ids_list, pcs)
+        ]
+        try:
+            seqs = engine.generate(requests)
+        except Exception:
+            print(f"  [{name}] ENGINE ERROR:")
+            traceback.print_exc()
+            all_ok = False
+            continue
+
+        ok = True
+        for i, (seq, case_ref) in enumerate(zip(seqs, case_refs)):
+            generated = seq.token_ids[seq.num_prompt_tokens:]
+            if generated != case_ref:
+                print(f"  [{name}] seq {i} MISMATCH:")
+                print(f"    engine : {generated}")
+                print(f"    hf_ref : {case_ref}")
+                ok = False
+
+        status = "PASS" if ok else "FAIL"
+        print(f"  {name}: {status}")
         if not ok:
             all_ok = False
 
