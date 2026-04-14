@@ -89,3 +89,100 @@ def _store_kvcache_pytorch(
         off = slot % block_size
         k_cache[blk, off] = key[t]
         v_cache[blk, off] = value[t]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PagedLlamaAttention
+# ──────────────────────────────────────────────────────────────────────────────
+
+class PagedLlamaAttention(nn.Module):
+    """
+    Drop-in replacement for HF LlamaAttention.
+    Reads routing info from thread-local ForwardContext.
+    Prefill: dense causal sdpa (handles left-padded batches via attention_mask).
+    Decode: gather K/V from block_tables, per-sequence sdpa.
+    """
+
+    @classmethod
+    def from_hf(
+        cls,
+        hf_attn,
+        k_cache: torch.Tensor,   # [num_blocks, block_size, H, D]
+        v_cache: torch.Tensor,
+    ) -> "PagedLlamaAttention":
+        obj = cls.__new__(cls)
+        nn.Module.__init__(obj)
+        obj.config         = hf_attn.config
+        obj.layer_idx      = hf_attn.layer_idx
+        obj.head_dim       = hf_attn.head_dim
+        obj.num_heads      = hf_attn.config.num_attention_heads
+        obj.num_kv_heads   = hf_attn.config.num_key_value_heads
+        obj.num_kv_groups  = obj.num_heads // obj.num_kv_heads
+        obj.scaling        = hf_attn.scaling
+        obj.rotary_fn      = hf_attn.rotary_fn
+        obj.q_proj  = hf_attn.q_proj
+        obj.k_proj  = hf_attn.k_proj
+        obj.v_proj  = hf_attn.v_proj
+        obj.o_proj  = hf_attn.o_proj
+        obj.k_cache = k_cache
+        obj.v_cache = v_cache
+        return obj
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        position_embeddings: tuple,
+        attention_mask: Optional[torch.Tensor] = None,
+        past_key_values=None,
+        **kwargs,
+    ) -> tuple:
+        from nanopointllm.engine.forward_context import get_forward_context
+        ctx = get_forward_context()
+        B, S, _ = hidden_states.shape
+        H, Hkv, D = self.num_heads, self.num_kv_heads, self.head_dim
+
+        # QKV → [B, H, S, D] for RoPE
+        q = self.q_proj(hidden_states).view(B, S, H,   D).transpose(1, 2)
+        k = self.k_proj(hidden_states).view(B, S, Hkv, D).transpose(1, 2)
+        v = self.v_proj(hidden_states).view(B, S, Hkv, D).transpose(1, 2)
+
+        cos, sin = position_embeddings
+        q, k = self.rotary_fn(q, k, cos, sin)  # unsqueeze_dim=1 default
+
+        # Write new K/V into physical pool
+        k_store = k.transpose(1, 2).reshape(B * S, Hkv, D).contiguous()
+        v_store = v.transpose(1, 2).reshape(B * S, Hkv, D).contiguous()
+        store_kvcache(k_store, v_store, self.k_cache, self.v_cache, ctx.slot_mapping)
+
+        if ctx.is_prefill:
+            k_exp = k.repeat_interleave(self.num_kv_groups, dim=1)
+            v_exp = v.repeat_interleave(self.num_kv_groups, dim=1)
+            attn_out = F.scaled_dot_product_attention(
+                q, k_exp, v_exp,
+                attn_mask=attention_mask,
+                is_causal=(attention_mask is None),
+                scale=self.scaling,
+            )
+            out = attn_out.transpose(1, 2).reshape(B, S, H * D)
+        else:
+            block_tables = ctx.block_tables
+            context_lens = ctx.context_lens
+            block_size = self.k_cache.shape[1]
+            seq_outs = []
+            for i in range(B):
+                ctx_len = int(context_lens[i])
+                num_blks = (ctx_len + block_size - 1) // block_size
+                bt = block_tables[i, :num_blks]
+                k_full = self.k_cache[bt].reshape(-1, Hkv, D)[:ctx_len]
+                v_full = self.v_cache[bt].reshape(-1, Hkv, D)[:ctx_len]
+                qi = q[i:i+1]
+                ki = k_full.transpose(0, 1).unsqueeze(0)
+                vi = v_full.transpose(0, 1).unsqueeze(0)
+                ki = ki.repeat_interleave(self.num_kv_groups, dim=1)
+                vi = vi.repeat_interleave(self.num_kv_groups, dim=1)
+                oi = F.scaled_dot_product_attention(qi, ki, vi, scale=self.scaling)
+                seq_outs.append(oi)
+            attn_out = torch.cat(seq_outs, dim=0)
+            out = attn_out.transpose(1, 2).reshape(B, 1, H * D)
+
+        return self.o_proj(out), None
