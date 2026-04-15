@@ -4,13 +4,12 @@ Unit tests for varlen continuous batching (Phase 2).
 import torch
 import pytest
 from nanopointllm.engine.forward_context import ForwardContext, set_forward_context, get_forward_context, clear_forward_context
-from collections import deque
 from nanopointllm.engine.scheduler import Scheduler
 from nanopointllm.engine.sequence import PointLLMSequence, SequenceStatus
 from nanopointllm.sampling_params import SamplingParams
 
 
-def _make_seq(token_ids, seq_id=0):
+def _make_seq(token_ids):
     sp = SamplingParams(max_tokens=4)
     seq = PointLLMSequence(token_ids=token_ids, point_clouds=None, sampling_params=sp)
     return seq
@@ -19,8 +18,8 @@ def _make_seq(token_ids, seq_id=0):
 def test_scheduler_returns_prefill_decode_tuple():
     """schedule() returns (prefill_seqs, decode_seqs) as separate lists."""
     sched = Scheduler(max_num_seqs=4, max_num_batched_tokens=512, block_manager=None)
-    seq_a = _make_seq([1, 2, 3], seq_id=0)
-    seq_b = _make_seq([4, 5], seq_id=1)
+    seq_a = _make_seq([1, 2, 3])
+    seq_b = _make_seq([4, 5])
     sched.add(seq_a)
     sched.add(seq_b)
 
@@ -37,7 +36,7 @@ def test_scheduler_returns_prefill_decode_tuple():
 def test_scheduler_decode_seqs_after_prefill():
     """After postprocess, same seqs appear in decode_seqs on next schedule()."""
     sched = Scheduler(max_num_seqs=4, max_num_batched_tokens=512, block_manager=None)
-    seq_a = _make_seq([1, 2, 3], seq_id=0)
+    seq_a = _make_seq([1, 2, 3])
     sched.add(seq_a)
 
     prefill_seqs, decode_seqs = sched.schedule()
@@ -57,7 +56,7 @@ def test_continuous_batching_scheduler():
     sched = Scheduler(max_num_seqs=8, max_num_batched_tokens=512, block_manager=None)
     # Add 4 initial requests
     for i in range(4):
-        sched.add(_make_seq([i + 1, i + 2], seq_id=i))
+        sched.add(_make_seq([i + 1, i + 2]))
 
     # Step 1: prefill all 4
     prefill1, decode1 = sched.schedule()
@@ -66,7 +65,7 @@ def test_continuous_batching_scheduler():
 
     # Add 4 more while originals are in decode
     for i in range(4, 8):
-        sched.add(_make_seq([i + 1, i + 2], seq_id=i))
+        sched.add(_make_seq([i + 1, i + 2]))
 
     # Step 2: new arrivals should be admitted as prefill THIS step
     prefill2, decode2 = sched.schedule()

@@ -85,6 +85,7 @@ class PointLLMLLMEngine:
 
     def step(self) -> None:
         """Execute one scheduling round (prefill or decode) and update sequences."""
+        # TODO(Task 3): update for continuous batching — schedule() now returns (prefill_seqs, decode_seqs)
         seqs, is_prefill = self.scheduler.schedule()
         token_ids = self.runner.run(seqs, is_prefill)
         self.scheduler.postprocess(seqs, token_ids)
