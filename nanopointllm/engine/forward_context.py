@@ -13,7 +13,7 @@ class ForwardContext:
     block_tables:  Optional[torch.Tensor]  # [total_seqs, max_blocks] int32
     context_lens:  Optional[torch.Tensor]  # [total_seqs] int32 — full KV length per seq
     position_ids:  Optional[torch.Tensor] = None  # [1, total_tokens] int64
-    seq_lens:      list[int] = field(default_factory=list)  # new query tokens per seq
+    seq_lens:      list[int] = field(default_factory=list)  # new query tokens per seq; consumed by varlen SDPA loop (Task 4/run_mixed)
 
 
 _ctx: threading.local = threading.local()

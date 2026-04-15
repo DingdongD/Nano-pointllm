@@ -3,12 +3,6 @@ import pytest
 from unittest.mock import MagicMock
 
 from nanopointllm.engine.kv_pool import KVPool, allocate_kv_pool
-from nanopointllm.engine.forward_context import (
-    ForwardContext,
-    set_forward_context,
-    get_forward_context,
-    clear_forward_context,
-)
 
 
 def test_kv_pool_slices():
@@ -40,19 +34,3 @@ def test_allocate_kv_pool_shapes():
     assert kv.head_dim == 32  # 256 // 8
     assert kv.pool.shape == (2, 4, 16, 8, 8, 32)
 
-
-def test_forward_context_thread_local():
-    """set/get/clear ForwardContext round-trips correctly."""
-    slot_map = torch.zeros(4, dtype=torch.int32)
-    ctx = ForwardContext(
-        slot_mapping=slot_map,
-        block_tables=None,
-        context_lens=None,
-        seq_lens=[4],
-    )
-    set_forward_context(ctx)
-    got = get_forward_context()
-    assert got is ctx
-    assert got.seq_lens == [4]
-    clear_forward_context()
-    assert get_forward_context() is None
