@@ -254,6 +254,105 @@ class PagedModelRunner:
             logits = logits[:, -1, :]
         return logits.float().argmax(dim=-1).tolist()
 
+    @torch.inference_mode()
+    def run_mixed(
+        self,
+        prefill_seqs: list[PointLLMSequence],
+        decode_seqs: list[PointLLMSequence],
+    ) -> list[int]:
+        """
+        Single model.forward() over prefill new-tokens + decode last-tokens.
+        Returns one next token_id per sequence (prefill_seqs first, then decode_seqs).
+        """
+        all_seqs = prefill_seqs + decode_seqs
+        if not all_seqs:
+            return []
+
+        self._encode_point_clouds_batch(prefill_seqs)
+        try:
+            device = next(self.hf_model.parameters()).device
+        except StopIteration:
+            device = torch.device("cpu")
+
+        emb_parts, pos_parts, slot_parts = [], [], []
+        seq_lens_list, context_lens_list, block_tables_list = [], [], []
+
+        for seq in prefill_seqs:
+            new_start = seq.num_cached_tokens
+            new_len   = seq.num_tokens - new_start
+            seq_lens_list.append(new_len)
+            context_lens_list.append(seq.num_tokens)
+            block_tables_list.append(seq.block_table)
+
+            # Embedding: only new tokens (prefix already in pool)
+            if seq.inputs_embeds_cached is not None:
+                emb = seq.inputs_embeds_cached[new_start:]
+            else:
+                ids = torch.tensor(seq.token_ids[new_start:], dtype=torch.long, device=device)
+                emb = self.wrapper.get_input_embeddings()(ids.unsqueeze(0)).squeeze(0)
+            emb_parts.append(emb)
+
+            # Positions: [new_start .. num_tokens-1]
+            pos_parts.append(torch.arange(new_start, seq.num_tokens,
+                                          dtype=torch.long, device=device))
+
+            # Slots: new positions only → physical slot
+            slots = []
+            for abs_pos in range(new_start, seq.num_tokens):
+                blk = abs_pos // self.block_size
+                off = abs_pos % self.block_size
+                slots.append(seq.block_table[blk] * self.block_size + off)
+            slot_parts.append(torch.tensor(slots, dtype=torch.int32, device=device))
+
+        for seq in decode_seqs:
+            seq_lens_list.append(1)
+            context_lens_list.append(seq.num_tokens)
+            block_tables_list.append(seq.block_table)
+
+            ids = torch.tensor([seq.last_token], dtype=torch.long, device=device)
+            emb_parts.append(self.wrapper.get_input_embeddings()(ids.unsqueeze(0)).squeeze(0))
+
+            pos = seq.num_tokens - 1
+            slot = seq.block_table[pos // self.block_size] * self.block_size + pos % self.block_size
+            pos_parts.append(torch.tensor([pos],  dtype=torch.long,  device=device))
+            slot_parts.append(torch.tensor([slot], dtype=torch.int32, device=device))
+
+        total_tokens  = sum(seq_lens_list)
+        inputs_embeds = torch.cat(emb_parts).unsqueeze(0)            # [1, T, H]
+        slot_mapping  = torch.cat(slot_parts)                        # [T]
+        position_ids  = torch.cat(pos_parts).unsqueeze(0)            # [1, T]
+        max_blocks    = max(len(bt) for bt in block_tables_list)
+        block_tables  = torch.tensor(
+            [bt + [-1] * (max_blocks - len(bt)) for bt in block_tables_list],
+            dtype=torch.int32, device=device,
+        )
+        context_lens  = torch.tensor(context_lens_list, dtype=torch.int32, device=device)
+
+        dummy_ids = torch.zeros(1, total_tokens, dtype=torch.long, device=device)
+        set_forward_context(ForwardContext(
+            slot_mapping=slot_mapping,
+            block_tables=block_tables,
+            context_lens=context_lens,
+            position_ids=position_ids,
+            seq_lens=seq_lens_list,
+        ))
+        try:
+            out = self.hf_model(
+                input_ids=dummy_ids,
+                inputs_embeds=inputs_embeds,
+                attention_mask=None,
+                point_clouds=None,
+                use_cache=False,
+                return_dict=True,
+            )
+        finally:
+            clear_forward_context()
+
+        logits = out.logits  # [1, total_tokens, vocab]
+        last_positions = [sum(seq_lens_list[:i+1]) - 1 for i in range(len(all_seqs))]
+        idx = torch.tensor(last_positions, dtype=torch.long, device=device)
+        return logits[0, idx, :].float().argmax(dim=-1).tolist()
+
     def run(self, seqs: list[PointLLMSequence], is_prefill: bool) -> list[int]:
         if is_prefill:
             return self.run_prefill(seqs)

@@ -157,3 +157,9 @@ def test_varlen_attention_single_decode():
     actual = F.scaled_dot_product_attention(q_tok, ki_gathered, vi_gathered, is_causal=False)
 
     torch.testing.assert_close(actual, expected)
+
+
+def test_run_mixed_method_exists():
+    """run_mixed method must exist on PagedModelRunner."""
+    from nanopointllm.engine import paged_model_runner as pmr
+    assert hasattr(pmr.PagedModelRunner, "run_mixed"), "run_mixed method must exist"

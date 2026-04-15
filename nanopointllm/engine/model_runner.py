@@ -304,6 +304,24 @@ class PointLLMModelRunner:
             logits = logits[:, -1, :]
         return logits.float().argmax(dim=-1).tolist()
 
+    def run_mixed(
+        self,
+        prefill_seqs: list[PointLLMSequence],
+        decode_seqs: list[PointLLMSequence],
+    ) -> list[int]:
+        """
+        Handle mixed prefill + decode batch.
+        Non-paged runner processes them separately and combines results.
+        Returns one next token_id per sequence (prefill_seqs first, then decode_seqs).
+        Delegates to self.run() so that monkeypatching run() still works.
+        """
+        results: list[int] = []
+        if prefill_seqs:
+            results.extend(self.run(prefill_seqs, is_prefill=True))
+        if decode_seqs:
+            results.extend(self.run(decode_seqs, is_prefill=False))
+        return results
+
     def run(self, seqs: list[PointLLMSequence], is_prefill: bool) -> list[int]:
         if is_prefill:
             return self.run_prefill(seqs)
