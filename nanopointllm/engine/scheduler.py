@@ -16,7 +16,7 @@ class Scheduler:
         self,
         max_num_seqs: int,
         max_num_batched_tokens: int,
-        eos_token_id: int,
+        eos_token_id: int = 0,
         block_manager=None,   # Optional[BlockManager]；None = 不做分页 KV 管理（Task 6 前）
     ) -> None:
         self.max_num_seqs = max_num_seqs
@@ -24,7 +24,7 @@ class Scheduler:
         self.eos_token_id = eos_token_id
         self.block_manager = block_manager
         self.waiting: deque[PointLLMSequence] = deque()
-        self.running: deque[PointLLMSequence] = deque()
+        self.running: list[PointLLMSequence] = []
 
     def is_finished(self) -> bool:
         return not self.waiting and not self.running
@@ -32,25 +32,31 @@ class Scheduler:
     def add(self, seq: PointLLMSequence) -> None:
         self.waiting.append(seq)
 
-    def schedule(self) -> tuple[list[PointLLMSequence], bool]:
+    def schedule(self) -> tuple[list[PointLLMSequence], list[PointLLMSequence]]:
         """
-        返回 (scheduled_seqs, is_prefill)。
-        is_prefill=True  → 这批序列需要走 prefill（含点云编码）。
-        is_prefill=False → 这批序列走 decode 步。
+        Returns (prefill_seqs, decode_seqs).
+
+        Prefill seqs: admitted from waiting this step.
+          - block_manager.can_allocate(seq) must pass
+          - token budget: sum(seq.num_tokens - seq.num_cached_tokens) <= max_num_batched_tokens
+          - count: total running seqs <= max_num_seqs
+        Decode seqs: all currently running seqs not being prefilled this step.
+        Both lists may be empty simultaneously only when engine is finished.
         """
         bm = self.block_manager
-
-        # ── Prefill 阶段：从 waiting 拉入新请求 ──
         prefill_seqs: list[PointLLMSequence] = []
-        total_tokens = 0
-        while self.waiting and len(prefill_seqs) < self.max_num_seqs:
+        token_budget = 0
+
+        while self.waiting:
             seq = self.waiting[0]
+            if len(self.running) >= self.max_num_seqs:
+                break
             if bm is not None and not bm.can_allocate(seq):
                 break
-            uncached = seq.num_tokens - seq.num_cached_tokens
-            if total_tokens + uncached > self.max_num_batched_tokens:
+            new_tokens = seq.num_tokens - seq.num_cached_tokens
+            if token_budget + new_tokens > self.max_num_batched_tokens:
                 break
-            total_tokens += uncached
+            token_budget += new_tokens
             self.waiting.popleft()
             if bm is not None:
                 bm.allocate(seq)
@@ -58,19 +64,15 @@ class Scheduler:
             self.running.append(seq)
             prefill_seqs.append(seq)
 
-        if prefill_seqs:
-            return prefill_seqs, True
-
-        # ── Decode 阶段：处理所有 running 序列 ──
-        assert self.running, "schedule() called on empty engine"
-        decode_seqs = list(self.running)
+        prefill_set = set(id(s) for s in prefill_seqs)
+        decode_seqs = [s for s in self.running if id(s) not in prefill_set]
 
         if bm is not None:
             for seq in decode_seqs:
                 if bm.can_append(seq):
                     bm.may_append(seq)
 
-        return decode_seqs, False
+        return prefill_seqs, decode_seqs
 
     def postprocess(
         self,
