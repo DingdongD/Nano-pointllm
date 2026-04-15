@@ -20,9 +20,9 @@ def test_add_and_schedule_prefill():
     s = Scheduler(max_num_seqs=4, max_num_batched_tokens=512, eos_token_id=2)
     seq = _seq(10)
     s.add(seq)
-    seqs, is_prefill = s.schedule()
-    assert is_prefill is True
-    assert seq in seqs
+    prefill_seqs, decode_seqs = s.schedule()
+    assert seq in prefill_seqs
+    assert decode_seqs == []
     assert seq.status == SequenceStatus.RUNNING
 
 
@@ -30,19 +30,19 @@ def test_schedule_decode_after_prefill():
     s = Scheduler(max_num_seqs=4, max_num_batched_tokens=512, eos_token_id=2)
     seq = _seq(10)
     s.add(seq)
-    s.schedule()                        # prefill moves seq to running
-    seqs, is_prefill = s.schedule()     # decode: no new requests
-    assert is_prefill is False
-    assert seq in seqs
+    s.schedule()                                    # prefill moves seq to running
+    prefill_seqs, decode_seqs = s.schedule()        # decode: no new requests
+    assert prefill_seqs == []
+    assert seq in decode_seqs
 
 
 def test_max_num_seqs_respected():
     s = Scheduler(max_num_seqs=2, max_num_batched_tokens=512, eos_token_id=2)
     for _ in range(5):
         s.add(_seq(10))
-    seqs, is_prefill = s.schedule()
-    assert is_prefill is True
-    assert len(seqs) <= 2
+    prefill_seqs, decode_seqs = s.schedule()
+    assert len(prefill_seqs) <= 2
+    assert decode_seqs == []
 
 
 def test_max_num_batched_tokens_respected():
