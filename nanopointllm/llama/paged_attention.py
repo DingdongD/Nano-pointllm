@@ -99,10 +99,9 @@ def _store_kvcache_pytorch(
 
 class PagedLlamaAttention(nn.Module):
     """
-    Drop-in replacement for HF LlamaAttention.
-    Reads routing info from thread-local ForwardContext.
-    Prefill: dense causal sdpa (handles left-padded batches via attention_mask).
-    Decode: gather K/V from block_tables, per-sequence sdpa.
+    Paged attention: unified varlen forward — QKV projected over all tokens at once,
+    KV written to physical pool via store_kvcache, then per-sequence SDPA gathering
+    full K/V history from the pool. is_causal=(q_len > 1) handles prefill vs decode.
     """
 
     @classmethod
@@ -158,6 +157,8 @@ class PagedLlamaAttention(nn.Module):
         # Per-sequence SDPA reading full K/V history from pool
         block_size = self.k_cache.shape[1]
         seq_outs, q_offset = [], 0
+        if not ctx.seq_lens:
+            return self.o_proj(hidden_states.new_zeros(1, 0, H * D)), None
         for i, q_len in enumerate(ctx.seq_lens):
             ctx_len  = int(ctx.context_lens[i])
             num_blks = (ctx_len + block_size - 1) // block_size
@@ -171,7 +172,9 @@ class PagedLlamaAttention(nn.Module):
 
             oi = F.scaled_dot_product_attention(
                 qi, ki, vi,
-                is_causal=(q_len > 1),   # True for prefill, False for decode
+                # is_causal is correct only when ctx_len == q_len (no cached prefix).
+                # Partial-prefix prefill is not supported in Phase 2.
+                is_causal=(q_len > 1),
                 scale=self.scaling,
             )  # [1, H, q_len, D]
             seq_outs.append(oi.squeeze(0).permute(1, 0, 2).reshape(q_len, H * D))

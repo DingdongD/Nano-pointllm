@@ -123,11 +123,12 @@ def _fill_kv_cache(k_cache, v_cache, block_table, token_kvs_k, token_kvs_v, bloc
 
 def test_varlen_attention_single_decode():
     """
-    Single decode seq: KV gather logic from pool matches direct construction.
+    KV gather from block pool matches direct construction.
+    Verifies the block-table gather logic is correct.
     """
     device = torch.device("cpu")
     H, Hkv, D = 4, 2, 8
-    ctx_len = 5   # existing KV history length
+    ctx_len = 5
     block_size = 4
     num_blocks = 4
 
@@ -136,25 +137,23 @@ def test_varlen_attention_single_decode():
     torch.manual_seed(0)
     kv_k = torch.randn(ctx_len, Hkv, D)
     kv_v = torch.randn(ctx_len, Hkv, D)
-    block_table = [0, 1]  # blocks 0 and 1 hold our tokens (4+1)
+    block_table = [0, 1]
     _fill_kv_cache(k_cache, v_cache, block_table, kv_k, kv_v, block_size)
 
-    # New decode query (1 token)
-    q_tok = torch.randn(1, H, 1, D)   # [1, H, 1, D]
+    q_tok = torch.randn(1, H, 1, D)
 
-    # Gather from pool using the same logic as PagedLlamaAttention
+    # Expected: SDPA directly from original kv tensors (no cache involved)
+    ki_direct = kv_k.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
+    vi_direct = kv_v.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
+    expected = F.scaled_dot_product_attention(q_tok, ki_direct, vi_direct, is_causal=False)
+
+    # Actual: gather from cache using block table
     num_blks = (ctx_len + block_size - 1) // block_size
     bt_valid = block_table[:num_blks]
-    k_full = k_cache[bt_valid].reshape(-1, Hkv, D)[:ctx_len]   # [ctx_len, Hkv, D]
+    k_full = k_cache[bt_valid].reshape(-1, Hkv, D)[:ctx_len]
     v_full = v_cache[bt_valid].reshape(-1, Hkv, D)[:ctx_len]
-
-    ki = k_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)  # [1,H,ctx_len,D]
-    vi = v_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
-
-    # Reference: direct SDPA with the gathered KV
-    expected = F.scaled_dot_product_attention(q_tok, ki, vi, is_causal=False)
-
-    # Gathered result must match expected
-    actual = F.scaled_dot_product_attention(q_tok, ki, vi, is_causal=False)
+    ki_gathered = k_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
+    vi_gathered = v_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
+    actual = F.scaled_dot_product_attention(q_tok, ki_gathered, vi_gathered, is_causal=False)
 
     torch.testing.assert_close(actual, expected)
