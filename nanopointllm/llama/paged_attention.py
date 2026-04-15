@@ -14,6 +14,8 @@ import torch.nn.functional as F
 import triton
 import triton.language as tl
 
+from nanopointllm.engine.forward_context import get_forward_context
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Triton kernel: scatter K/V into physical pool slots
@@ -136,53 +138,44 @@ class PagedLlamaAttention(nn.Module):
         past_key_values=None,
         **kwargs,
     ) -> tuple:
-        from nanopointllm.engine.forward_context import get_forward_context
         ctx = get_forward_context()
-        B, S, _ = hidden_states.shape
+        _, S, _ = hidden_states.shape   # shape is [1, total_tokens, hidden]
         H, Hkv, D = self.num_heads, self.num_kv_heads, self.head_dim
 
-        # QKV → [B, H, S, D] for RoPE
-        q = self.q_proj(hidden_states).view(B, S, H,   D).transpose(1, 2)
-        k = self.k_proj(hidden_states).view(B, S, Hkv, D).transpose(1, 2)
-        v = self.v_proj(hidden_states).view(B, S, Hkv, D).transpose(1, 2)
+        # QKV projections — single pass over total_tokens
+        q = self.q_proj(hidden_states).view(1, S, H,   D).transpose(1, 2)  # [1, H, S, D]
+        k = self.k_proj(hidden_states).view(1, S, Hkv, D).transpose(1, 2)
+        v = self.v_proj(hidden_states).view(1, S, Hkv, D).transpose(1, 2)
 
         cos, sin = position_embeddings
-        q, k = self.rotary_fn(q, k, cos, sin)  # unsqueeze_dim=1 default
+        q, k = self.rotary_fn(q, k, cos, sin)
 
-        # Write new K/V into physical pool
-        k_store = k.transpose(1, 2).reshape(B * S, Hkv, D).contiguous()
-        v_store = v.transpose(1, 2).reshape(B * S, Hkv, D).contiguous()
+        # Write all new K/V to physical pool (slot=-1 positions are skipped)
+        k_store = k.transpose(1, 2).reshape(S, Hkv, D).contiguous()
+        v_store = v.transpose(1, 2).reshape(S, Hkv, D).contiguous()
         store_kvcache(k_store, v_store, self.k_cache, self.v_cache, ctx.slot_mapping)
 
-        if ctx.block_tables is None:
-            k_exp = k.repeat_interleave(self.num_kv_groups, dim=1)
-            v_exp = v.repeat_interleave(self.num_kv_groups, dim=1)
-            attn_out = F.scaled_dot_product_attention(
-                q, k_exp, v_exp,
-                attn_mask=attention_mask,
-                is_causal=(attention_mask is None),
-                scale=self.scaling,
-            )
-            out = attn_out.transpose(1, 2).reshape(B, S, H * D)
-        else:
-            block_tables = ctx.block_tables
-            context_lens = ctx.context_lens
-            block_size = self.k_cache.shape[1]
-            seq_outs = []
-            for i in range(B):
-                ctx_len = int(context_lens[i])
-                num_blks = (ctx_len + block_size - 1) // block_size
-                bt = block_tables[i, :num_blks]
-                k_full = self.k_cache[bt].reshape(-1, Hkv, D)[:ctx_len]
-                v_full = self.v_cache[bt].reshape(-1, Hkv, D)[:ctx_len]
-                qi = q[i:i+1]
-                ki = k_full.transpose(0, 1).unsqueeze(0)
-                vi = v_full.transpose(0, 1).unsqueeze(0)
-                ki = ki.repeat_interleave(self.num_kv_groups, dim=1)
-                vi = vi.repeat_interleave(self.num_kv_groups, dim=1)
-                oi = F.scaled_dot_product_attention(qi, ki, vi, scale=self.scaling)
-                seq_outs.append(oi)
-            attn_out = torch.cat(seq_outs, dim=0)
-            out = attn_out.transpose(1, 2).reshape(B, 1, H * D)
+        # Per-sequence SDPA reading full K/V history from pool
+        block_size = self.k_cache.shape[1]
+        seq_outs, q_offset = [], 0
+        for i, q_len in enumerate(ctx.seq_lens):
+            ctx_len  = int(ctx.context_lens[i])
+            num_blks = (ctx_len + block_size - 1) // block_size
+            bt       = ctx.block_tables[i, :num_blks]                          # valid blocks only
+            k_full   = self.k_cache[bt].reshape(-1, Hkv, D)[:ctx_len]         # [ctx_len, Hkv, D]
+            v_full   = self.v_cache[bt].reshape(-1, Hkv, D)[:ctx_len]
 
+            qi = q[0, :, q_offset:q_offset+q_len, :].unsqueeze(0)             # [1, H, q_len, D]
+            ki = k_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(self.num_kv_groups, 1)
+            vi = v_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(self.num_kv_groups, 1)
+
+            oi = F.scaled_dot_product_attention(
+                qi, ki, vi,
+                is_causal=(q_len > 1),   # True for prefill, False for decode
+                scale=self.scaling,
+            )  # [1, H, q_len, D]
+            seq_outs.append(oi.squeeze(0).permute(1, 0, 2).reshape(q_len, H * D))
+            q_offset += q_len
+
+        out = torch.cat(seq_outs).unsqueeze(0)   # [1, total_tokens, H*D]
         return self.o_proj(out), None

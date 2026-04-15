@@ -54,29 +54,43 @@ def _make_caches(H: int, D: int, num_blocks: int = 8, block_size: int = 4):
 
 
 def test_prefill_parity_vs_dense_sdpa():
-    """PagedLlamaAttention prefill must match dense causal sdpa."""
+    """PagedLlamaAttention prefill (varlen) must match per-seq causal sdpa."""
     from nanopointllm.llama.paged_attention import PagedLlamaAttention
 
-    B, S, H, D = 2, 6, 4, 8
+    # Two prefill sequences each of length S=6, using varlen API
+    # hidden_states is [1, total_tokens, hidden] = [1, 12, hidden]
+    num_seqs, S, H, D = 2, 6, 4, 8
     hidden = H * D
-    hf_attn = _make_fake_hf_attn(B, S, H, D)
-    k_cache, v_cache = _make_caches(H, D)
+    total_tokens = num_seqs * S
+    hf_attn = _make_fake_hf_attn(num_seqs, S, H, D)
+    k_cache, v_cache = _make_caches(H, D, num_blocks=8, block_size=4)
 
     paged = PagedLlamaAttention.from_hf(hf_attn, k_cache, v_cache)
 
     torch.manual_seed(0)
-    hidden_states = torch.randn(B, S, hidden)
-    cos = torch.ones(1, S, D)
-    sin = torch.zeros(1, S, D)
+    # Flat [1, 12, hidden]: seq0 tokens then seq1 tokens
+    hidden_states = torch.randn(1, total_tokens, hidden)
+    cos = torch.ones(1, total_tokens, D)
+    sin = torch.zeros(1, total_tokens, D)
 
-    # slot_mapping: B*S slots
-    # seq0: slots 0..5 (block 0 has 4 slots, block 1 has slots 4..5→4,5)
-    # seq1: slots 8..13 (block 2 slots 8..11, block 3 slots 12,13)
+    # slot_mapping: seq0 → slots 0..5 (block 0: off 0-3, block 1: off 0-1)
+    #              seq1 → slots 8..13 (block 2: off 0-3, block 3: off 0-1)
     slots = torch.cat([
         torch.arange(6, dtype=torch.int32),
         torch.arange(8, 14, dtype=torch.int32),
     ])
-    ctx = ForwardContext(slot_mapping=slots, block_tables=None, context_lens=None, seq_lens=[S, S])
+    # block_tables[i] = physical block indices for seq i
+    # seq0: blocks 0,1 (slots 0-3 in blk0, slots 4-5 in blk1)
+    # seq1: blocks 2,3 (slots 8-11 in blk2, slots 12-13 in blk3)
+    block_tables = torch.tensor([[0, 1], [2, 3]], dtype=torch.int32)
+    context_lens = torch.tensor([S, S], dtype=torch.int32)
+
+    ctx = ForwardContext(
+        slot_mapping=slots,
+        block_tables=block_tables,
+        context_lens=context_lens,
+        seq_lens=[S, S],
+    )
     set_forward_context(ctx)
 
     try:
@@ -84,15 +98,20 @@ def test_prefill_parity_vs_dense_sdpa():
     finally:
         clear_forward_context()
 
-    # Reference: dense causal sdpa
+    # Reference: per-seq causal sdpa on each seq independently
+    ref_outs = []
     with torch.no_grad():
-        q = hf_attn.q_proj(hidden_states).view(B, S, H, D).transpose(1, 2)  # [B,H,S,D]
-        k = hf_attn.k_proj(hidden_states).view(B, S, H, D).transpose(1, 2)
-        v = hf_attn.v_proj(hidden_states).view(B, S, H, D).transpose(1, 2)
-        ref_attn = F.scaled_dot_product_attention(q, k, v, is_causal=True, scale=D**-0.5)
-        ref_out = hf_attn.o_proj(ref_attn.transpose(1, 2).reshape(B, S, H * D))
+        for i in range(num_seqs):
+            hs_i = hidden_states[0, i*S:(i+1)*S, :].unsqueeze(0)  # [1, S, hidden]
+            q_i = hf_attn.q_proj(hs_i).view(1, S, H, D).transpose(1, 2)
+            k_i = hf_attn.k_proj(hs_i).view(1, S, H, D).transpose(1, 2)
+            v_i = hf_attn.v_proj(hs_i).view(1, S, H, D).transpose(1, 2)
+            oi = F.scaled_dot_product_attention(q_i, k_i, v_i, is_causal=True, scale=D**-0.5)
+            ref_outs.append(hf_attn.o_proj(oi.transpose(1, 2).reshape(1, S, H * D)))
+    # Concatenate into [1, total_tokens, hidden]
+    ref_out = torch.cat([r.squeeze(0) for r in ref_outs], dim=0).unsqueeze(0)
 
-    assert out_paged.shape == ref_out.shape
+    assert out_paged.shape == ref_out.shape, f"shape mismatch: {out_paged.shape} vs {ref_out.shape}"
     assert torch.allclose(out_paged, ref_out, atol=1e-5), \
         f"max diff = {(out_paged - ref_out).abs().max()}"
 

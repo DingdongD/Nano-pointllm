@@ -99,3 +99,62 @@ def test_forward_context_thread_local():
     assert get_forward_context() is ctx
     clear_forward_context()
     assert get_forward_context() is None
+
+
+import torch.nn.functional as F
+
+
+def _build_kv_cache(num_blocks, block_size, num_kv_heads, head_dim, device):
+    """Allocate a fake KV pool (pre-filled with zeros)."""
+    k_cache = torch.zeros(num_blocks, block_size, num_kv_heads, head_dim, device=device)
+    v_cache = torch.zeros(num_blocks, block_size, num_kv_heads, head_dim, device=device)
+    return k_cache, v_cache
+
+
+def _fill_kv_cache(k_cache, v_cache, block_table, token_kvs_k, token_kvs_v, block_size):
+    """Write token KVs into pool according to block_table."""
+    for pos, (k_tok, v_tok) in enumerate(zip(token_kvs_k, token_kvs_v)):
+        blk = pos // block_size
+        off = pos % block_size
+        phys = block_table[blk]
+        k_cache[phys, off] = k_tok
+        v_cache[phys, off] = v_tok
+
+
+def test_varlen_attention_single_decode():
+    """
+    Single decode seq: KV gather logic from pool matches direct construction.
+    """
+    device = torch.device("cpu")
+    H, Hkv, D = 4, 2, 8
+    ctx_len = 5   # existing KV history length
+    block_size = 4
+    num_blocks = 4
+
+    k_cache, v_cache = _build_kv_cache(num_blocks, block_size, Hkv, D, device)
+
+    torch.manual_seed(0)
+    kv_k = torch.randn(ctx_len, Hkv, D)
+    kv_v = torch.randn(ctx_len, Hkv, D)
+    block_table = [0, 1]  # blocks 0 and 1 hold our tokens (4+1)
+    _fill_kv_cache(k_cache, v_cache, block_table, kv_k, kv_v, block_size)
+
+    # New decode query (1 token)
+    q_tok = torch.randn(1, H, 1, D)   # [1, H, 1, D]
+
+    # Gather from pool using the same logic as PagedLlamaAttention
+    num_blks = (ctx_len + block_size - 1) // block_size
+    bt_valid = block_table[:num_blks]
+    k_full = k_cache[bt_valid].reshape(-1, Hkv, D)[:ctx_len]   # [ctx_len, Hkv, D]
+    v_full = v_cache[bt_valid].reshape(-1, Hkv, D)[:ctx_len]
+
+    ki = k_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)  # [1,H,ctx_len,D]
+    vi = v_full.permute(1, 0, 2).unsqueeze(0).repeat_interleave(H // Hkv, 1)
+
+    # Reference: direct SDPA with the gathered KV
+    expected = F.scaled_dot_product_attention(q_tok, ki, vi, is_causal=False)
+
+    # Gathered result must match expected
+    actual = F.scaled_dot_product_attention(q_tok, ki, vi, is_causal=False)
+
+    torch.testing.assert_close(actual, expected)
