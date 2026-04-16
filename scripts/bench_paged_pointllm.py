@@ -126,14 +126,23 @@ def bench_continuous(
     Benchmark continuous batching: submit total_requests with max_num_seqs=window.
     When window < total_requests, some steps will have mixed prefill+decode.
 
+    To guarantee mixed steps, sequences get staggered max_tokens (half at
+    decode_steps // 2, half at decode_steps) so the first sub-batch finishes
+    while the second sub-batch is still waiting — forcing a mixed step when the
+    new prefill is admitted.
+
     Returns throughput metrics plus the fraction of steps that were truly mixed.
     """
-    sp  = SamplingParams(max_tokens=decode_steps, ignore_eos=True)
     pcs = [make_fake_point_cloud(device, dtype) for _ in range(total_requests)]
-    reqs = [
-        {"token_ids": token_ids, "point_clouds": pc, "sampling_params": sp}
-        for pc in pcs
-    ]
+    reqs = []
+    for i, pc in enumerate(pcs):
+        # Stagger lifetimes: even-indexed seqs run for decode_steps // 2,
+        # odd-indexed seqs run for decode_steps. This guarantees that when an
+        # even seq finishes mid-flight, a waiting seq gets admitted while
+        # odd seqs are still decoding → truly mixed step.
+        mt = decode_steps // 2 if i % 2 == 0 else decode_steps
+        sp = SamplingParams(max_tokens=mt, ignore_eos=True)
+        reqs.append({"token_ids": token_ids, "point_clouds": pc, "sampling_params": sp})
 
     def _run() -> tuple[float, float, int, float]:
         engine = PointLLMLLMEngine(
@@ -170,7 +179,9 @@ def bench_continuous(
         total_decode_steps = sum(1 for p, d in step_log if d > 0)
         mixed_steps = sum(1 for p, d in step_log if p > 0 and d > 0)
         mixed_frac = mixed_steps / max(total_decode_steps, 1)
-        total_tokens = total_requests * decode_steps
+        # Half of reqs run decode_steps//2, half run decode_steps
+        half = total_requests // 2
+        total_tokens = half * (decode_steps // 2) + (total_requests - half) * decode_steps
         return (t1 - t0) * 1000, (t2 - t1) * 1000, total_tokens, mixed_frac
 
     with torch.inference_mode():
