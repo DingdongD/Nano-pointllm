@@ -69,8 +69,12 @@ def test_may_append_allocates_new_block():
     assert len(seq.block_table) == 2
 
 
-def test_prefix_cache_reuse():
-    """相同 prompt prefix 的两个请求应复用 cache block。"""
+def test_prefix_cache_no_same_step_sharing():
+    """
+    Two text-only seqs with the same token_ids allocated in the SAME scheduling
+    step must NOT share blocks.  Their KV data hasn't been written yet, so reusing
+    in-flight blocks would read stale/zero values.
+    """
     bm = BlockManager(num_blocks=10, block_size=4)
     tokens = list(range(8))
     seq1 = PointLLMSequence(token_ids=list(tokens))
@@ -79,11 +83,36 @@ def test_prefix_cache_reuse():
     bm.allocate(seq1)
     bm.allocate(seq2)
 
-    # 两个序列的完整 block 都相同，至少一个 block 应被复用（ref_count>=2）
-    shared = False
-    for bid in seq1.block_table:
-        block = bm.blocks[bid]
-        if block.hash != -1 and block.ref_count >= 2:
-            shared = True
-            break
-    assert shared, "No prefix cache block shared between identical sequences"
+    assert seq1.block_table != seq2.block_table, (
+        "Same-step seqs must not share blocks (KV not written yet)"
+    )
+    assert seq2.num_cached_tokens == 0, (
+        "Seq allocated in same step as its prefix source must not be marked cached"
+    )
+
+
+def test_prefix_cache_cross_request_reuse():
+    """
+    A text-only seq whose blocks have been deallocated (KV data written + seq
+    finished) should be reused as prefix cache for a new seq with the same tokens.
+    """
+    bm = BlockManager(num_blocks=10, block_size=4)
+    tokens = list(range(8))
+    seq1 = PointLLMSequence(token_ids=list(tokens))
+    seq2 = PointLLMSequence(token_ids=list(tokens))
+
+    bm.allocate(seq1)
+    seq1_blocks = list(seq1.block_table)  # save before dealloc clears it
+    # Simulate seq1 finishing: blocks go back to free list with hashes intact
+    bm.deallocate(seq1)
+
+    # seq1's blocks are now free — seq2 should find them via prefix cache
+    bm.allocate(seq2)
+
+    assert seq2.num_cached_tokens == 8, (
+        f"Expected 8 cached tokens from cross-request prefix cache, "
+        f"got {seq2.num_cached_tokens}"
+    )
+    assert seq2.block_table == seq1_blocks, (
+        "Cross-request prefix cache should reuse the same physical blocks"
+    )

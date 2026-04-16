@@ -40,6 +40,10 @@ class PointLLMSequence:
         self.block_table: list[int] = []
         self.num_cached_tokens: int = 0
 
+        # Multimodal seqs must not share KV blocks via prefix cache:
+        # same token_ids can produce different embeddings (different point clouds).
+        self.disable_prefix_cache: bool = point_clouds is not None
+
     @property
     def num_tokens(self) -> int:
         return len(self.token_ids)

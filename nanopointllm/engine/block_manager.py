@@ -57,9 +57,8 @@ class BlockManager:
 
     def _deallocate_block(self, block_id: int) -> None:
         assert self.blocks[block_id].ref_count == 0
-        block = self.blocks[block_id]
-        if block.hash != -1:
-            self.hash_to_block_id.pop(block.hash, None)
+        # Keep hash in hash_to_block_id so future text-only seqs can reuse
+        # completed blocks via prefix cache (matches nano-vllm behaviour).
         self.used_block_ids.discard(block_id)
         self.free_block_ids.add(block_id)
 
@@ -70,9 +69,21 @@ class BlockManager:
         return len(self.free_block_ids) >= self._num_blocks_for(seq)
 
     def allocate(self, seq: PointLLMSequence) -> None:
-        """Prefill 调度时调用；尝试 prefix cache 命中，否则新分配。"""
+        """Prefill 调度时调用；尝试 prefix cache 命中，否则新分配。
+
+        Multimodal seqs (disable_prefix_cache=True) always get fresh blocks:
+        same token_ids + different point clouds → different embeddings → wrong KV if shared.
+        """
         assert not seq.block_table
         n_blocks = self._num_blocks_for(seq)
+
+        if getattr(seq, "disable_prefix_cache", False):
+            for _ in range(n_blocks):
+                bid = next(iter(self.free_block_ids))
+                self._allocate_block(bid)
+                seq.block_table.append(bid)
+            return
+
         h = -1
         cache_miss = False
         for i in range(n_blocks):
@@ -87,15 +98,16 @@ class BlockManager:
                 not cache_miss
                 and h_new != -1
                 and block_id_cached != -1
+                # Only reuse FREE (completed) blocks — blocks in used_block_ids
+                # are being actively prefilled and their KV data is not yet written.
+                # Sharing an in-flight block would read stale/zero KV values.
+                and block_id_cached in self.free_block_ids
                 and self.blocks[block_id_cached].token_ids == chunk
             ):
-                # Prefix cache 命中：复用
+                # Prefix cache 命中：复用已完成序列的 KV 块
                 seq.num_cached_tokens += self.block_size
                 bid = block_id_cached
-                if bid in self.used_block_ids:
-                    self.blocks[bid].ref_count += 1
-                else:
-                    self._allocate_block(bid)
+                self._allocate_block(bid)
             else:
                 cache_miss = True
                 bid = next(iter(self.free_block_ids))
