@@ -9,6 +9,7 @@ import struct
 
 import numpy as np
 
+from nanopointllm.engine.prefix_cache import PrefixCacheIndex
 from nanopointllm.engine.sequence import PointLLMSequence
 
 
@@ -36,6 +37,7 @@ class BlockManager:
         self.block_size = block_size
         self.blocks: list[Block] = [Block(i) for i in range(num_blocks)]
         self.hash_to_block_id: dict[int, int] = {}
+        self.prefix_cache = PrefixCacheIndex(self.hash_to_block_id)
         self.free_block_ids: set[int] = set(range(num_blocks))
         self.used_block_ids: set[int] = set()
 
@@ -93,7 +95,7 @@ class BlockManager:
             is_full = len(chunk) == self.block_size
             h_new = self.compute_hash(chunk, h) if is_full else -1
 
-            block_id_cached = self.hash_to_block_id.get(h_new, -1)
+            block_id_cached = self.prefix_cache.lookup(h_new) if h_new != -1 else -1
             if (
                 not cache_miss
                 and h_new != -1
@@ -114,7 +116,7 @@ class BlockManager:
                 block = self._allocate_block(bid)
                 if h_new != -1:
                     block.update(h_new, chunk)
-                    self.hash_to_block_id[h_new] = bid
+                    self.prefix_cache.insert(h_new, bid)
 
             h = h_new
             seq.block_table.append(bid)
@@ -129,31 +131,50 @@ class BlockManager:
         seq.block_table.clear()
 
     def can_append(self, seq: PointLLMSequence) -> bool:
-        """新 token 是否需要新 block，以及是否有空闲 block。"""
-        needs_new_block = (seq.num_tokens % self.block_size) == 0
+        """当前 decode 输入 token 是否需要新 block，以及是否有空闲 block。
+
+        ``postprocess`` 会先把上一步采样出的 token 追加到 ``seq``，下一轮
+        decode 需要为这个 last_token 写 KV。当 token 数模 block_size 为 1
+        时，这个 last_token 正好位于新 block 的第一个 slot，必须先分配块。
+        """
+        needs_new_block = (seq.num_tokens % self.block_size) == 1
         return not needs_new_block or len(self.free_block_ids) >= 1
 
     def may_append(self, seq: PointLLMSequence) -> None:
         """
         Decode 前元数据维护：
-        - 若需要新 block（token 数是 block_size 的整倍数），分配之
-        - 若前一个 block 刚好填满，写入 hash 供 prefix cache
+        - 若当前 last_token 落在新 block 第一格，分配新物理块
+        - 若当前 last_token 填满一个 block，写入 hash 供 prefix cache
         """
-        n_tokens = seq.num_tokens
-        n_blocks_needed = (n_tokens + self.block_size - 1) // self.block_size
-        if n_blocks_needed > len(seq.block_table):
+        block_table = seq.block_table
+        if seq.num_tokens % self.block_size == 1:
+            if (
+                not getattr(seq, "disable_prefix_cache", False)
+                and block_table
+                and self.blocks[block_table[-1]].hash == -1
+            ):
+                raise AssertionError("previous full block must be hashable before append")
             bid = next(iter(self.free_block_ids))
             self._allocate_block(bid)
-            seq.block_table.append(bid)
-        # 如果前一个 block 刚好满了，写入 hash
-        last_idx = len(seq.block_table) - 2
-        if last_idx >= 0 and (n_tokens - 1) % self.block_size == 0:
-            prev_bid = seq.block_table[last_idx]
-            block = self.blocks[prev_bid]
-            if block.hash == -1:
-                chunk_start = last_idx * self.block_size
-                chunk = seq.token_ids[chunk_start: chunk_start + self.block_size]
-                prev_hash = self.blocks[seq.block_table[last_idx - 1]].hash if last_idx > 0 else -1
-                h = self.compute_hash(chunk, prev_hash)
-                block.update(h, chunk)
-                self.hash_to_block_id[h] = prev_bid
+            block_table.append(bid)
+            return
+
+        if seq.num_tokens % self.block_size != 0:
+            return
+        if getattr(seq, "disable_prefix_cache", False):
+            return
+
+        last_idx = len(block_table) - 1
+        if last_idx < 0:
+            return
+        block = self.blocks[block_table[last_idx]]
+        if block.hash != -1:
+            return
+        chunk_start = last_idx * self.block_size
+        chunk = seq.token_ids[chunk_start: chunk_start + self.block_size]
+        if len(chunk) != self.block_size:
+            return
+        prev_hash = self.blocks[block_table[last_idx - 1]].hash if last_idx > 0 else -1
+        h = self.compute_hash(chunk, prev_hash)
+        block.update(h, chunk)
+        self.prefix_cache.insert(h, block.block_id)

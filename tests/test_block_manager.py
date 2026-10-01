@@ -46,8 +46,9 @@ def test_can_append_same_block():
 
 def test_can_append_needs_new_block():
     bm = BlockManager(num_blocks=2, block_size=4)
-    seq = _seq(4)   # exactly 1 full block
+    seq = _seq(4)   # exactly 1 full block after prefill
     bm.allocate(seq)
+    seq.append_token(99)  # next decode writes token 99 into block 1, offset 0
     assert bm.can_append(seq)  # 1 free block is enough
 
 
@@ -55,7 +56,8 @@ def test_can_append_no_free_blocks():
     bm = BlockManager(num_blocks=1, block_size=4)
     seq = _seq(4)   # uses the only block
     bm.allocate(seq)
-    # next append would cross boundary but no free blocks
+    seq.append_token(99)
+    # next decode would write the appended token into a new block, but none is free
     assert not bm.can_append(seq)
 
 
@@ -64,9 +66,26 @@ def test_may_append_allocates_new_block():
     seq = _seq(4)   # full block
     bm.allocate(seq)
     assert len(seq.block_table) == 1
-    seq.token_ids.append(99)    # simulate new token pushing to next block
+    seq.append_token(99)    # simulate postprocess appending token into next block
     bm.may_append(seq)
     assert len(seq.block_table) == 2
+
+
+def test_may_append_hashes_newly_completed_block():
+    bm = BlockManager(num_blocks=4, block_size=4)
+    seq = _seq(4)
+    bm.allocate(seq)
+    seq.append_token(99)
+    bm.may_append(seq)
+
+    seq.append_token(100)
+    seq.append_token(101)
+    seq.append_token(102)  # second block now has 4 tokens
+    bm.may_append(seq)
+
+    second_block = bm.blocks[seq.block_table[1]]
+    assert second_block.hash != -1
+    assert second_block.token_ids == [99, 100, 101, 102]
 
 
 def test_prefix_cache_no_same_step_sharing():
@@ -116,3 +135,5 @@ def test_prefix_cache_cross_request_reuse():
     assert seq2.block_table == seq1_blocks, (
         "Cross-request prefix cache should reuse the same physical blocks"
     )
+    assert bm.prefix_cache.stats.hits >= 2
+    assert bm.prefix_cache.stats.inserts >= 2

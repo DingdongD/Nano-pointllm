@@ -8,12 +8,15 @@ PointLLMModelRunner：批量 prefill（点云编码 + HF forward）+ padded-KV �
 """
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import torch
 import torch.nn as nn
 
+from nanopointllm.engine.point_feature_cache import PointFeatureCache
 from nanopointllm.engine.hf_hybrid import hf_prefill
+from nanopointllm.engine.sampler import build_sampler
 from nanopointllm.engine.sequence import PointLLMSequence
 from nanopointllm.models.pointllm_wrapper import PointLLMWrapper
 
@@ -162,9 +165,15 @@ def _batch_hf_decode(
 
 class PointLLMModelRunner:
 
-    def __init__(self, hf_model: nn.Module) -> None:
+    def __init__(self, hf_model: nn.Module, point_feature_cache: PointFeatureCache | None = None) -> None:
         self.hf_model = hf_model
         self.wrapper = PointLLMWrapper(hf_model)
+        self.sampler = build_sampler(compile_greedy_cuda=True)
+        if point_feature_cache is None:
+            point_feature_cache = PointFeatureCache(
+                max_entries=int(os.environ.get("NANOPOINTLLM_POINT_FEATURE_CACHE_SIZE", "128"))
+            )
+        self.point_feature_cache = point_feature_cache
 
     def _encode_point_clouds_batch(self, seqs: list[PointLLMSequence]) -> None:
         """
@@ -191,22 +200,45 @@ class PointLLMModelRunner:
         def _to_2d(pc: torch.Tensor) -> torch.Tensor:
             return pc.squeeze(0) if pc.dim() == 3 else pc
 
-        pcs_2d = [_to_2d(seq.point_clouds).to(device) for seq in pending]
-        shapes = {pc.shape for pc in pcs_2d}
+        uncached_seqs: list[PointLLMSequence] = []
+        uncached_pcs: list[torch.Tensor] = []
+        for seq in pending:
+            if seq.point_features_cached is not None:
+                continue
+            key = seq.point_cloud_cache_key
+            if key is None:
+                key = self.wrapper.point_cloud_cache_key(seq.point_clouds)
+                seq.point_cloud_cache_key = key
+            feat = self.point_feature_cache.get(key)
+            if feat is not None:
+                seq.point_features_cached = feat
+                continue
+            pc_2d = _to_2d(seq.point_clouds).to(device)
+            uncached_seqs.append(seq)
+            uncached_pcs.append(pc_2d)
 
-        if len(shapes) == 1:
-            # 全部相同形状 → 单次 backbone forward [B, N, C]
-            stacked = torch.stack(pcs_2d)          # [B, N, C]
-            all_features = self.wrapper.encode_point_clouds(stacked)  # list[B × Tensor]
-        else:
-            # 形状不一致 → 逐条编码（fallback）
-            all_features = [
-                self.wrapper.encode_point_clouds(pc)[0] for pc in pcs_2d
-            ]
+        if uncached_seqs:
+            shapes = {pc.shape for pc in uncached_pcs}
+            if len(shapes) == 1:
+                stacked = torch.stack(uncached_pcs)
+                all_features = self.wrapper.encode_point_clouds(stacked)
+            else:
+                all_features = [self.wrapper.encode_point_clouds(pc)[0] for pc in uncached_pcs]
 
-        for seq, feat in zip(pending, all_features):
+            for seq, feat in zip(uncached_seqs, all_features):
+                seq.point_features_cached = feat
+                assert seq.point_cloud_cache_key is not None
+                self.point_feature_cache.put(seq.point_cloud_cache_key, feat)
+
+        for seq in pending:
             ids = torch.tensor([seq.token_ids], dtype=torch.long, device=device)
-            embeds = self.wrapper.prepare_inputs_embeds(ids, [feat])  # [1, L, H]
+            if seq.input_embed_layout_cached is None:
+                seq.input_embed_layout_cached = self.wrapper.analyze_input_layout(ids[0])
+            embeds = self.wrapper.prepare_inputs_embeds(
+                ids,
+                [seq.point_features_cached],
+                layouts=[seq.input_embed_layout_cached],
+            )  # [1, L, H]
             seq.inputs_embeds_cached = embeds.squeeze(0)              # [L, H]
 
     @torch.inference_mode()
@@ -268,8 +300,7 @@ class PointLLMModelRunner:
         _split_prefill_cache(prefill_out.past_key_values, seqs)
 
         # Greedy 采样
-        logits = prefill_out.logits   # [B, 1, V]
-        return logits[:, -1, :].float().argmax(dim=-1).tolist()
+        return self.sampler(prefill_out.logits, seqs).tolist()
 
     @torch.inference_mode()
     def run_decode(self, seqs: list[PointLLMSequence]) -> list[int]:
@@ -299,10 +330,7 @@ class PointLLMModelRunner:
 
         _split_batched_cache(out.past_key_values, seqs, orig_kv_lens)
 
-        logits = out.logits   # [B, 1, V] 或 [B, V]
-        if logits.dim() == 3:
-            logits = logits[:, -1, :]
-        return logits.float().argmax(dim=-1).tolist()
+        return self.sampler(out.logits, seqs).tolist()
 
     def run_mixed(
         self,

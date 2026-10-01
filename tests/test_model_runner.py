@@ -88,6 +88,41 @@ def test_encode_point_clouds_skips_already_cached():
     assert seq.inputs_embeds_cached is dummy  # unchanged
 
 
+def test_encode_point_clouds_reuses_runner_feature_cache():
+    hf_model = _make_mock_hf_model()
+    calls = {"backbone": 0}
+    orig_backbone = hf_model.model.point_backbone
+
+    def counted_backbone(pcs):
+        calls["backbone"] += 1
+        return orig_backbone(pcs)
+
+    hf_model.model.point_backbone = counted_backbone
+    runner = PointLLMModelRunner(hf_model=hf_model)
+
+    pc = torch.randn(512, 3)
+    seq1 = PointLLMSequence(
+        token_ids=[1] + [PATCH_TOKEN_ID] * NUM_PATCH + [2],
+        point_clouds=pc.clone(),
+        sampling_params=SamplingParams(max_tokens=5),
+    )
+    seq2 = PointLLMSequence(
+        token_ids=[1] + [PATCH_TOKEN_ID] * NUM_PATCH + [2],
+        point_clouds=pc.clone(),
+        sampling_params=SamplingParams(max_tokens=5),
+    )
+
+    runner._encode_point_clouds_batch([seq1])
+    runner._encode_point_clouds_batch([seq2])
+
+    assert calls["backbone"] == 1
+    assert seq1.point_features_cached is not None
+    assert seq2.point_features_cached is not None
+    torch.testing.assert_close(seq1.point_features_cached, seq2.point_features_cached)
+    assert seq2.point_cloud_cache_key in runner.point_feature_cache
+    assert runner.point_feature_cache.stats.hits >= 1
+
+
 def test_run_prefill_sets_past_key_values(monkeypatch):
     """prefill 后每个 seq 应有 past_key_values。"""
     runner = PointLLMModelRunner(hf_model=_make_mock_hf_model())

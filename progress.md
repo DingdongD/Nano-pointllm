@@ -1,0 +1,319 @@
+# Progress Log
+
+## Session: 2026-04-16
+
+### Phase 17: Point Encoder Reuse
+- **Status:** complete
+- Actions taken:
+  - Added `point_features_cached`, `point_cloud_cache_key`, and `input_embed_layout_cached` to `PointLLMSequence`.
+  - Extended `PointLLMWrapper` with value-stable point-cloud hashing, precomputed input splice layouts, and `prepare_inputs_embeds(..., layouts=...)`.
+  - Wired both `PointLLMModelRunner` and `PagedModelRunner` to reuse projected point features across repeated requests inside a persistent runner.
+  - Added parity tests for wrapper layout reuse and runner point-feature cache reuse.
+  - Added `scripts/bench_point_encoder_cache.py` to measure repeated-point-cloud prefill reuse.
+  - Fixed a real benchmark failure where `bfloat16` point clouds could not be hashed through `numpy()`.
+- Files created/modified:
+  - `nanopointllm/engine/sequence.py`
+  - `nanopointllm/models/pointllm_wrapper.py`
+  - `nanopointllm/engine/model_runner.py`
+  - `nanopointllm/engine/paged_model_runner.py`
+  - `tests/test_pointllm_wrapper.py`
+  - `tests/test_model_runner.py`
+  - `scripts/bench_point_encoder_cache.py`
+  - `results/bench_point_encoder_cache_b4_paged.json`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Phase 18: Engine-Level Point Feature Cache
+- **Status:** complete
+- Actions taken:
+  - Added explicit `PointFeatureCache` subsystem with LRU semantics and stats.
+  - Changed padded and paged runners to accept an injected shared point-feature cache instead of silently owning unrelated local caches.
+  - Promoted the cache to `PointLLMLLMEngine`, so one engine/session now shares point features across repeated requests.
+  - Extended `PointLLMLLMEngine.add_request(...)` and `LLM.generate(...)` request dicts with `point_cloud_cache_key` and `point_features_cached`.
+  - Added engine helpers for cache stats and cache clearing.
+  - Added tests for cache subsystem behavior, shared engine wiring, and API passthrough.
+- Files created/modified:
+  - `nanopointllm/engine/point_feature_cache.py`
+  - `nanopointllm/engine/model_runner.py`
+  - `nanopointllm/engine/paged_model_runner.py`
+  - `nanopointllm/engine/llm_engine.py`
+  - `nanopointllm/engine/sequence.py`
+  - `nanopointllm/llm.py`
+  - `tests/test_point_feature_cache.py`
+  - `tests/test_llm_engine_point_cache.py`
+  - `tests/test_llm_api.py`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Phase 19: PointBERT Backbone Hotspot Profiling
+- **Status:** complete
+- Actions taken:
+  - Added `scripts/profile_pointbert_backbone.py` to split PointBERT backbone execution into grouping, local encoder, bridge, per-transformer-block, and tail stages.
+  - Ran real PointLLM-7B profiling on A100 with `B=1, warmup=1, runs=3`.
+  - Ran the same profiler at `B=4` to confirm hotspot ordering under small batching.
+  - Summed transformer-block attention/MLP totals to compare backbone-internal cost centers directly.
+- Files created/modified:
+  - `scripts/profile_pointbert_backbone.py`
+  - `results/profile_pointbert_backbone_b1.json`
+  - `results/profile_pointbert_backbone_b1_w1_r3.json`
+  - `results/profile_pointbert_backbone_b4_w1_r3.json`
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Phase 7: Decode-Only Paged Attention Kernel
+- **Status:** complete
+- Actions taken:
+  - Inspected `PagedLlamaAttention` and confirmed the q_len=1 path can bypass per-sequence SDPA.
+  - Chose a batched Triton kernel over `(sequence, query_head)` with online softmax.
+  - Implemented `paged_decode_attention()` with CUDA Triton fast path and PyTorch fallback.
+  - Routed `PagedLlamaAttention.forward()` to the fast path when every `seq_len` is 1.
+  - Added CUDA GQA parity test against direct SDPA.
+  - Ran real PointLLM-7B B=8 and B=1,2,4,8 benchmarks.
+- Files created/modified:
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+  - `nanopointllm/llama/paged_attention.py`
+  - `tests/test_paged_attention.py`
+  - `results/bench_paged_b8_d32_triton_decode.json`
+  - `results/bench_paged_b1_2_4_8_d32_triton_decode.json`
+
+### Phase 8: Mixed Decode Fast Path And Runtime Gaps
+- **Status:** complete
+- Actions taken:
+  - Extended `PagedLlamaAttention.forward()` to use the Triton decode kernel for q_len=1 rows inside mixed prefill+decode batches.
+  - Added mixed prefill+decode parity test.
+  - Added `GreedySampler` with lazy CUDA `torch.compile` and routed `PointLLMModelRunner` and `PagedModelRunner` through it.
+  - Confirmed `flash_attn` is not installed in `/opt/conda/envs/pointllm`.
+  - Ran full tests and a continuous batching benchmark.
+- Files created/modified:
+  - `nanopointllm/llama/paged_attention.py`
+  - `nanopointllm/engine/sampler.py`
+  - `nanopointllm/engine/model_runner.py`
+  - `nanopointllm/engine/paged_model_runner.py`
+  - `tests/test_paged_attention.py`
+  - `tests/test_sampler.py`
+  - `results/bench_continuous_w4_d32_mixed_triton.json`
+
+### Phase 9: Prefill Varlen Paged Attention Kernel
+- **Status:** complete
+- Actions taken:
+  - Implemented q_len>1 paged varlen Triton attention kernel.
+  - Added CUDA parity test covering GQA, causal prefill, and partial-prefix suffix prefill.
+  - Routed CUDA q_len>1 rows in `PagedLlamaAttention.forward()` through the new varlen kernel while keeping SDPA fallback for CPU.
+  - Ran full tests and PointLLM-7B benchmarks.
+- Files created/modified:
+  - `nanopointllm/llama/paged_attention.py`
+  - `tests/test_paged_attention.py`
+  - `results/bench_paged_b8_d32_varlen_prefill.json`
+  - `results/bench_paged_b1_2_4_8_d32_varlen_prefill.json`
+
+### Phase 10: Kernel Config Tuning
+- **Status:** in_progress
+- Actions taken:
+  - Started head_dim=128 BLOCK_M/BLOCK_N tuning work.
+  - Chose static config selection plus environment overrides rather than runtime search in generation.
+- Files created/modified:
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Phase 6: CUDA Benchmark
+- **Status:** complete
+- Actions taken:
+  - Confirmed 4 idle NVIDIA A100-SXM4-40GB GPUs.
+  - Found PointLLM checkpoints under `/mnt/llm_data/pointllm_ckpt`.
+  - Selected existing benchmark scripts rather than creating a separate benchmark harness.
+  - Default base Python could not initialize CUDA because torch was built for CUDA 13.0 while the driver is CUDA 12.2-era.
+  - Switched to `/opt/conda/envs/pointllm/bin/python` with torch 2.5.1+cu121; CUDA worked.
+  - Ran B=1 smoke benchmark.
+  - Ran padded engine benchmark for B=1,2,4,8.
+  - Ran padded vs paged benchmark for B=1,2,4,8 and continuous batching total=8/window=4.
+- Files created/modified:
+  - `task_plan.md`
+  - `progress.md`
+  - `results/bench_smoke_engine_b1.json`
+  - `results/bench_engine_b1_2_4_8_d32.json`
+  - `results/bench_paged_b1_2_4_8_d32.json`
+
+### Phase 1: Discovery
+- **Status:** complete
+- **Started:** 2026-04-16
+- Actions taken:
+  - Compared the existing framework shape in `nano-pointllm` with `nano-vllm`.
+  - Created persistent planning files for this multi-step change.
+  - Confirmed a paged KV append off-by-one mismatch against `nano-vllm`.
+- Files created/modified:
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Phase 2-4: Design, Implementation, Verification
+- **Status:** complete
+- Actions taken:
+  - Fixed paged KV append block-boundary semantics.
+  - Added paged scheduler preemption on KV block exhaustion.
+  - Made KV pool allocation GQA-aware via `num_key_value_heads`.
+  - Added partial-prefix prefill mask support in paged attention.
+  - Routed paged prefill through flattened varlen `run_mixed`.
+  - Added `nanopointllm.LLM` top-level API wrapper.
+  - Added tests for block boundary allocation, scheduler preemption, GQA KV pool shape, partial-prefix paged attention, and `LLM.generate`.
+- Files created/modified:
+  - `nanopointllm/engine/block_manager.py`
+  - `nanopointllm/engine/scheduler.py`
+  - `nanopointllm/engine/kv_pool.py`
+  - `nanopointllm/engine/paged_model_runner.py`
+  - `nanopointllm/llama/paged_attention.py`
+  - `nanopointllm/llm.py`
+  - `nanopointllm/__init__.py`
+  - `tests/test_block_manager.py`
+  - `tests/test_scheduler.py`
+  - `tests/test_kv_pool.py`
+  - `tests/test_paged_attention.py`
+  - `tests/test_llm_api.py`
+
+## Test Results
+| Test | Input | Expected | Actual | Status |
+|------|-------|----------|--------|--------|
+| Paged framework subset | `python3 -m pytest -q tests/test_block_manager.py tests/test_scheduler.py tests/test_continuous_batching.py tests/test_varlen_paged.py tests/test_paged_attention.py` | Pass | `33 passed in 2.42s` | pass |
+| Expanded framework subset | `python3 -m pytest -q tests/test_llm_api.py tests/test_kv_pool.py tests/test_paged_attention.py tests/test_block_manager.py tests/test_scheduler.py tests/test_continuous_batching.py tests/test_varlen_paged.py` | Pass | `39 passed in 2.58s` | pass |
+| Full suite | `python3 -m pytest -q` | Pass | `78 passed, 1 skipped in 2.71s` | pass |
+| CUDA env smoke | `/opt/conda/envs/pointllm/bin/python -c 'import torch; print(torch.cuda.is_available())'` | CUDA available | `True`, A100 visible | pass |
+| B=1 smoke bench | `bench_engine_pointllm.py --batch_sizes 1 --decode_steps 4 --warmup 0 --runs 1` | Completes on PointLLM-7B | Engine B=1 `36.5 tok/s` for 4-step smoke | pass |
+| Padded batch sweep | `bench_engine_pointllm.py --batch_sizes 1,2,4,8 --decode_steps 32 --warmup 1 --runs 3` | Completes | B=1/2/4/8 TPS: `23.6`, `57.0`, `137.5`, `205.3` | pass |
+| Paged vs padded sweep | `bench_paged_pointllm.py --batch_sizes 1,2,4,8 --decode_steps 32 --warmup 1 --runs 3 --continuous_total 8 --continuous_window 4` | Completes | Paged TPS B=1/2/4/8: `33.3`, `60.2`, `94.1`, `127.2`; continuous TPS `76.1` | pass |
+| Triton decode CUDA parity | `pytest -q tests/test_paged_attention.py::test_decode_only_triton_kernel_parity_gqa_cuda` | Pass | `1 passed in 4.93s` | pass |
+| Triton related tests | `pytest -q tests/test_paged_attention.py tests/test_kv_pool.py tests/test_varlen_paged.py tests/test_block_manager.py tests/test_scheduler.py tests/test_continuous_batching.py` | Pass | `38 passed in 4.34s` | pass |
+| Full suite after Triton kernel | `pytest -q` | Pass | `79 passed, 1 skipped in 4.52s` | pass |
+| Triton paged B=8 bench | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Paged improves | Padded `194.6 tok/s`; paged `237.7 tok/s` | pass |
+| Triton paged batch sweep | `bench_paged_pointllm.py --batch_sizes 1,2,4,8 --decode_steps 32 --warmup 1 --runs 3` | Completes | Paged TPS B=1/2/4/8: `36.3`, `80.0`, `155.1`, `281.9` | pass |
+| Mixed fast path + sampler tests | `pytest -q tests/test_sampler.py tests/test_paged_attention.py tests/test_model_runner.py tests/test_llm_engine.py tests/test_continuous_batching.py` | Pass | `23 passed in 4.14s` | pass |
+| Full suite after mixed/sampler | `pytest -q` | Pass | `82 passed, 1 skipped in 4.93s` | pass |
+| Continuous batching after mixed fast path | `bench_paged_pointllm.py --batch_sizes 4 --continuous_total 8 --continuous_window 4 --decode_steps 32 --warmup 1 --runs 3` | Completes | Continuous TPS `96.3`, mixed step fraction `3.2%` | pass |
+| Varlen prefill CUDA parity | `pytest -q tests/test_paged_attention.py::test_varlen_prefill_triton_kernel_parity_gqa_cuda` | Pass | `1 passed in 5.01s` | pass |
+| Varlen prefill related tests | `pytest -q tests/test_paged_attention.py tests/test_sampler.py tests/test_model_runner.py tests/test_llm_engine.py tests/test_continuous_batching.py` | Pass | `24 passed in 4.77s` | pass |
+| Full suite after varlen prefill | `pytest -q` | Pass | `83 passed, 1 skipped in 4.70s` | pass |
+| Varlen prefill B=8 bench | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Completes | Padded `172.3 tok/s`; paged `263.6 tok/s`; paged prefill `380.8ms` | pass |
+| Varlen prefill batch sweep | `bench_paged_pointllm.py --batch_sizes 1,2,4,8 --decode_steps 32 --warmup 1 --runs 3` | Completes | Paged TPS B=1/2/4/8: `36.8`, `72.8`, `138.3`, `255.6`; B=8 prefill `386.0ms` | pass |
+| Kernel config targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_sampler.py` | Pass | `9 passed in 4.36s` | pass |
+| Full suite after config guards | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `84 passed, 1 skipped in 3.86s` | pass |
+| B=8 tune default | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Completes | `varlen M16/N64`, `decode N64`: padded `158.9 tok/s`, paged `225.9 tok/s`, prefill `380.3ms` | pass |
+| B=8 tune varlen N32 | `NANOPOINTLLM_VARLEN_BLOCK_N=32 bench_paged_pointllm.py ...` | Completes | padded `139.9 tok/s`, paged `246.8 tok/s`, prefill `384.6ms` | pass |
+| B=8 tune varlen N128 | `NANOPOINTLLM_VARLEN_BLOCK_N=128 bench_paged_pointllm.py ...` | Completes | padded `167.5 tok/s`, paged `190.9 tok/s`, prefill `384.9ms` | pass |
+| B=8 tune decode N32 | `NANOPOINTLLM_DECODE_BLOCK_N=32 bench_paged_pointllm.py ...` | Completes | padded `166.1 tok/s`, paged `241.9 tok/s`, prefill `381.7ms` | pass |
+| B=8 tune decode N128 | `NANOPOINTLLM_DECODE_BLOCK_N=128 bench_paged_pointllm.py ...` | Completes | padded `166.4 tok/s`, paged `245.7 tok/s`, prefill `381.3ms` | pass |
+| B=8 tune varlen N32 + decode N128 | `NANOPOINTLLM_VARLEN_BLOCK_N=32 NANOPOINTLLM_DECODE_BLOCK_N=128 bench_paged_pointllm.py ...` | Completes | padded `167.3 tok/s`, paged `242.8 tok/s`, prefill `384.3ms` | pass |
+| Framework scaffold focused tests | `pytest -q tests/test_sampler.py tests/test_metadata_staging.py tests/test_cuda_graph.py tests/test_lightweight_runner.py tests/test_block_manager.py tests/test_scheduler.py` | Pass | `31 passed in 3.01s` | pass |
+| Runner integration after scaffold | `pytest -q tests/test_model_runner.py tests/test_llm_engine.py tests/test_continuous_batching.py tests/test_paged_attention.py tests/test_llm_api.py` | Pass | `25 passed in 4.74s` | pass |
+| Full suite after framework scaffold | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `93 passed, 1 skipped in 3.95s` | pass |
+| B=8 after framework scaffold | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Completes | padded `164.5 tok/s`, paged `250.2 tok/s`, prefill `381.0ms`, decode step `3.998ms` | pass |
+| Strict graph module tests | `pytest -q tests/test_sampler.py tests/test_cuda_graph.py tests/test_lightweight_runner.py tests/test_scheduler.py tests/test_metadata_staging.py` | Pass | `20 passed in 3.34s` | pass |
+| Strict graph runner integration | `pytest -q tests/test_model_runner.py tests/test_llm_engine.py tests/test_continuous_batching.py tests/test_paged_attention.py tests/test_llm_api.py` | Pass | `25 passed in 4.75s` | pass |
+| Full suite after strict graph/sampler changes | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `93 passed, 1 skipped in 4.94s` | pass |
+| Strict CUDA graph B=1 smoke | Direct PointLLM-7B engine step with `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` | Completes | B=1 prefill + decode graph step completed with no fallback | pass |
+| Strict CUDA graph B=8 bench | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Completes | padded `187.8 tok/s`, paged `210.0 tok/s`, paged prefill `381.6ms`, decode step `4.762ms` | pass |
+| Chunked long-prefill bench | `bench_paged_pointllm.py --batch_sizes 1 --target_prompt_len 2048 --max_prefill_chunk_tokens 512 --decode_steps 8 --warmup 0 --runs 1` | Completes | padded prefill `3277.7ms`, paged prefill `1774.7ms`, paged `40.0 tok/s` | pass |
+| Eager B=8 after strict changes | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 32 --warmup 1 --runs 3` | Completes | padded `154.1 tok/s`, paged `268.6 tok/s`, paged prefill `471.4ms`, decode step `3.722ms` | pass |
+| Replay split tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `93 passed, 1 skipped in 4.17s` | pass |
+| Strict graph replay split B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `143.8 tok/s`, replay-only `157.5 tok/s`, first decode/capture included separately | pass |
+| Eager replay split B=8 | `bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `187.3 tok/s`, replay-only `187.4 tok/s` | pass |
+| Sampler fast graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `208.1 tok/s`, replay-only `238.0 tok/s` | pass |
+| Triton lightweight ops graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_TRITON_LIGHTWEIGHT_OPS=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `154.2 tok/s`, replay-only `216.2 tok/s`; slower than default layer ops | pass |
+| Default ops graph replay B=8 after sampler fast | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `205.8 tok/s`, replay-only `235.5 tok/s` | pass |
+| Fused residual RMSNorm graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_FUSED_DECODE_RMSNORM=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 0 --runs 1` | Completes | paged total `211.9 tok/s`, replay-only `244.6 tok/s` | pass |
+| Full suite after sampler/layer overhead pass | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `93 passed, 1 skipped in 4.96s` | pass |
+| Targeted tests after default fused graph residual norm | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_lightweight_runner.py tests/test_sampler.py tests/test_paged_attention.py` | Pass | `14 passed in 4.70s` | pass |
+| Full suite after default fused graph residual norm | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `94 passed, 1 skipped in 4.93s` | pass |
+| Default fused graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | padded total `192.7 tok/s`, replay-only `192.8 tok/s`; paged total `251.4 tok/s`, replay-only `284.7 tok/s` | pass |
+| Decode QKV staging targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `15 passed in 5.85s` | pass |
+| Decode QKV staging graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_DECODE_QKV_INPUT_STAGING=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | paged total `215.4 tok/s`, replay-only `258.4 tok/s`; slower than default graph path | pass |
+| Targeted tests after gating decode QKV staging | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `15 passed in 4.55s` | pass |
+| Default graph replay B=8 after gating decode QKV staging | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | padded total `180.1 tok/s`, replay-only `180.2 tok/s`; paged total `249.2 tok/s`, replay-only `285.7 tok/s` | pass |
+| Packed QKV targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `17 passed in 5.81s` | pass |
+| Packed QKV graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_PACKED_QKV_DECODE=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | paged total `246.3 tok/s`, replay-only `278.8 tok/s`; slower than default graph path | pass |
+| Targeted tests after gating packed QKV | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `17 passed in 4.82s` | pass |
+| Default graph replay B=8 after gating packed QKV | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | padded total `163.1 tok/s`, replay-only `162.9 tok/s`; paged total `253.8 tok/s`, replay-only `285.5 tok/s` | pass |
+| Fused RMSNorm + packed QKV targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `18 passed in 4.70s` | pass |
+| Fused RMSNorm + packed QKV graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_FUSED_RMSNORM_PACKED_QKV=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | paged total `47.7 tok/s`, replay-only `49.4 tok/s`; much slower than default graph path | pass |
+| Full suite after fused RMSNorm + packed QKV experiment | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `98 passed, 1 skipped in 5.18s` | pass |
+| Tiled fused kernel and staged-buffer targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `19 passed in 5.90s` | pass |
+| Tiled fused RMSNorm + packed QKV graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_FUSED_RMSNORM_PACKED_QKV=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | paged total `182.6 tok/s`, replay-only `199.6 tok/s`; improved over the first fused kernel but still slower than default | pass |
+| RMSNorm staged packed QKV graph replay B=8 | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 NANOPOINTLLM_RMSNORM_STAGED_PACKED_QKV=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | paged total `241.0 tok/s`, replay-only `292.9 tok/s`; faster than the previous default graph path | pass |
+| Targeted tests after promoting staged path | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `20 passed in 4.90s` | pass |
+| Default graph replay B=8 after promoting staged path | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | padded total `189.6 tok/s`, replay-only `189.8 tok/s`; paged total `259.6 tok/s`, replay-only `294.1 tok/s` | pass |
+| Full suite after promoting staged path | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `100 passed, 1 skipped in 4.04s` | pass |
+| Output projection + packed gateup targeted tests | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q tests/test_paged_attention.py tests/test_lightweight_runner.py tests/test_sampler.py` | Pass | `22 passed in 5.80s` | pass |
+| Default graph replay B=8 after output/MLP scheduling | `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1 bench_paged_pointllm.py --batch_sizes 8 --decode_steps 64 --warmup 1 --runs 1` | Completes | padded total `195.2 tok/s`, replay-only `195.2 tok/s`; paged total `265.5 tok/s`, replay-only `298.5 tok/s` | pass |
+| Full suite after output/MLP scheduling | `PYTHONPATH=. /opt/conda/envs/pointllm/bin/python -m pytest -q` | Pass | `102 passed, 1 skipped in 5.01s` | pass |
+
+## Error Log
+| Timestamp | Error | Attempt | Resolution |
+|-----------|-------|---------|------------|
+| 2026-04-16 | `allocate_kv_pool` read missing MagicMock config attrs as mock objects | 1 | Accept only integer `num_key_value_heads` / `head_dim`, otherwise fall back to query heads and derived head dim |
+| 2026-04-16 | Base Python reported `CUDA not available`; torch 2.11.0+cu130 incompatible with driver 12020 | 1 | Used `/opt/conda/envs/pointllm/bin/python` with torch 2.5.1+cu121 |
+| 2026-04-16 | `BLOCK_M=8` varlen candidate failed in Triton `tl.dot` compile on PointLLM-7B | 1 | Kept head_dim=128 default at `BLOCK_M=16` and added minimum env override guards |
+| 2026-04-16 | Paged B=8 skipped after pure decode was routed to `run_decode`: invalid reshape from `[B,1]` model input | 1 | Changed decode metadata staging to flattened `[1,B]` input layout |
+| 2026-04-16 | Sampler received one row for B=8 because paged decode logits were `[1,B,V]` | 1 | Sliced paged decode logits to `[B,V]` before per-request sampling |
+| 2026-04-16 | Strict CUDA graph failed inside HF `create_causal_mask` during capture | 1 | Routed graph decode through `LightweightLlamaRunner` instead of HF model-level forward |
+| 2026-04-16 | Strict CUDA graph failed on `context_lens.max().item()` during capture | 2 | Used static block-table upper bound for decode `MAX_CONTEXT_LEN` |
+| 2026-04-16 | Chunked prefill benchmark counted remaining prefill chunks as decode time | 1 | Measured prefill until every request produced its first completion token |
+| 2026-04-16 | Chunked prefill benchmark CLI parsed `--max_prefill_chunk_tokens` but did not pass it into `bench_batch` | 1 | Added the argument to the common benchmark kwargs and reran the long-prefill bench |
+| 2026-04-16 | `torch.compile(lightweight_runner)` produced illegal memory access under strict graph on real PointLLM-7B | 1 | Made lightweight runner compilation explicit opt-in via `NANOPOINTLLM_COMPILE_LIGHTWEIGHT=1`; default stays strict graph without compiled runner |
+| 2026-04-16 | Triton RMSNorm/SiLU-mul lightweight ops were slower than torch ops in graph replay | 1 | Kept them as explicit opt-in via `NANOPOINTLLM_TRITON_LIGHTWEIGHT_OPS=1`; default uses faster measured path |
+
+## 5-Question Reboot Check
+| Question | Answer |
+|----------|--------|
+| Where am I? | Completed delivery |
+| Where am I going? | Ready for optional CUDA/PointLLM-7B validation |
+| What's the goal? | Align `nano-pointllm` closer to `nano-vllm` high-performance inference |
+| What have I learned? | See `findings.md` |
+| What have I done? | Created planning files and recorded initial gaps |
+
+## 2026-09-22: Default Lightweight Eager Decode
+- Started Phase 20 to make the lightweight decoder the default for ordinary paged eager decode.
+- Confirmed current construction is gated by `NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` or `NANOPOINTLLM_PROFILE_LAYERS=1`.
+- Planned an explicit `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` opt-out for HF-path parity/debugging.
+- Implemented default eager lightweight routing while preserving HF prefill/mixed-prefill execution.
+- Made packed MLP decode weights lazy so the plain lightweight route shares HF weights without allocating unused packed copies.
+- Added focused runner-routing and lazy-weight tests plus README usage documentation.
+- Full unit suite passed: `117 passed, 1 skipped`.
+- Real PointLLM-7B 4-token parity: B1 passed, while B4/B8/mixed batches diverged after the shared prefill token, generally leaving only batch row 0 correct. Phase 20 remains in progress pending a batched decode fix.
+- Fixed the actual batched parity bug: explicit `position_ids=None` from PointLLM prevented ForwardContext position injection, so flattened prefill positions did not reset per sequence.
+- Post-fix full suite: `118 passed, 1 skipped`.
+- Post-fix real PointLLM-7B 4-token parity: B1/B4/B8/mixed all passed token-for-token.
+- Same-state lightweight-vs-HF paged decode: logits exactly equal for B1/B4/B8; alternating shared-GPU speedups approximately `1.16x/1.11x/1.10x`.
+- Saved noisy shared-GPU end-to-end benchmark outputs to `results/bench_lightweight_eager_default_b1_b4_b8_d32_sharedgpu.json` and `results/bench_lightweight_eager_hf_fallback_b1_b4_b8_d32_sharedgpu.json`; these are diagnostic only because all GPUs were saturated.
+- Extended 20-token native-HF parity crossed the paged block boundary but showed later BF16/Triton token divergence on some synthetic point clouds. Same-state equality confirms this is outside the lightweight routing change.
+
+## 2026-09-22: End-to-End Performance Diagnostic Suite
+- Started Phase 21 to add a single reproducible benchmark for TTFT, TPOT, tokens/s, prefill/decode splits, shape sweeps, CUDA operator breakdown, KV-cache memory, and HBM diagnostics.
+- Metric outputs will distinguish measured CUDA timings from analytical memory/traffic estimates.
+- Implemented the unified diagnostic benchmark, pure metric helpers, profiling hooks, plots, README command, and focused tests.
+- Corrected profiling semantics so layer profiling no longer selects graph-mode module optimizations for eager decode.
+- Added CUDA events for final norm, LM head, and sampling; external scheduling/Python gaps are separated as `unattributed_timeline_ms` rather than mislabeled as model CUDA work.
+- Full test suite passed: `122 passed, 1 skipped`; artifact validation passed for 8 results, two 32-layer profiles, JSON, and three PNG files.
+- Real outputs written to `results/pointllm_diagnostics_b1_b4_i560_768_o8_32/`.
+- Phase 21 completed with a shared-GPU caveat because all four A100s remained at 100% utilization.
+
+## 2026-09-22: Isolated-GPU Benchmark Methodology
+- Started Phase 22 to make the diagnostic suite suitable for empty-GPU steady-state measurement.
+- Planned explicit cold-start reporting, 10/30 default warmup/run counts, percentile distributions, clock/power telemetry, and representative-only hardware-counter profiling.
+- Implemented per-shape cold runs, model/engine startup timing, 10/30 defaults, and P10/P50/P90/P95 distributions.
+- Added UUID-targeted `nvidia-smi` telemetry plus strict `--require_idle_gpu` validation and sensor-status warnings.
+- Added `profile_pointllm_ncu.py` and `summarize_ncu_pointllm.py`; verified NCU permissions, metrics, duration-weighted CSV parsing, and push/pop NVTX filtering syntax.
+- Added `cold_steady_gpu_telemetry.png` and updated all primary plots to use steady-state medians.
+- Real PointLLM-7B one-shape smoke completed and emitted the expanded JSON/plots under `results/pointllm_diagnostics_phase22_smoke/`; it is marked non-publishable because the GPU was not idle.
+
+## 2026-09-30: Native Paged Runtime And Strict Decoder Roofline
+- Removed the remaining default HF model-level call from paged prefill and mixed continuous batches; all paged LLaMA execution now uses the lightweight runner unless the explicit fallback is selected.
+- Added low-overhead, opt-in NVTX stage ranges around QKV, attention, O projection, MLP, LM head, and sampling.
+- Added per-stage NCU orchestration, traffic/FLOP manifests, roofline fields, and conservative weight-bound evidence rules.
+- Fixed the continuous parity driver so request arrivals are staggered and a real prefill+decode mixed step is mandatory.
+- Corrected real PointLLM-7B mixed-step parity passed all three cases token-for-token, with observed mixed compositions `(1,1)`, `(1,3)`, and `(2,1)`.
+- Full regression after the runtime/profiler changes: `133 passed, 1 skipped`.
+- Added and smoke-tested automatic `stage_bottleneck.png` rendering; the synthetic smoke output was 85,262 bytes.
+- All four A100s were externally occupied at 100% utilization; strict B1/B8 NCU collection remains pending and the idle guard correctly prevents contaminated reports.

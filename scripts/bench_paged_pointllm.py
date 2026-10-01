@@ -44,6 +44,7 @@ def bench_batch(
     runs: int,
     num_kvcache_blocks: int,   # 0 → padded (no paged KV)
     kvcache_block_size: int,
+    max_prefill_chunk_tokens: int | None = None,
 ) -> dict:
     """
     Benchmark one (B, mode) configuration.
@@ -62,7 +63,7 @@ def bench_batch(
         for pc in pcs
     ]
 
-    def _run() -> tuple[float, float, int]:
+    def _run() -> tuple[float, float, int, float, float, int]:
         engine = PointLLMLLMEngine(
             model,
             eos_token_id=eos_token_id,
@@ -70,34 +71,64 @@ def bench_batch(
             max_num_batched_tokens=4096,
             num_kvcache_blocks=num_kvcache_blocks if use_paged else None,
             kvcache_block_size=kvcache_block_size,
+            max_prefill_chunk_tokens=max_prefill_chunk_tokens,
         )
-        for req in reqs:
-            engine.add_request(**req)
+        seqs = [engine.add_request(**req) for req in reqs]
 
         torch.cuda.synchronize(device)
         t0 = time.perf_counter()
-        engine.step()   # prefill
+        while True:
+            engine.step()   # prefill, or several prefill chunks
+            if all(seq.num_completion_tokens > 0 or seq.is_finished for seq in seqs):
+                break
+            if engine.is_finished():
+                break
         torch.cuda.synchronize(device)
         t1 = time.perf_counter()
 
+        first_decode_ms = 0.0
+        replay_decode_ms = 0.0
+        replay_steps = 0
         steps = 0
+        if not engine.is_finished():
+            torch.cuda.synchronize(device)
+            t_first0 = time.perf_counter()
+            engine.step()
+            torch.cuda.synchronize(device)
+            t_first1 = time.perf_counter()
+            first_decode_ms = (t_first1 - t_first0) * 1000
+            steps += 1
+
+        torch.cuda.synchronize(device)
+        t_replay0 = time.perf_counter()
         while not engine.is_finished():
             engine.step()
             steps += 1
         torch.cuda.synchronize(device)
-        t2 = time.perf_counter()
-        return (t1 - t0) * 1000, (t2 - t1) * 1000, steps
+        t_replay1 = time.perf_counter()
+        replay_decode_ms = (t_replay1 - t_replay0) * 1000
+        replay_steps = max(steps - 1, 0)
+        decode_ms = first_decode_ms + replay_decode_ms
+        return (t1 - t0) * 1000, decode_ms, steps, first_decode_ms, replay_decode_ms, replay_steps
 
     with torch.inference_mode():
         for _ in range(warmup):
             _run()
-        pf_list, dc_list, s_list = zip(*[_run() for _ in range(runs)])
+        pf_list, dc_list, s_list, first_list, replay_list, replay_step_list = zip(
+            *[_run() for _ in range(runs)]
+        )
 
     pf_mean = sum(pf_list) / runs
     dc_mean = sum(dc_list) / runs
+    first_mean = sum(first_list) / runs
+    replay_mean = sum(replay_list) / runs
     actual  = s_list[-1]
+    replay_actual = replay_step_list[-1]
     dec_per_step = dc_mean / (actual * B) if actual > 0 else 0.0
     tps          = (actual * B) / (dc_mean / 1000) if dc_mean > 0 else 0.0
+    first_per_seq = first_mean / B if B > 0 else 0.0
+    replay_per_step = replay_mean / (replay_actual * B) if replay_actual > 0 else 0.0
+    replay_tps = (replay_actual * B) / (replay_mean / 1000) if replay_mean > 0 else 0.0
     return {
         "batch_size": B,
         "mode": "paged" if use_paged else "padded",
@@ -105,7 +136,22 @@ def bench_batch(
         "decode_mean_per_step_ms": round(dec_per_step, 3),
         "tokens_per_sec": round(tps, 1),
         "actual_decode_steps": actual,
+        "first_decode_step_ms": round(first_per_seq, 3),
+        "replay_decode_mean_per_step_ms": round(replay_per_step, 3),
+        "replay_tokens_per_sec": round(replay_tps, 1),
+        "replay_decode_steps": replay_actual,
+        "max_prefill_chunk_tokens": max_prefill_chunk_tokens or 0,
     }
+
+
+def extend_prompt_to_len(token_ids: list[int], target_len: int) -> list[int]:
+    if target_len <= 0 or target_len <= len(token_ids):
+        return token_ids
+    tail = token_ids[-min(len(token_ids), 128):]
+    out = list(token_ids)
+    while len(out) < target_len:
+        out.extend(tail[:target_len - len(out)])
+    return out
 
 
 def bench_continuous(
@@ -216,6 +262,10 @@ def main() -> None:
     ap.add_argument("--runs", type=int, default=3)
     ap.add_argument("--num_kvcache_blocks", type=int, default=512)
     ap.add_argument("--kvcache_block_size", type=int, default=16)
+    ap.add_argument("--max_prefill_chunk_tokens", type=int, default=0,
+                    help="If >0, enable paged chunked prefill with this chunk size")
+    ap.add_argument("--target_prompt_len", type=int, default=0,
+                    help="If >0, extend prompt token ids to this length for long-prefill benchmarks")
     ap.add_argument("--out_json", default="")
     # Task 6: continuous batching bench
     ap.add_argument("--continuous_total", type=int, default=0,
@@ -235,12 +285,13 @@ def main() -> None:
         warmup=args.warmup,
         runs=args.runs,
         kvcache_block_size=args.kvcache_block_size,
+        max_prefill_chunk_tokens=args.max_prefill_chunk_tokens or None,
     )
 
     print(f"Loading model {args.model_path} on {device} ({args.dtype})...")
     model, tok = load_pointllm_model(args.model_path, device, dtype)
     eos     = tok.eos_token_id
-    pt_ids  = build_prompt_token_ids(tok, model)
+    pt_ids  = extend_prompt_to_len(build_prompt_token_ids(tok, model), args.target_prompt_len)
     print(f"Model loaded. prompt_len={len(pt_ids)}\n")
 
     fmt = f"{'B':>4}  {'mode':<8}  {'prefill_ms':>10}  {'dec/step/seq_ms':>15}  {'tps':>8}"
@@ -257,7 +308,9 @@ def main() -> None:
                             num_kvcache_blocks=0, **kw)
             print(f"  B={B:<2}  padded   prefill={r['prefill_ms_mean']:7.1f}ms  "
                   f"dec/step={r['decode_mean_per_step_ms']:7.3f}ms  "
-                  f"tps={r['tokens_per_sec']:7.1f}")
+                  f"tps={r['tokens_per_sec']:7.1f}  "
+                  f"replay={r['replay_decode_mean_per_step_ms']:7.3f}ms/"
+                  f"{r['replay_tokens_per_sec']:7.1f}tps")
             padded_results.append(r)
         except Exception as e:
             print(f"  B={B:<2}  padded   SKIPPED ({e})")
@@ -273,7 +326,10 @@ def main() -> None:
             speedup = r["tokens_per_sec"] / pad_r["tokens_per_sec"] if pad_r else 0
             print(f"  B={B:<2}  paged    prefill={r['prefill_ms_mean']:7.1f}ms  "
                   f"dec/step={r['decode_mean_per_step_ms']:7.3f}ms  "
-                  f"tps={r['tokens_per_sec']:7.1f}  ({speedup:.2f}x vs padded)")
+                  f"tps={r['tokens_per_sec']:7.1f}  "
+                  f"replay={r['replay_decode_mean_per_step_ms']:7.3f}ms/"
+                  f"{r['replay_tokens_per_sec']:7.1f}tps  "
+                  f"({speedup:.2f}x vs padded)")
             paged_results.append(r)
         except Exception as e:
             print(f"  B={B:<2}  paged    SKIPPED ({e})")

@@ -8,10 +8,20 @@ PointLLMWrapper：把 PointLLMLlamaForCausalLM 包装成
 """
 from __future__ import annotations
 
+import hashlib
+from dataclasses import dataclass
 from typing import Any, Optional
 
 import torch
 import torch.nn as nn
+
+
+@dataclass(frozen=True)
+class PointInputLayout:
+    has_point_tokens: bool
+    use_start_end: bool
+    start_idx: int = -1
+    start_positions: tuple[int, ...] = ()
 
 
 class PointLLMWrapper:
@@ -36,6 +46,42 @@ class PointLLMWrapper:
 
     def get_input_embeddings(self) -> nn.Embedding:
         return self.inner.embed_tokens
+
+    @staticmethod
+    def point_cloud_cache_key(point_cloud: torch.Tensor) -> str:
+        pc = point_cloud.detach()
+        if pc.dim() == 3 and pc.shape[0] == 1:
+            pc = pc.squeeze(0)
+        pc = pc.contiguous().to(device="cpu", dtype=torch.float32)
+        digest = hashlib.sha1(pc.numpy().tobytes()).hexdigest()
+        return f"{tuple(pc.shape)}:{str(pc.dtype)}:{digest}"
+
+    def analyze_input_layout(self, input_ids: torch.Tensor) -> PointInputLayout:
+        inner = self.inner
+        cfg = inner.point_backbone_config
+        use_start_end: bool = cfg.get("mm_use_point_start_end", False)
+        patch_token_id: int = cfg["point_patch_token"]
+
+        if input_ids.dim() != 1:
+            raise ValueError(f"analyze_input_layout expects 1D token ids, got {tuple(input_ids.shape)}")
+
+        if use_start_end:
+            start_token_id: int = cfg["point_start_token"]
+            starts = tuple(torch.where(input_ids == start_token_id)[0].tolist())
+            return PointInputLayout(
+                has_point_tokens=len(starts) > 0,
+                use_start_end=True,
+                start_positions=starts,
+            )
+
+        masked = torch.where(input_ids == patch_token_id)[0]
+        if masked.numel() == 0:
+            return PointInputLayout(has_point_tokens=False, use_start_end=False)
+        return PointInputLayout(
+            has_point_tokens=True,
+            use_start_end=False,
+            start_idx=int(masked[0]),
+        )
 
     @torch.inference_mode()
     def encode_point_clouds(self, point_clouds: Any) -> list[torch.Tensor]:
@@ -70,6 +116,7 @@ class PointLLMWrapper:
         self,
         input_ids: torch.Tensor,
         point_features: Optional[list[torch.Tensor]],
+        layouts: Optional[list[PointInputLayout]] = None,
     ) -> torch.Tensor:
         """
         将文本 token embeddings 与点云 patch features 融合，返回 inputs_embeds。
@@ -89,37 +136,38 @@ class PointLLMWrapper:
             return inputs_embeds
 
         cfg = inner.point_backbone_config
-        use_start_end: bool = cfg.get("mm_use_point_start_end", False)
-        patch_token_id: int = cfg["point_patch_token"]
+        if layouts is None:
+            layouts = [self.analyze_input_layout(row) for row in input_ids]
+        if len(layouts) != input_ids.shape[0]:
+            raise ValueError("layouts length must match batch size")
 
         new_embeds = []
-        for i, (cur_ids, cur_emb) in enumerate(zip(input_ids, inputs_embeds)):
+        for i, (cur_ids, cur_emb, layout) in enumerate(zip(input_ids, inputs_embeds, layouts)):
             cur_feat = point_features[i].to(device=cur_emb.device, dtype=cur_emb.dtype)
-            num_patches = cur_feat.shape[0]
-
-            if (cur_ids == patch_token_id).sum() == 0:
-                # 纯文本样本：无点云占位符
-                new_embeds.append(cur_emb)
-                continue
-
-            if use_start_end:
-                start_token_id: int = cfg["point_start_token"]
-                start_positions = torch.where(cur_ids == start_token_id)[0]
-                cur_new_emb = cur_emb
-                for pos in reversed(start_positions):
-                    cur_new_emb = torch.cat([
-                        cur_new_emb[:pos + 1],
-                        cur_feat,
-                        cur_new_emb[pos + num_patches + 1:],
-                    ])
-                new_embeds.append(cur_new_emb)
-            else:
-                masked_indices = torch.where(cur_ids == patch_token_id)[0]
-                start_idx = masked_indices[0]
-                new_embeds.append(torch.cat([
-                    cur_emb[:start_idx],
-                    cur_feat,
-                    cur_emb[start_idx + num_patches:],
-                ]))
+            new_embeds.append(self.splice_point_features(cur_emb, cur_feat, layout))
 
         return torch.stack(new_embeds)   # [B, L, H]
+
+    def splice_point_features(
+        self,
+        token_embeds: torch.Tensor,
+        point_features: torch.Tensor,
+        layout: PointInputLayout,
+    ) -> torch.Tensor:
+        num_patches = point_features.shape[0]
+        if not layout.has_point_tokens:
+            return token_embeds
+        if layout.use_start_end:
+            cur_new = token_embeds
+            for pos in reversed(layout.start_positions):
+                cur_new = torch.cat([
+                    cur_new[:pos + 1],
+                    point_features,
+                    cur_new[pos + num_patches + 1:],
+                ])
+            return cur_new
+        return torch.cat([
+            token_embeds[:layout.start_idx],
+            point_features,
+            token_embeds[layout.start_idx + num_patches:],
+        ])

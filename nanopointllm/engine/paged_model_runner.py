@@ -4,11 +4,13 @@ Replaces PointLLMModelRunner when the engine is constructed with num_kvcache_blo
 """
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import torch
 import torch.nn as nn
 
+from nanopointllm.engine.cuda_graph import DecodeGraphCache, DecodeGraphKey
 from nanopointllm.engine.forward_context import (
     ForwardContext,
     clear_forward_context,
@@ -16,16 +18,21 @@ from nanopointllm.engine.forward_context import (
     set_forward_context,
 )
 from nanopointllm.engine.kv_pool import KVPool
+from nanopointllm.engine.metadata_staging import DecodeMetadataStagingBuffer, next_bucket_size
+from nanopointllm.engine.point_feature_cache import PointFeatureCache
+from nanopointllm.engine.sampler import build_sampler
 from nanopointllm.engine.sequence import PointLLMSequence
+from nanopointllm.llama.lightweight_runner import build_lightweight_llama_runner
 from nanopointllm.models.pointllm_wrapper import PointLLMWrapper
+from nanopointllm.profiling import nvtx_stage
 
 
 def _install_position_ids_patch() -> None:
     """
-    PointLLMLlamaModel.forward() calls super().forward() without position_ids,
-    so LlamaModel always defaults to position 0 for decode tokens.  We patch
-    LlamaModel.forward (class-level, once) to read position_ids from the
-    active ForwardContext and inject them transparently.
+    PointLLMLlamaModel.forward() can pass position_ids=None to super().forward(),
+    so LlamaModel would derive positions for the flattened token stream instead
+    of each logical request. Patch LlamaModel.forward (class-level, once) to
+    inject positions from the active ForwardContext when the value is missing.
     """
     try:
         from transformers.models.llama.modeling_llama import LlamaModel
@@ -42,7 +49,7 @@ def _install_position_ids_patch() -> None:
         if (
             ctx is not None
             and ctx.position_ids is not None
-            and "position_ids" not in kwargs
+            and kwargs.get("position_ids") is None
         ):
             kwargs["position_ids"] = ctx.position_ids
         return _orig(self, *args, **kwargs)
@@ -53,13 +60,90 @@ def _install_position_ids_patch() -> None:
 
 class PagedModelRunner:
 
-    def __init__(self, hf_model: nn.Module, kv_pool: KVPool, block_manager) -> None:
+    def __init__(
+        self,
+        hf_model: nn.Module,
+        kv_pool: KVPool,
+        block_manager,
+        point_feature_cache: PointFeatureCache | None = None,
+    ) -> None:
         self.hf_model      = hf_model
         self.kv_pool       = kv_pool
         self.block_manager = block_manager
         self.wrapper       = PointLLMWrapper(hf_model)
         self.block_size    = kv_pool.block_size
+        self.sampler       = build_sampler(compile_greedy_cuda=True)
+        if point_feature_cache is None:
+            point_feature_cache = PointFeatureCache(
+                max_entries=int(os.environ.get("NANOPOINTLLM_POINT_FEATURE_CACHE_SIZE", "128"))
+            )
+        self.point_feature_cache = point_feature_cache
+        self._decode_metadata: DecodeMetadataStagingBuffer | None = None
+        self._decode_graphs = DecodeGraphCache(
+            enabled=os.environ.get("NANOPOINTLLM_ENABLE_CUDA_GRAPH", "0") == "1",
+        )
+        lightweight_requested = os.environ.get(
+            "NANOPOINTLLM_LIGHTWEIGHT_DECODE", "1"
+        ) != "0"
+        profile_layers = os.environ.get("NANOPOINTLLM_PROFILE_LAYERS", "0") == "1"
+        # Graph capture requires the lightweight stack. Profiling also requires
+        # that stack for layer events, but must not silently switch eager decode
+        # to the graph-optimized module configuration.
+        lightweight_required = self._decode_graphs.enabled or profile_layers
+        self.lightweight_decode_enabled = lightweight_requested or lightweight_required
+        self.lightweight_runner = None
+        if self.lightweight_decode_enabled:
+            self.lightweight_runner = build_lightweight_llama_runner(
+                hf_model,
+                decode_graph_mode=self._decode_graphs.enabled,
+            )
+            if os.environ.get("NANOPOINTLLM_COMPILE_LIGHTWEIGHT", "0") == "1":
+                self.lightweight_runner = torch.compile(
+                    self.lightweight_runner,
+                    mode="reduce-overhead",
+                    fullgraph=False,
+                )
         _install_position_ids_patch()
+        self.profile_runtime = profile_layers
+        self.last_cuda_profile: dict[str, float] = {}
+
+    def _sample_logits(
+        self,
+        logits: torch.Tensor,
+        seqs: list[PointLLMSequence],
+    ) -> torch.Tensor:
+        if not self.profile_runtime or not logits.is_cuda:
+            with nvtx_stage("pointllm_sampling", logits):
+                return self.sampler(logits, seqs)
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        start.record()
+        with nvtx_stage("pointllm_sampling", logits):
+            sampled = self.sampler(logits, seqs)
+        end.record()
+        end.synchronize()
+        self.last_cuda_profile = {"sampling_ms": start.elapsed_time(end)}
+        return sampled
+
+    def _get_decode_metadata_buffer(
+        self,
+        *,
+        device: torch.device,
+        batch_size: int,
+        max_blocks: int,
+    ) -> DecodeMetadataStagingBuffer:
+        bucket_size = next_bucket_size(batch_size)
+        if (
+            self._decode_metadata is None
+            or self._decode_metadata.device != device
+            or not self._decode_metadata.can_fit(bucket_size, max_blocks)
+        ):
+            self._decode_metadata = DecodeMetadataStagingBuffer(
+                device=device,
+                max_batch_size=bucket_size,
+                max_blocks_per_seq=max_blocks,
+            )
+        return self._decode_metadata
 
     # ── Point cloud encoding (mirrors PointLLMModelRunner) ──────────────────
 
@@ -79,18 +163,45 @@ class PagedModelRunner:
         def _to_2d(pc: torch.Tensor) -> torch.Tensor:
             return pc.squeeze(0) if pc.dim() == 3 else pc
 
-        pcs_2d = [_to_2d(seq.point_clouds).to(device) for seq in pending]
-        shapes = {pc.shape for pc in pcs_2d}
+        uncached_seqs: list[PointLLMSequence] = []
+        uncached_pcs: list[torch.Tensor] = []
+        for seq in pending:
+            if seq.point_features_cached is not None:
+                continue
+            key = seq.point_cloud_cache_key
+            if key is None:
+                key = self.wrapper.point_cloud_cache_key(seq.point_clouds)
+                seq.point_cloud_cache_key = key
+            feat = self.point_feature_cache.get(key)
+            if feat is not None:
+                seq.point_features_cached = feat
+                continue
+            pc_2d = _to_2d(seq.point_clouds).to(device)
+            uncached_seqs.append(seq)
+            uncached_pcs.append(pc_2d)
 
-        if len(shapes) == 1:
-            stacked = torch.stack(pcs_2d)
-            all_features = self.wrapper.encode_point_clouds(stacked)
-        else:
-            all_features = [self.wrapper.encode_point_clouds(pc)[0] for pc in pcs_2d]
+        if uncached_seqs:
+            shapes = {pc.shape for pc in uncached_pcs}
+            if len(shapes) == 1:
+                stacked = torch.stack(uncached_pcs)
+                all_features = self.wrapper.encode_point_clouds(stacked)
+            else:
+                all_features = [self.wrapper.encode_point_clouds(pc)[0] for pc in uncached_pcs]
 
-        for seq, feat in zip(pending, all_features):
+            for seq, feat in zip(uncached_seqs, all_features):
+                seq.point_features_cached = feat
+                assert seq.point_cloud_cache_key is not None
+                self.point_feature_cache.put(seq.point_cloud_cache_key, feat)
+
+        for seq in pending:
             ids    = torch.tensor([seq.token_ids], dtype=torch.long, device=device)
-            embeds = self.wrapper.prepare_inputs_embeds(ids, [feat])
+            if seq.input_embed_layout_cached is None:
+                seq.input_embed_layout_cached = self.wrapper.analyze_input_layout(ids[0])
+            embeds = self.wrapper.prepare_inputs_embeds(
+                ids,
+                [seq.point_features_cached],
+                layouts=[seq.input_embed_layout_cached],
+            )
             seq.inputs_embeds_cached = embeds.squeeze(0)
 
     # ── Slot-mapping helpers ─────────────────────────────────────────────────
@@ -131,6 +242,13 @@ class PagedModelRunner:
 
     @torch.inference_mode()
     def run_prefill(self, seqs: list[PointLLMSequence]) -> list[int]:
+        # Keep paged prefill on the same varlen path as mixed prefill+decode.
+        # PagedLlamaAttention expects a flattened [1, total_tokens, hidden]
+        # stream, which run_mixed prepares for both pure and mixed batches.
+        return self.run_mixed(seqs, [])
+
+    @torch.inference_mode()
+    def _run_prefill_padded_legacy(self, seqs: list[PointLLMSequence]) -> list[int]:
         self._encode_point_clouds_batch(seqs)
 
         B       = len(seqs)
@@ -182,10 +300,16 @@ class PagedModelRunner:
         dummy_ids = torch.zeros(B, max_len, dtype=torch.long, device=device)
 
         seq_lens_list = [seq.num_tokens for seq in seqs]
+        context_lens = torch.tensor(seq_lens_list, dtype=torch.int32, device=device)
+        max_blocks = max(len(seq.block_table) for seq in seqs)
+        block_tables = torch.tensor(
+            [seq.block_table + [-1] * (max_blocks - len(seq.block_table)) for seq in seqs],
+            dtype=torch.int32, device=device,
+        )
         set_forward_context(ForwardContext(
             slot_mapping=slot_mapping,
-            block_tables=None,
-            context_lens=None,
+            block_tables=block_tables,
+            context_lens=context_lens,
             position_ids=position_ids,
             seq_lens=seq_lens_list,
         ))
@@ -201,8 +325,7 @@ class PagedModelRunner:
         finally:
             clear_forward_context()
 
-        logits = out.logits
-        return logits[:, -1, :].float().argmax(dim=-1).tolist()
+        return self.sampler(out.logits, seqs).tolist()
 
     # ── Decode ───────────────────────────────────────────────────────────────
 
@@ -214,56 +337,67 @@ class PagedModelRunner:
         except StopIteration:
             device = torch.device("cpu")
 
-        input_ids = torch.tensor(
-            [[seq.last_token] for seq in seqs], dtype=torch.long, device=device,
-        )
-        positions = torch.tensor(
-            [[seq.num_tokens - 1] for seq in seqs], dtype=torch.long, device=device,
-        )
-        slot_mapping = torch.tensor(
-            [self._decode_slot(seq) for seq in seqs], dtype=torch.int32, device=device,
-        )
-        context_lens = torch.tensor(
-            [seq.num_tokens for seq in seqs], dtype=torch.int32, device=device,
-        )
         max_blocks = max(len(seq.block_table) for seq in seqs)
-        block_tables = torch.tensor(
-            [seq.block_table + [-1] * (max_blocks - len(seq.block_table)) for seq in seqs],
-            dtype=torch.int32, device=device,
+        metadata = self._get_decode_metadata_buffer(
+            device=device,
+            batch_size=B,
+            max_blocks=max_blocks,
+        ).prepare_decode(seqs, block_size=self.block_size)
+
+        def _forward_logits(input_ids: torch.Tensor, ctx: ForwardContext) -> torch.Tensor:
+            set_forward_context(ctx)
+            try:
+                if self.lightweight_runner is not None:
+                    return self.lightweight_runner(
+                        input_ids=input_ids,
+                        position_ids=ctx.position_ids,
+                        attention_mask=None,
+                    )
+                return self.hf_model(
+                    input_ids=input_ids,
+                    attention_mask=None,
+                    use_cache=False,
+                    return_dict=True,
+                ).logits
+            finally:
+                clear_forward_context()
+
+        graph_key = DecodeGraphKey(
+            bucket_size=metadata.bucket_size,
+            max_blocks_per_seq=metadata.bucket_context.block_tables.shape[1],
+            vocab_size=int(getattr(getattr(self.hf_model, "config", None), "vocab_size", 0)),
+            dtype=next(self.hf_model.parameters()).dtype,
+            device=device,
         )
-
-        set_forward_context(ForwardContext(
-            slot_mapping=slot_mapping,
-            block_tables=block_tables,
-            context_lens=context_lens,
-            position_ids=positions,
-            seq_lens=[1] * B,
-        ))
-        try:
-            out = self.hf_model(
-                input_ids=input_ids,
-                attention_mask=None,
-                use_cache=False,
-                return_dict=True,
+        if self._decode_graphs.enabled:
+            logits = self._decode_graphs.run(
+                graph_key,
+                lambda: _forward_logits(metadata.bucket_input_ids, metadata.bucket_context),
             )
-        finally:
-            clear_forward_context()
+            logits = logits[:B]
+        else:
+            logits = _forward_logits(metadata.input_ids, metadata.context)
+        if logits.dim() == 3 and logits.shape[0] == 1:
+            logits = logits[0, :B, :]
 
-        logits = out.logits
-        if logits.dim() == 3:
-            logits = logits[:, -1, :]
-        return logits.float().argmax(dim=-1).tolist()
+        return self._sample_logits(logits, seqs).tolist()
 
     @torch.inference_mode()
     def run_mixed(
         self,
         prefill_seqs: list[PointLLMSequence],
         decode_seqs: list[PointLLMSequence],
-    ) -> list[int]:
+    ) -> list[Optional[int]]:
         """
-        Single model.forward() over prefill new-tokens + decode last-tokens.
+        Run one lightweight LLaMA pass over prefill new-tokens + decode last-tokens.
+
+        The HuggingFace model-level ``forward`` is used only when the explicit
+        lightweight-runtime fallback is disabled.
         Returns one next token_id per sequence (prefill_seqs first, then decode_seqs).
         """
+        if not prefill_seqs and decode_seqs:
+            return self.run_decode(decode_seqs)
+
         all_seqs = prefill_seqs + decode_seqs
         if not all_seqs:
             return []
@@ -276,29 +410,32 @@ class PagedModelRunner:
 
         emb_parts, pos_parts, slot_parts = [], [], []
         seq_lens_list, context_lens_list, block_tables_list = [], [], []
+        prefill_is_final: list[bool] = []
 
         for seq in prefill_seqs:
             new_start = seq.num_cached_tokens
-            new_len   = seq.num_tokens - new_start
+            chunk_end = seq.prefill_chunk_end or seq.num_tokens
+            new_len   = chunk_end - new_start
             seq_lens_list.append(new_len)
-            context_lens_list.append(seq.num_tokens)
+            context_lens_list.append(chunk_end)
             block_tables_list.append(seq.block_table)
+            prefill_is_final.append(chunk_end >= seq.num_tokens)
 
             # Embedding: only new tokens (prefix already in pool)
             if seq.inputs_embeds_cached is not None:
-                emb = seq.inputs_embeds_cached[new_start:]
+                emb = seq.inputs_embeds_cached[new_start:chunk_end]
             else:
-                ids = torch.tensor(seq.token_ids[new_start:], dtype=torch.long, device=device)
+                ids = torch.tensor(seq.token_ids[new_start:chunk_end], dtype=torch.long, device=device)
                 emb = self.wrapper.get_input_embeddings()(ids.unsqueeze(0)).squeeze(0)
             emb_parts.append(emb)
 
-            # Positions: [new_start .. num_tokens-1]
-            pos_parts.append(torch.arange(new_start, seq.num_tokens,
+            # Positions: [new_start .. chunk_end-1]
+            pos_parts.append(torch.arange(new_start, chunk_end,
                                           dtype=torch.long, device=device))
 
             # Slots: new positions only → physical slot
             slots = []
-            for abs_pos in range(new_start, seq.num_tokens):
+            for abs_pos in range(new_start, chunk_end):
                 blk = abs_pos // self.block_size
                 off = abs_pos % self.block_size
                 slots.append(seq.block_table[blk] * self.block_size + off)
@@ -328,7 +465,6 @@ class PagedModelRunner:
         )
         context_lens  = torch.tensor(context_lens_list, dtype=torch.int32, device=device)
 
-        dummy_ids = torch.zeros(1, total_tokens, dtype=torch.long, device=device)
         set_forward_context(ForwardContext(
             slot_mapping=slot_mapping,
             block_tables=block_tables,
@@ -337,21 +473,35 @@ class PagedModelRunner:
             seq_lens=seq_lens_list,
         ))
         try:
-            out = self.hf_model(
-                input_ids=dummy_ids,
-                inputs_embeds=inputs_embeds,
-                attention_mask=None,
-                point_clouds=None,
-                use_cache=False,
-                return_dict=True,
-            )
+            if self.lightweight_runner is not None:
+                logits = self.lightweight_runner(
+                    inputs_embeds=inputs_embeds,
+                    position_ids=position_ids,
+                    attention_mask=None,
+                )
+            else:
+                dummy_ids = torch.zeros(1, total_tokens, dtype=torch.long, device=device)
+                logits = self.hf_model(
+                    input_ids=dummy_ids,
+                    inputs_embeds=inputs_embeds,
+                    attention_mask=None,
+                    point_clouds=None,
+                    use_cache=False,
+                    return_dict=True,
+                ).logits
         finally:
             clear_forward_context()
 
-        logits = out.logits  # [1, total_tokens, vocab]
+        # [1, total_tokens, vocab] for both lightweight and explicit HF fallback.
         last_positions = [sum(seq_lens_list[:i+1]) - 1 for i in range(len(all_seqs))]
         idx = torch.tensor(last_positions, dtype=torch.long, device=device)
-        return logits[0, idx, :].float().argmax(dim=-1).tolist()
+        sampled = self._sample_logits(logits[0, idx, :], all_seqs).tolist()
+        results: list[Optional[int]] = []
+        for seq, token_id, is_final in zip(prefill_seqs, sampled[:len(prefill_seqs)], prefill_is_final):
+            seq.num_cached_tokens = seq.prefill_chunk_end or seq.num_tokens
+            results.append(token_id if is_final else None)
+        results.extend(sampled[len(prefill_seqs):])
+        return results
 
     def run(self, seqs: list[PointLLMSequence], is_prefill: bool) -> list[int]:
         if is_prefill:

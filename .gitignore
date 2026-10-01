@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+*.so
+
+# Local benchmark/profiler artifacts and downloaded tooling.
+results/
+codex-*
+
+# Nsight Compute reports can be regenerated from the checked-in scripts.
+*.ncu-rep

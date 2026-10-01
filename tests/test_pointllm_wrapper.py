@@ -88,3 +88,28 @@ def test_prepare_inputs_embeds_no_point_clouds():
     input_ids = torch.tensor([[1, 5, 6, 2]])
     embeds = wrapper.prepare_inputs_embeds(input_ids, point_features=None)
     assert embeds.shape == (1, 4, hidden_size)
+
+
+def test_analyze_input_layout_matches_prepare_path():
+    hf_model, PATCH_TOKEN_ID, num_patch_tokens, hidden_size = _make_mock_hf_model()
+    wrapper = PointLLMWrapper(hf_model)
+
+    input_ids = torch.tensor([
+        [1] + [PATCH_TOKEN_ID] * num_patch_tokens + [2],
+        [1, 5, 6, 2, 0, 0],
+    ])
+    point_features = [torch.randn(num_patch_tokens, hidden_size), torch.empty(0, hidden_size)]
+
+    layouts = [wrapper.analyze_input_layout(row) for row in input_ids]
+    embeds_layout = wrapper.prepare_inputs_embeds(input_ids, point_features, layouts=layouts)
+    embeds_ref = wrapper.prepare_inputs_embeds(input_ids, point_features)
+    torch.testing.assert_close(embeds_layout, embeds_ref)
+
+
+def test_point_cloud_cache_key_is_value_stable():
+    hf_model, *_ = _make_mock_hf_model()
+    wrapper = PointLLMWrapper(hf_model)
+
+    pc = torch.randn(32, 3)
+    pc_clone = pc.clone()
+    assert wrapper.point_cloud_cache_key(pc) == wrapper.point_cloud_cache_key(pc_clone)

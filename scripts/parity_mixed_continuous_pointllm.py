@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import sys
 import traceback
-from threading import Thread
 
 import torch
 
@@ -45,8 +44,8 @@ def run_paged_continuous(
     kvcache_block_size: int,
 ) -> tuple[list[list[int]], list[tuple[int, int]]]:
     """
-    Run paged engine with max_num_seqs < len(all_token_ids) so that
-    continuous batching (mixed prefill+decode steps) is exercised.
+    Start part of the batch, then inject the remaining requests after its
+    prefill so that a later scheduling round contains both prefill and decode.
 
     Returns (generated_tokens_per_seq, step_log) where each entry in
     step_log is (num_prefill, num_decode) for that step.
@@ -73,10 +72,27 @@ def run_paged_continuous(
 
     engine.runner.run_mixed = tracked_run_mixed
 
+    if max_num_seqs < 2:
+        raise ValueError("mixed-step parity requires max_num_seqs >= 2")
+
+    # Leave one admission slot free.  After this first prefill step, adding the
+    # rest guarantees that the next round combines a new prefill with decode.
+    initial_count = min(B, max_num_seqs - 1)
     seqs = [
         engine.add_request(token_ids=ids, point_clouds=pc, sampling_params=sp)
-        for ids, pc in zip(all_token_ids, all_point_clouds)
+        for ids, pc in zip(
+            all_token_ids[:initial_count],
+            all_point_clouds[:initial_count],
+        )
     ]
+    engine.step()
+    seqs.extend(
+        engine.add_request(token_ids=ids, point_clouds=pc, sampling_params=sp)
+        for ids, pc in zip(
+            all_token_ids[initial_count:],
+            all_point_clouds[initial_count:],
+        )
+    )
 
     while not engine.is_finished():
         engine.step()
@@ -115,7 +131,7 @@ def main() -> None:
         return make_fake_point_cloud(device, dtype)
 
     # Cases: (name, token_ids_list, point_clouds_list, max_num_seqs)
-    # max_num_seqs < len(requests) → forces continuous batching mixed steps
+    # Requests are staggered inside run_paged_continuous to force mixed steps.
     cases = [
         (
             "2pc+2text, max_num_seqs=2 (forces mixed steps)",
@@ -173,12 +189,12 @@ def main() -> None:
         # Check that at least one step was truly mixed
         mixed_steps = [(p, d) for p, d in step_log if p > 0 and d > 0]
         if not mixed_steps:
-            print(f"  [{name}] WARNING: no mixed step occurred; "
-                  f"step_log={step_log}")
+            print(f"  [{name}] FAIL: no mixed step occurred; step_log={step_log}")
+            all_ok = False
+            ok = False
         else:
             print(f"  [{name}] mixed steps: {mixed_steps}")
-
-        ok = True
+            ok = True
         for i, (gen, ref) in enumerate(zip(generated, case_refs)):
             if gen != ref:
                 print(f"    seq {i} MISMATCH:")

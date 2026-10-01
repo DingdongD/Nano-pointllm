@@ -1,5 +1,6 @@
 import pytest
 from nanopointllm.engine.sequence import PointLLMSequence, SequenceStatus
+from nanopointllm.engine.block_manager import BlockManager
 from nanopointllm.engine.scheduler import Scheduler
 from nanopointllm.sampling_params import SamplingParams
 
@@ -80,3 +81,60 @@ def test_postprocess_appends_token():
     s.postprocess(seqs, [77])
     assert seq.last_token == 77
     assert not seq.is_finished
+
+
+def test_paged_scheduler_preempts_when_decode_append_needs_unavailable_block():
+    bm = BlockManager(num_blocks=1, block_size=4)
+    s = Scheduler(
+        max_num_seqs=1,
+        max_num_batched_tokens=512,
+        eos_token_id=2,
+        block_manager=bm,
+    )
+    seq = _seq(4, max_tokens=10)
+    s.add(seq)
+
+    prefill_seqs, decode_seqs = s.schedule()
+    assert prefill_seqs == [seq]
+    assert decode_seqs == []
+
+    s.postprocess(prefill_seqs, [99])  # seq now has 5 tokens; needs a new block
+    prefill_seqs, decode_seqs = s.schedule()
+
+    assert prefill_seqs == []
+    assert decode_seqs == []
+    assert seq.status == SequenceStatus.WAITING
+    assert list(s.waiting) == [seq]
+    assert seq.block_table == []
+    assert len(bm.free_block_ids) == 1
+
+
+def test_chunked_prefill_requeues_without_deallocating_blocks():
+    bm = BlockManager(num_blocks=8, block_size=4)
+    s = Scheduler(
+        max_num_seqs=1,
+        max_num_batched_tokens=512,
+        eos_token_id=2,
+        block_manager=bm,
+        max_prefill_chunk_tokens=3,
+    )
+    seq = _seq(8, max_tokens=10)
+    s.add(seq)
+
+    prefill_seqs, decode_seqs = s.schedule()
+    assert prefill_seqs == [seq]
+    assert decode_seqs == []
+    assert seq.prefill_chunk_end == 3
+    assert seq.block_table
+
+    seq.num_cached_tokens = 3
+    s.postprocess(prefill_seqs, [None])
+
+    assert seq.status == SequenceStatus.WAITING
+    assert seq.block_table
+    assert list(s.waiting) == [seq]
+
+    prefill_seqs, decode_seqs = s.schedule()
+    assert prefill_seqs == [seq]
+    assert decode_seqs == []
+    assert seq.prefill_chunk_end == 6

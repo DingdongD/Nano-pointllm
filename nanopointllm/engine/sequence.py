@@ -21,6 +21,8 @@ class PointLLMSequence:
         self,
         token_ids: list[int],
         point_clouds: Optional[Any] = None,
+        point_cloud_cache_key: Optional[str] = None,
+        point_features_cached: Optional[torch.Tensor] = None,
         sampling_params: Optional[SamplingParams] = None,
     ):
         self.token_ids: list[int] = list(token_ids)
@@ -31,6 +33,9 @@ class PointLLMSequence:
         self.num_prompt_tokens: int = len(token_ids)
 
         # 点云编码后缓存（prefill 阶段填充，decode 阶段不再用点云）
+        self.point_features_cached: Optional[torch.Tensor] = point_features_cached
+        self.point_cloud_cache_key: Optional[str] = point_cloud_cache_key
+        self.input_embed_layout_cached: Optional[Any] = None
         self.inputs_embeds_cached: Optional[torch.Tensor] = None
 
         # HF DynamicCache（prefill 后持有）
@@ -39,6 +44,7 @@ class PointLLMSequence:
         # 分页 KV 元数据（Task 6 启用）
         self.block_table: list[int] = []
         self.num_cached_tokens: int = 0
+        self.prefill_chunk_end: Optional[int] = None
 
         # Multimodal seqs must not share KV blocks via prefix cache:
         # same token_ids can produce different embeddings (different point clouds).
