@@ -292,6 +292,10 @@
 - Decoder NCU scopes are `pointllm_qkv`, `pointllm_attention`, `pointllm_o_proj`, `pointllm_mlp`, `pointllm_lm_head`, and `pointllm_sampling`.
 - Each scope has a manifest for actual runner weight bytes, activation bytes, paged K/V bytes, estimated FLOPs, and arithmetic intensity. Attention is classified from K/V traffic and is never mislabeled weight-bound.
 - A strict linear-stage weight-bound result requires: idle GPU at launch, >=80% modeled compulsory traffic from weights, arithmetic intensity below the A100 roofline ridge, measured DRAM bytes >=50% of modeled traffic, DRAM throughput above the configured threshold, and DRAM pressure above SM throughput.
-- All four A100s remained at 100% external utilization with 9352 MiB allocated, so no publishable NCU bottleneck claim was made. `--require_idle_gpu` correctly rejects the run before loading weights.
+- Publishable B1/B8 runs completed after the idle gate observed 0% utilization and less than 40 MiB used on GPU 0. Both manifests record `idle_at_start=true`.
+- QKV/O/MLP are strictly weight-bandwidth-bound at both B1 and B8. Their duration-weighted DRAM throughput is 63-75%, SM throughput is 25-31%, and measured bytes closely match modeled weight traffic.
+- LM head is strictly weight-bandwidth-bound at B1 (80.29% DRAM), but B8 selects a CUTLASS GEMM that reaches only 24.17% DRAM and 13.89% SM. It remains weight-stream dominated but needs shape-specific kernel selection/autotuning rather than only more bandwidth.
+- Whole-stage attention is KV-memory-bound/underfilled. The dominant tile reaches 37.16% DRAM at B1 and 71.90% at B8, while surrounding small kernels pull whole-stage throughput down to 7.92% and 34.98%, respectively.
+- Scaled marked-stage shares identify MLP as the first optimization target (48.65% B1, 40.66% B8), followed by attention (21.88%, 34.15%) and QKV (20.83%, 15.17%). These are not end-to-end TPOT shares.
 - The corrected real PointLLM-7B run produced mixed rounds `(1 prefill, 1 decode)`, `(1,3)`, and `(2,1)` across three request mixes; every generated token matched the unmodified HF greedy reference.
 - The NCU orchestrator also writes `stage_bottleneck.png` with stage CUDA time, DRAM versus SM throughput, and arithmetic intensity versus the roofline ridge; CSV/JSON remain the source of truth.

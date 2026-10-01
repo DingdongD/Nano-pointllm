@@ -1,0 +1,442 @@
+{
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "batch_size": 8,
+    "input_length": 768,
+    "warmup_decode_steps": 10,
+    "profile_steps": 1,
+    "profile_layer": 0,
+    "stages": "qkv,attention,o_proj,mlp,lm_head",
+    "peak_hbm_gbps": 1555.0,
+    "peak_compute_tflops": 312.0,
+    "min_dram_throughput_pct": 50.0,
+    "ncu": "/usr/local/cuda/bin/ncu",
+    "python": "/opt/conda/envs/pointllm/bin/python",
+    "replay_mode": "kernel",
+    "output_dir": "results/ncu_decode_stages/b8",
+    "no_plot": false
+  },
+  "combined_ncu_csv": "/home/nano-pointllm/results/ncu_decode_stages/b8/all_stages.csv",
+  "stage_summaries": {
+    "qkv": {
+      "kernel_count": 2,
+      "total_profiled_kernel_time_ms": 0.08864,
+      "duration_weighted_sm_active_pct": 78.93108303249096,
+      "duration_weighted_sm_throughput_pct": 30.382202166064975,
+      "duration_weighted_dram_throughput_pct": 74.86851263537906,
+      "dram_read_bytes": 100753920.0,
+      "dram_write_bytes": 2373120.0,
+      "estimated_duration_weighted_dram_gbps": 1164.2053714801443,
+      "peak_hbm_gbps": 1555.0,
+      "top_kernels_by_duration": [
+        {
+          "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn",
+          "duration_ns": 83648.0,
+          "sm_active_pct": 83.49,
+          "dram_throughput_pct": 79.33,
+          "sm_throughput_pct": 32.19,
+          "dram_read_bytes": 100745216.0,
+          "dram_write_bytes": 2373120.0
+        },
+        {
+          "kernel_name": "_rmsnorm_only_kernel",
+          "duration_ns": 4992.0,
+          "sm_active_pct": 2.54,
+          "dram_throughput_pct": 0.11,
+          "sm_throughput_pct": 0.09,
+          "dram_read_bytes": 8704.0,
+          "dram_write_bytes": 0.0
+        }
+      ],
+      "method_note": "NCU metrics are weighted by kernel duration. Nsight replay perturbs latency; use the steady-state benchmark, not this report, for TTFT/TPOT.",
+      "stage": "qkv",
+      "theoretical": {
+        "weight_bytes_per_step": 100663296,
+        "weight_bytes": 100663296,
+        "activation_bytes": 262144,
+        "compulsory_bytes": 100925440,
+        "estimated_flops": 805306368,
+        "weight_fraction_of_compulsory_bytes": 0.9974025974025974,
+        "arithmetic_intensity_flops_per_byte": 7.979220779220779
+      },
+      "measured_dram_bytes": 103127040.0,
+      "bottleneck": {
+        "classification": "confirmed_weight_bandwidth_bound",
+        "strict_weight_bound_confirmed": true,
+        "idle_at_start": true,
+        "weight_dominated_compulsory_traffic": true,
+        "dram_saturated": true,
+        "measured_traffic_present": true,
+        "memory_pressure_dominates_sm": true,
+        "min_dram_throughput_pct": 50.0,
+        "arithmetic_intensity_flops_per_byte": 7.979220779220779,
+        "ridge_point_flops_per_byte": 200.64308681672026,
+        "below_roofline_ridge": true,
+        "weight_fraction_of_compulsory_bytes": 0.9974025974025974,
+        "measured_to_compulsory_dram_byte_ratio": 1.0218141233766234,
+        "duration_weighted_sm_throughput_pct": 30.382202166064975,
+        "evidence_rule": "Strict confirmation requires an idle launch, >=80% theoretical compulsory bytes from weights, arithmetic intensity below the hardware ridge point, measured DRAM traffic >=50% of modeled compulsory traffic, DRAM throughput above the configured threshold, and DRAM pressure greater than SM throughput."
+      }
+    },
+    "attention": {
+      "kernel_count": 14,
+      "total_profiled_kernel_time_ms": 0.199584,
+      "duration_weighted_sm_active_pct": 56.53891293891293,
+      "duration_weighted_sm_throughput_pct": 13.634506974506971,
+      "duration_weighted_dram_throughput_pct": 34.982182138848806,
+      "dram_read_bytes": 105139712.0,
+      "dram_write_bytes": 3350272.0,
+      "estimated_duration_weighted_dram_gbps": 543.9729322590989,
+      "peak_hbm_gbps": 1555.0,
+      "top_kernels_by_duration": [
+        {
+          "kernel_name": "_paged_decode_attention_tile_kernel",
+          "duration_ns": 94528.0,
+          "sm_active_pct": 90.63,
+          "dram_throughput_pct": 71.9,
+          "sm_throughput_pct": 26.06,
+          "dram_read_bytes": 102275328.0,
+          "dram_write_bytes": 3350272.0
+        },
+        {
+          "kernel_name": "void at::native::<unnamed>::CatArrayBatchedCopy<at::native::<unnamed>::OpaqueType<(unsigned int)2>, unsigned int, (int)4, (int)64, (int)64>(T1 *, at::native::<unnamed>::CatArrInputTensorMetadata<T1, T2, T4, T5>, at::native::<unnamed>::TensorSizeStride<T2, (unsigned int)4>, int, T2)",
+          "duration_ns": 9280.0,
+          "sm_active_pct": 21.79,
+          "dram_throughput_pct": 0.51,
+          "sm_throughput_pct": 7.17,
+          "dram_read_bytes": 73088.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::<unnamed>::CatArrayBatchedCopy<at::native::<unnamed>::OpaqueType<(unsigned int)2>, unsigned int, (int)4, (int)64, (int)64>(T1 *, at::native::<unnamed>::CatArrInputTensorMetadata<T1, T2, T4, T5>, at::native::<unnamed>::TensorSizeStride<T2, (unsigned int)4>, int, T2)",
+          "duration_ns": 9184.0,
+          "sm_active_pct": 22.2,
+          "dram_throughput_pct": 0.51,
+          "sm_throughput_pct": 7.27,
+          "dram_read_bytes": 72960.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 8800.0,
+          "sm_active_pct": 28.95,
+          "dram_throughput_pct": 1.11,
+          "sm_throughput_pct": 1.45,
+          "dram_read_bytes": 151424.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 8448.0,
+          "sm_active_pct": 30.38,
+          "dram_throughput_pct": 1.16,
+          "sm_throughput_pct": 1.52,
+          "dram_read_bytes": 151296.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 8256.0,
+          "sm_active_pct": 28.05,
+          "dram_throughput_pct": 0.66,
+          "sm_throughput_pct": 1.02,
+          "dram_read_bytes": 83840.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::neg_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 2)]::operator ()() const::[lambda() (instance 9)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7840.0,
+          "sm_active_pct": 15.59,
+          "dram_throughput_pct": 0.42,
+          "sm_throughput_pct": 0.69,
+          "dram_read_bytes": 51072.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7808.0,
+          "sm_active_pct": 31.53,
+          "dram_throughput_pct": 0.74,
+          "sm_throughput_pct": 1.64,
+          "dram_read_bytes": 89344.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::neg_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 2)]::operator ()() const::[lambda() (instance 9)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7808.0,
+          "sm_active_pct": 15.81,
+          "dram_throughput_pct": 0.42,
+          "sm_throughput_pct": 0.69,
+          "dram_read_bytes": 51072.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7808.0,
+          "sm_active_pct": 31.04,
+          "dram_throughput_pct": 0.73,
+          "sm_throughput_pct": 1.36,
+          "dram_read_bytes": 87808.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7712.0,
+          "sm_active_pct": 31.74,
+          "dram_throughput_pct": 0.74,
+          "sm_throughput_pct": 1.66,
+          "dram_read_bytes": 87808.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7648.0,
+          "sm_active_pct": 31.92,
+          "dram_throughput_pct": 0.74,
+          "sm_throughput_pct": 1.39,
+          "dram_read_bytes": 87808.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "_store_kvcache_kernel",
+          "duration_ns": 7328.0,
+          "sm_active_pct": 2.38,
+          "dram_throughput_pct": 1.2,
+          "sm_throughput_pct": 0.12,
+          "dram_read_bytes": 135680.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "_paged_decode_attention_reduce_kernel",
+          "duration_ns": 7136.0,
+          "sm_active_pct": 45.9,
+          "dram_throughput_pct": 15.79,
+          "sm_throughput_pct": 4.48,
+          "dram_read_bytes": 1741184.0,
+          "dram_write_bytes": 0.0
+        }
+      ],
+      "method_note": "NCU metrics are weighted by kernel duration. Nsight replay perturbs latency; use the steady-state benchmark, not this report, for TTFT/TPOT.",
+      "stage": "attention",
+      "theoretical": {
+        "weight_bytes_per_step": 0,
+        "weight_bytes": 0,
+        "activation_bytes": 131072,
+        "kv_read_bytes": 102105088,
+        "kv_write_bytes": 131072,
+        "compulsory_bytes": 102236160,
+        "estimated_flops": 102105088,
+        "weight_fraction_of_compulsory_bytes": 0.0,
+        "arithmetic_intensity_flops_per_byte": 0.9987179487179487
+      },
+      "measured_dram_bytes": 108489984.0,
+      "bottleneck": {
+        "classification": "kv_memory_bound_or_bandwidth_underfilled",
+        "strict_weight_bound_confirmed": false,
+        "idle_at_start": true,
+        "weight_dominated_compulsory_traffic": false,
+        "dram_saturated": false,
+        "measured_traffic_present": true,
+        "memory_pressure_dominates_sm": true,
+        "min_dram_throughput_pct": 50.0,
+        "arithmetic_intensity_flops_per_byte": 0.9987179487179487,
+        "ridge_point_flops_per_byte": 200.64308681672026,
+        "below_roofline_ridge": true,
+        "weight_fraction_of_compulsory_bytes": 0.0,
+        "measured_to_compulsory_dram_byte_ratio": 1.0611703725961539,
+        "duration_weighted_sm_throughput_pct": 13.634506974506971,
+        "evidence_rule": "Strict confirmation requires an idle launch, >=80% theoretical compulsory bytes from weights, arithmetic intensity below the hardware ridge point, measured DRAM traffic >=50% of modeled compulsory traffic, DRAM throughput above the configured threshold, and DRAM pressure greater than SM throughput."
+      }
+    },
+    "o_proj": {
+      "kernel_count": 1,
+      "total_profiled_kernel_time_ms": 0.036576,
+      "duration_weighted_sm_active_pct": 44.78,
+      "duration_weighted_sm_throughput_pct": 24.63,
+      "duration_weighted_dram_throughput_pct": 63.25,
+      "dram_read_bytes": 33635968.0,
+      "dram_write_bytes": 2287616.0,
+      "estimated_duration_weighted_dram_gbps": 983.5374999999999,
+      "peak_hbm_gbps": 1555.0,
+      "top_kernels_by_duration": [
+        {
+          "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn",
+          "duration_ns": 36576.0,
+          "sm_active_pct": 44.78,
+          "dram_throughput_pct": 63.25,
+          "sm_throughput_pct": 24.63,
+          "dram_read_bytes": 33635968.0,
+          "dram_write_bytes": 2287616.0
+        }
+      ],
+      "method_note": "NCU metrics are weighted by kernel duration. Nsight replay perturbs latency; use the steady-state benchmark, not this report, for TTFT/TPOT.",
+      "stage": "o_proj",
+      "theoretical": {
+        "weight_bytes_per_step": 33554432,
+        "weight_bytes": 33554432,
+        "activation_bytes": 131072,
+        "compulsory_bytes": 33685504,
+        "estimated_flops": 268435456,
+        "weight_fraction_of_compulsory_bytes": 0.9961089494163424,
+        "arithmetic_intensity_flops_per_byte": 7.968871595330739
+      },
+      "measured_dram_bytes": 35923584.0,
+      "bottleneck": {
+        "classification": "confirmed_weight_bandwidth_bound",
+        "strict_weight_bound_confirmed": true,
+        "idle_at_start": true,
+        "weight_dominated_compulsory_traffic": true,
+        "dram_saturated": true,
+        "measured_traffic_present": true,
+        "memory_pressure_dominates_sm": true,
+        "min_dram_throughput_pct": 50.0,
+        "arithmetic_intensity_flops_per_byte": 7.968871595330739,
+        "ridge_point_flops_per_byte": 200.64308681672026,
+        "below_roofline_ridge": true,
+        "weight_fraction_of_compulsory_bytes": 0.9961089494163424,
+        "measured_to_compulsory_dram_byte_ratio": 1.0664404486867705,
+        "duration_weighted_sm_throughput_pct": 24.63,
+        "evidence_rule": "Strict confirmation requires an idle launch, >=80% theoretical compulsory bytes from weights, arithmetic intensity below the hardware ridge point, measured DRAM traffic >=50% of modeled compulsory traffic, DRAM throughput above the configured threshold, and DRAM pressure greater than SM throughput."
+      }
+    },
+    "mlp": {
+      "kernel_count": 4,
+      "total_profiled_kernel_time_ms": 0.237664,
+      "duration_weighted_sm_active_pct": 72.94595933755218,
+      "duration_weighted_sm_throughput_pct": 30.582745388447556,
+      "duration_weighted_dram_throughput_pct": 74.73033122391276,
+      "dram_read_bytes": 271380352.0,
+      "dram_write_bytes": 4711168.0,
+      "estimated_duration_weighted_dram_gbps": 1162.0566505318434,
+      "peak_hbm_gbps": 1555.0,
+      "top_kernels_by_duration": [
+        {
+          "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x3_tn",
+          "duration_ns": 140320.0,
+          "sm_active_pct": 88.06,
+          "dram_throughput_pct": 83.79,
+          "sm_throughput_pct": 34.19,
+          "dram_read_bytes": 180440192.0,
+          "dram_write_bytes": 2358784.0
+        },
+        {
+          "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn",
+          "duration_ns": 81152.0,
+          "sm_active_pct": 50.32,
+          "dram_throughput_pct": 73.52,
+          "sm_throughput_pct": 29.66,
+          "dram_read_bytes": 90370176.0,
+          "dram_write_bytes": 2352384.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::<unnamed>::silu_kernel(at::TensorIteratorBase &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 6)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 8256.0,
+          "sm_active_pct": 55.15,
+          "dram_throughput_pct": 1.55,
+          "sm_throughput_pct": 4.29,
+          "dram_read_bytes": 197504.0,
+          "dram_write_bytes": 0.0
+        },
+        {
+          "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+          "duration_ns": 7936.0,
+          "sm_active_pct": 55.59,
+          "dram_throughput_pct": 3.05,
+          "sm_throughput_pct": 3.59,
+          "dram_read_bytes": 372480.0,
+          "dram_write_bytes": 0.0
+        }
+      ],
+      "method_note": "NCU metrics are weighted by kernel duration. Nsight replay perturbs latency; use the steady-state benchmark, not this report, for TTFT/TPOT.",
+      "stage": "mlp",
+      "theoretical": {
+        "weight_bytes_per_step": 270532608,
+        "weight_bytes": 270532608,
+        "activation_bytes": 659456,
+        "compulsory_bytes": 271192064,
+        "estimated_flops": 2164260864,
+        "weight_fraction_of_compulsory_bytes": 0.997568306423598,
+        "arithmetic_intensity_flops_per_byte": 7.980546451388784
+      },
+      "measured_dram_bytes": 276091520.0,
+      "bottleneck": {
+        "classification": "confirmed_weight_bandwidth_bound",
+        "strict_weight_bound_confirmed": true,
+        "idle_at_start": true,
+        "weight_dominated_compulsory_traffic": true,
+        "dram_saturated": true,
+        "measured_traffic_present": true,
+        "memory_pressure_dominates_sm": true,
+        "min_dram_throughput_pct": 50.0,
+        "arithmetic_intensity_flops_per_byte": 7.980546451388784,
+        "ridge_point_flops_per_byte": 200.64308681672026,
+        "below_roofline_ridge": true,
+        "weight_fraction_of_compulsory_bytes": 0.997568306423598,
+        "measured_to_compulsory_dram_byte_ratio": 1.0180663693757646,
+        "duration_weighted_sm_throughput_pct": 30.582745388447556,
+        "evidence_rule": "Strict confirmation requires an idle launch, >=80% theoretical compulsory bytes from weights, arithmetic intensity below the hardware ridge point, measured DRAM traffic >=50% of modeled compulsory traffic, DRAM throughput above the configured threshold, and DRAM pressure greater than SM throughput."
+      }
+    },
+    "lm_head": {
+      "kernel_count": 1,
+      "total_profiled_kernel_time_ms": 0.704832,
+      "duration_weighted_sm_active_pct": 66.77,
+      "duration_weighted_sm_throughput_pct": 13.89,
+      "duration_weighted_dram_throughput_pct": 24.17,
+      "dram_read_bytes": 262329856.0,
+      "dram_write_bytes": 2569984.0,
+      "estimated_duration_weighted_dram_gbps": 375.84350000000006,
+      "peak_hbm_gbps": 1555.0,
+      "top_kernels_by_duration": [
+        {
+          "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_tn_align1>(T1::Params)",
+          "duration_ns": 704832.0,
+          "sm_active_pct": 66.77,
+          "dram_throughput_pct": 24.17,
+          "sm_throughput_pct": 13.89,
+          "dram_read_bytes": 262329856.0,
+          "dram_write_bytes": 2569984.0
+        }
+      ],
+      "method_note": "NCU metrics are weighted by kernel duration. Nsight replay perturbs latency; use the steady-state benchmark, not this report, for TTFT/TPOT.",
+      "stage": "lm_head",
+      "theoretical": {
+        "weight_bytes_per_step": 262168576,
+        "weight_bytes": 262168576,
+        "activation_bytes": 577584,
+        "compulsory_bytes": 262746160,
+        "estimated_flops": 2097348608,
+        "weight_fraction_of_compulsory_bytes": 0.9978017414222152,
+        "arithmetic_intensity_flops_per_byte": 7.982413931377722
+      },
+      "measured_dram_bytes": 264899840.0,
+      "bottleneck": {
+        "classification": "weight_stream_dominated_but_not_strictly_confirmed",
+        "strict_weight_bound_confirmed": false,
+        "idle_at_start": true,
+        "weight_dominated_compulsory_traffic": true,
+        "dram_saturated": false,
+        "measured_traffic_present": true,
+        "memory_pressure_dominates_sm": true,
+        "min_dram_throughput_pct": 50.0,
+        "arithmetic_intensity_flops_per_byte": 7.982413931377722,
+        "ridge_point_flops_per_byte": 200.64308681672026,
+        "below_roofline_ridge": true,
+        "weight_fraction_of_compulsory_bytes": 0.9978017414222152,
+        "measured_to_compulsory_dram_byte_ratio": 1.008196808661257,
+        "duration_weighted_sm_throughput_pct": 13.89,
+        "evidence_rule": "Strict confirmation requires an idle launch, >=80% theoretical compulsory bytes from weights, arithmetic intensity below the hardware ridge point, measured DRAM traffic >=50% of modeled compulsory traffic, DRAM throughput above the configured threshold, and DRAM pressure greater than SM throughput."
+      }
+    }
+  },
+  "strict_weight_bound_stages": [
+    "qkv",
+    "o_proj",
+    "mlp"
+  ],
+  "all_linear_stages_strictly_weight_bound": false,
+  "attention_note": "Attention has no decoder weights in this accounting; classify it from paged K/V traffic rather than calling it weight-bound.",
+  "plot": "/home/nano-pointllm/results/ncu_decode_stages/b8/stage_bottleneck.png"
+}

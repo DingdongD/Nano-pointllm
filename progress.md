@@ -316,4 +316,8 @@
 - Corrected real PointLLM-7B mixed-step parity passed all three cases token-for-token, with observed mixed compositions `(1,1)`, `(1,3)`, and `(2,1)`.
 - Full regression after the runtime/profiler changes: `133 passed, 1 skipped`.
 - Added and smoke-tested automatic `stage_bottleneck.png` rendering; the synthetic smoke output was 85,262 bytes.
-- All four A100s were externally occupied at 100% utilization; strict B1/B8 NCU collection remains pending and the idle guard correctly prevents contaminated reports.
+- Strict B1/B8 NCU collection completed on an idle A100 with context length 780 and decoder layer 0 as the representative hardware-counter scope.
+- B1 confirmed QKV, O projection, MLP, and LM head as weight-bandwidth-bound; attention was KV-memory-bound/underfilled.
+- B8 confirmed QKV, O projection, and MLP as weight-bandwidth-bound. LM head remained weight-stream dominated but reached only 24.17% DRAM throughput, so it did not pass the strict threshold.
+- Stage-only scaled shares were B1: MLP 48.65%, attention 21.88%, QKV 20.83%, O 7.31%, LM head 1.33%; B8: MLP 40.66%, attention 34.15%, QKV 15.17%, O 6.26%, LM head 3.77%.
+- Reports and plots are under `docs/results/ncu_weight_bound_2026-09-30/`; raw NCU CSV remains under ignored local `results/ncu_decode_stages/`.

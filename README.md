@@ -128,6 +128,8 @@ done
 
 每个目录会生成一份完整 `all_stages.csv`、五组按 NVTX 拆分的 CSV、manifest、stage summary、`stage_bottleneck_summary.json` 和图片。只有空卡启动、权重占理论强制流量至少 80%、算术强度低于 roofline ridge、实测 DRAM 字节达到理论流量的 50%、DRAM throughput 达阈值且高于 SM throughput 时，线性 stage 才标为 `confirmed_weight_bandwidth_bound`；attention 单独按 paged K/V 流量判断，不能称为 weight-bound。
 
+2026-09-30 的 A100 B1/B8 正式结果、图和结论见 [`docs/results/ncu_weight_bound_2026-09-30/`](docs/results/ncu_weight_bound_2026-09-30/README.md)。
+
 **Paged runtime 默认轻量路径**：构造带 `num_kvcache_blocks` 的 `PointLLMLLMEngine` 后，prefill、mixed step 和 eager decode 默认均经 `LightweightLlamaRunner` 绕过 HuggingFace 模型级 `forward`。设置 `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` 才恢复显式 HF fallback，用于 parity/debug；`NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` 启用固定 shape bucket 的 decode graph 并强制轻量路径。  
 分页执行会从 `ForwardContext` 注入每个逻辑请求自己的 position ids，包括 PointLLM 显式向基类传递 `position_ids=None` 的情况；修改运行时代码后需重启已有 Python 服务，确保类级 patch 重新安装。  
 **`torch_loop`**：需 **`transformers.cache_utils`**（含 `DynamicCache`）；若环境缺该模块，运行时会 **自动退回 `hf_inner`** 并打 log，升级 `transformers` 后可走显式逐层路径。  

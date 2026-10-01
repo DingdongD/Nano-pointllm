@@ -158,8 +158,8 @@ Phase 22 complete
 - [x] Add stage traffic/FLOP manifests and strict weight-bound classification
 - [x] Add true mixed-step routing tests and repair the staggered real-model parity driver
 - [x] Document the native runtime boundary and reproducible B1/B8 NCU commands
-- [ ] Capture publishable B1/B8 NCU reports after an A100 becomes idle
-- **Status:** blocked on an idle GPU for measurement only; implementation complete
+- [x] Capture publishable B1/B8 NCU reports on an idle A100
+- **Status:** complete
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?

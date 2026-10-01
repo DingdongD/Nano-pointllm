@@ -9,7 +9,7 @@ build/
 *.so
 
 # Local benchmark/profiler artifacts and downloaded tooling.
-results/
+/results/
 codex-*
 
 # Nsight Compute reports can be regenerated from the checked-in scripts.
