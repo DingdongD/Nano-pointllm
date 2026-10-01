@@ -173,13 +173,14 @@ PYTHONPATH=/home/PointLLM:. /opt/conda/envs/pointllm/bin/python \
 
 该流程分别输出 FPS、KNN、local encoder、完整 12 层 PointTransformer QKV/attention/O/MLP 的 NCU DRAM bytes、DRAM/SM throughput、显式 FLOP model、measured-byte AI 和统一 roofline 图。正式结果见 [`docs/results/pointbert_ncu_roofline_2026-10-01/`](docs/results/pointbert_ncu_roofline_2026-10-01/README.md)。
 
-### Phase-adaptive architecture simulator
+### Phase-adaptive architecture estimator
 
 [`architecture_simulator/`](architecture_simulator/README.md) 提供独立的
-PointLLM trace-driven 架构模型，覆盖 persistent FPS/KNN、dense tensor、
+PointLLM operation-level 解析估算器，覆盖 persistent FPS/KNN、dense tensor、
 Split-K decode、W4/W8/BF16 weight streaming、fused/paged attention、分阶段
-SRAM 和资源约束 DSE。该模型只声明 phase-level analytical fidelity；在
-C-model/RTL 相关性建立前不会输出未经表征的面积或能耗结论。
+SRAM 和资源约束 DSE。它不是完整 cycle simulator、C-model 或 RTL；当前
+没有 ready/valid、stall、bank conflict、DRAM timing 或 RTL correlation，
+因此输出只用于探索，不能作为可发表的性能/面积/能耗结论。
 
 ```bash
 cd /home/nano-pointllm/architecture_simulator
@@ -190,8 +191,9 @@ cd /home/nano-pointllm/architecture_simulator
 ```
 
 快速 DSE 会联合扫描 tensor shape、Split-K、geometry lanes、HBM、SRAM 与
-weight-unpack 吞吐；C-model、RTL、golden trace 与 PTPX/CACTI 的后续边界也在
-该子目录中显式记录。首轮 `B1/S768/O128` 结果与限制见
+weight-unpack 吞吐；`validate` 命令负责核对真实 config/YAML/safetensors
+shape 和解析守恒。C-model/RTL 仍是明确标注的 future work。修正后的
+`B1/S768/O128` 结果与限制见
 [`docs/results/architecture_simulator_2026-10-01/`](docs/results/architecture_simulator_2026-10-01/README.md)。
 
 **Paged runtime 默认轻量路径**：构造带 `num_kvcache_blocks` 的 `PointLLMLLMEngine` 后，prefill、mixed step 和 eager decode 默认均经 `LightweightLlamaRunner` 绕过 HuggingFace 模型级 `forward`。设置 `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` 才恢复显式 HF fallback，用于 parity/debug；`NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` 启用固定 shape bucket 的 decode graph 并强制轻量路径。  

@@ -1,15 +1,21 @@
 from dataclasses import replace
+import math
 from pathlib import Path
 
 import pytest
 
 from pointllm_archsim.dse import SweepSpec, iter_configs, latency_resource_pareto, run_sweep
-from pointllm_archsim.engines import EngineModels
+from pointllm_archsim.engines import EngineModels, ceil_div, packed_bytes
 from pointllm_archsim.evidence import extract_ncu_evidence
 from pointllm_archsim.schema import HardwareConfig, Operation, Workload
 from pointllm_archsim.simulator import ArchitectureSimulator
 from pointllm_archsim.simulator import summary_row
 from pointllm_archsim.workload import build_pointllm_7b_workload
+from pointllm_archsim.validation import (
+    validate_conservation,
+    validate_model_files,
+    validate_workload_contract,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -98,6 +104,53 @@ def test_fused_attention_avoids_score_hbm(config):
         materialized.hbm_read_bytes + materialized.hbm_write_bytes
     )
     assert fused.details["materialized_score_bytes"] == 0
+
+
+def test_decode_attention_parallelizes_heads(config):
+    operation = Operation(
+        "decode_attention", "llm_decode", "attention", repeat=32,
+        batch=1, q_len=1, kv_len=768, heads=32, hidden=4096,
+        weight_bits=8, attributes={"paged": True},
+    )
+    parallel = EngineModels(config).estimate(operation)
+    serial_config = replace(
+        config,
+        attention=replace(config.attention, parallelize_heads=False),
+    )
+    serial = EngineModels(serial_config).estimate(operation)
+    lower_bound = ceil_div(
+        parallel.macs,
+        config.tensor.rows * config.tensor.cols
+        * config.tensor.precision_macs_per_cycle[operation.activation_bits],
+    )
+
+    assert parallel.details["head_mapping"] == "head_query_parallel"
+    assert parallel.compute_cycles >= lower_bound
+    assert parallel.compute_cycles < serial.compute_cycles / 10
+    assert parallel.macs == serial.macs
+
+
+def test_packed_bytes_supports_subbyte_activations():
+    assert packed_bytes(1, 4) == 1
+    assert packed_bytes(2, 4) == 1
+    assert packed_bytes(3, 4) == 2
+
+
+def test_knn_hbm_cycles_match_reported_hbm_traffic(config):
+    operation = Operation(
+        "knn", "geometry", "knn", batch=1, m=512, n=8192, k=3,
+        weight_bits=16, attributes={"neighbors": 32, "coordinate_bytes": 2},
+    )
+    result = EngineModels(config).estimate(operation)
+    bytes_per_cycle = (
+        config.memory.hbm_bandwidth_gbps * 1e9 / config.clock_hz
+        * config.memory.hbm_efficiency
+    )
+
+    assert result.memory_cycles == math.ceil(
+        (result.hbm_read_bytes + result.hbm_write_bytes) / bytes_per_cycle
+    )
+    assert result.details["on_chip_distance_scratch_bytes"] > 0
 
 
 def test_simulator_records_phase_transitions(config):
@@ -195,3 +248,54 @@ def test_ncu_evidence_contract():
 
     assert evidence["pointbert"]["1"]["fps"]["time_ms"] == pytest.approx(2.95088)
     assert evidence["decoder"]["1"]["mlp"]["classification"] == "confirmed_weight_bandwidth_bound"
+
+
+def test_real_workload_contract_and_conservation(config):
+    workload = build_pointllm_7b_workload(
+        batch_size=1, input_tokens=64, output_tokens=4,
+    )
+    result = ArchitectureSimulator(config).run(workload)
+    checks = validate_workload_contract(workload) + validate_conservation(
+        config, workload, result
+    )
+
+    assert checks
+    assert all(check.passed for check in checks)
+    assert result.methodology["result_status"] == "exploratory_only"
+    assert result.methodology["rtl_correlated"] is False
+
+
+def test_model_file_validation(tmp_path):
+    checkpoint = tmp_path / "config.json"
+    checkpoint.write_text(
+        """{
+  "hidden_size": 4096,
+  "intermediate_size": 11008,
+  "num_hidden_layers": 32,
+  "num_attention_heads": 32,
+  "vocab_size": 32003,
+  "point_backbone_config_name": "PointTransformer_8192point_2layer",
+  "use_color": true
+}\n""",
+        encoding="utf-8",
+    )
+    pointbert = tmp_path / "pointbert.yaml"
+    pointbert.write_text(
+        """model: {
+  trans_dim: 384,
+  depth: 12,
+  num_heads: 6,
+  group_size: 32,
+  num_group: 512,
+  encoder_dims: 256,
+  point_dims: 3,
+  projection_hidden_layer: 2
+}
+npoints: 8192
+""",
+        encoding="utf-8",
+    )
+
+    checks = validate_model_files(checkpoint, pointbert)
+
+    assert all(check.passed for check in checks)

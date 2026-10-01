@@ -1,0 +1,2805 @@
+{
+  "schema_version": "0.1",
+  "status": "analytical_invariants_passed",
+  "checks_passed": 374,
+  "checks_total": 374,
+  "maturity": {
+    "model_shape_contract": true,
+    "analytical_conservation": true,
+    "event_level_cycle_model": false,
+    "rtl_implementation": false,
+    "rtl_cycle_correlation": false,
+    "area_energy_characterized": false,
+    "publishable_performance_claim": false
+  },
+  "checks": [
+    {
+      "name": "checkpoint.hidden_size",
+      "passed": true,
+      "expected": 4096,
+      "actual": 4096,
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "checkpoint.intermediate_size",
+      "passed": true,
+      "expected": 11008,
+      "actual": 11008,
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "checkpoint.num_hidden_layers",
+      "passed": true,
+      "expected": 32,
+      "actual": 32,
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "checkpoint.num_attention_heads",
+      "passed": true,
+      "expected": 32,
+      "actual": 32,
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "checkpoint.vocab_size",
+      "passed": true,
+      "expected": 32003,
+      "actual": 32003,
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "checkpoint.point_backbone_config_name",
+      "passed": true,
+      "expected": "PointTransformer_8192point_2layer",
+      "actual": "PointTransformer_8192point_2layer",
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json"
+    },
+    {
+      "name": "pointbert.trans_dim",
+      "passed": true,
+      "expected": 384,
+      "actual": 384,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.depth",
+      "passed": true,
+      "expected": 12,
+      "actual": 12,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.num_heads",
+      "passed": true,
+      "expected": 6,
+      "actual": 6,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.group_size",
+      "passed": true,
+      "expected": 32,
+      "actual": 32,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.num_group",
+      "passed": true,
+      "expected": 512,
+      "actual": 512,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.encoder_dims",
+      "passed": true,
+      "expected": 256,
+      "actual": 256,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.point_dims",
+      "passed": true,
+      "expected": 3,
+      "actual": 3,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.projection_hidden_layer",
+      "passed": true,
+      "expected": 2,
+      "actual": 2,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.npoints",
+      "passed": true,
+      "expected": 8192,
+      "actual": 8192,
+      "source": "/home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml"
+    },
+    {
+      "name": "pointbert.effective_point_dims",
+      "passed": true,
+      "expected": 6,
+      "actual": 6,
+      "source": "checkpoint.use_color overrides PointBERT point_dims"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_backbone.reduce_dim.weight",
+      "passed": true,
+      "expected": [
+        384,
+        256
+      ],
+      "actual": [
+        384,
+        256
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_backbone.pos_embed.0.weight",
+      "passed": true,
+      "expected": [
+        128,
+        3
+      ],
+      "actual": [
+        128,
+        3
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_backbone.pos_embed.2.weight",
+      "passed": true,
+      "expected": [
+        384,
+        128
+      ],
+      "actual": [
+        384,
+        128
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_proj.0.weight",
+      "passed": true,
+      "expected": [
+        1024,
+        384
+      ],
+      "actual": [
+        1024,
+        384
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_proj.2.weight",
+      "passed": true,
+      "expected": [
+        2048,
+        1024
+      ],
+      "actual": [
+        2048,
+        1024
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.point_proj.4.weight",
+      "passed": true,
+      "expected": [
+        4096,
+        2048
+      ],
+      "actual": [
+        4096,
+        2048
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.layers.0.self_attn.q_proj.weight",
+      "passed": true,
+      "expected": [
+        4096,
+        4096
+      ],
+      "actual": [
+        4096,
+        4096
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.layers.0.mlp.gate_proj.weight",
+      "passed": true,
+      "expected": [
+        11008,
+        4096
+      ],
+      "actual": [
+        11008,
+        4096
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.model.layers.0.mlp.down_proj.weight",
+      "passed": true,
+      "expected": [
+        4096,
+        11008
+      ],
+      "actual": [
+        4096,
+        11008
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "checkpoint_tensor.lm_head.weight",
+      "passed": true,
+      "expected": [
+        32003,
+        4096
+      ],
+      "actual": [
+        32003,
+        4096
+      ],
+      "source": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/model.safetensors.index.json"
+    },
+    {
+      "name": "workload.point_reduce_dim_256_384.mnk",
+      "passed": true,
+      "expected": [
+        512,
+        384,
+        256
+      ],
+      "actual": [
+        512,
+        384,
+        256
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.point_position_fc_3_128.mnk",
+      "passed": true,
+      "expected": [
+        512,
+        128,
+        3
+      ],
+      "actual": [
+        512,
+        128,
+        3
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.point_position_fc_128_384.mnk",
+      "passed": true,
+      "expected": [
+        512,
+        384,
+        128
+      ],
+      "actual": [
+        512,
+        384,
+        128
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.point_transformer_qkv.mnk",
+      "passed": true,
+      "expected": [
+        513,
+        1152,
+        384
+      ],
+      "actual": [
+        513,
+        1152,
+        384
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.projector_fc0.mnk",
+      "passed": true,
+      "expected": [
+        513,
+        1024,
+        384
+      ],
+      "actual": [
+        513,
+        1024,
+        384
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.projector_fc1.mnk",
+      "passed": true,
+      "expected": [
+        513,
+        2048,
+        1024
+      ],
+      "actual": [
+        513,
+        2048,
+        1024
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.projector_fc2.mnk",
+      "passed": true,
+      "expected": [
+        513,
+        4096,
+        2048
+      ],
+      "actual": [
+        513,
+        4096,
+        2048
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.prefill_qkv.mnk",
+      "passed": true,
+      "expected": [
+        768,
+        12288,
+        4096
+      ],
+      "actual": [
+        768,
+        12288,
+        4096
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.decode_qkv.mnk",
+      "passed": true,
+      "expected": [
+        1,
+        12288,
+        4096
+      ],
+      "actual": [
+        1,
+        12288,
+        4096
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.decode_gate_up.mnk",
+      "passed": true,
+      "expected": [
+        1,
+        11008,
+        4096
+      ],
+      "actual": [
+        1,
+        11008,
+        4096
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.decode_down.mnk",
+      "passed": true,
+      "expected": [
+        1,
+        4096,
+        11008
+      ],
+      "actual": [
+        1,
+        4096,
+        11008
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.decode_lm_head.mnk",
+      "passed": true,
+      "expected": [
+        1,
+        32003,
+        4096
+      ],
+      "actual": [
+        1,
+        32003,
+        4096
+      ],
+      "source": "PointLLM-v1.2 model contract"
+    },
+    {
+      "name": "workload.required_vector_stages",
+      "passed": true,
+      "expected": [
+        "decode_greedy_sampling",
+        "decode_norm_rope_silu_residual",
+        "point_transformer_gelu",
+        "point_transformer_norm_residual",
+        "prefill_norm_rope_silu_residual",
+        "projector_gelu"
+      ],
+      "actual": [
+        "decode_greedy_sampling",
+        "decode_norm_rope_silu_residual",
+        "point_transformer_gelu",
+        "point_transformer_norm_residual",
+        "prefill_norm_rope_silu_residual",
+        "projector_gelu"
+      ],
+      "source": "PointBERT and LLaMA forward graphs"
+    },
+    {
+      "name": "cycles.operation_plus_reconfiguration",
+      "passed": true,
+      "expected": 6205747718,
+      "actual": 6205747718,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "cycles.phase_sum",
+      "passed": true,
+      "expected": 6205747718,
+      "actual": 6205747718,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "traffic.hbm_sum",
+      "passed": true,
+      "expected": 926538237016,
+      "actual": 926538237016,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "macs.local_conv_6_128",
+      "passed": true,
+      "expected": 12582912,
+      "actual": 12582912,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.local_conv_6_128",
+      "passed": true,
+      "expected": 768,
+      "actual": 768,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.local_conv_6_128",
+      "passed": true,
+      "expected": ">=6144",
+      "actual": 137216,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.local_conv_128_256",
+      "passed": true,
+      "expected": 536870912,
+      "actual": 536870912,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.local_conv_128_256",
+      "passed": true,
+      "expected": 32768,
+      "actual": 32768,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.local_conv_128_256",
+      "passed": true,
+      "expected": ">=262144",
+      "actual": 524288,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.local_conv_512_512",
+      "passed": true,
+      "expected": 4294967296,
+      "actual": 4294967296,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.local_conv_512_512",
+      "passed": true,
+      "expected": 262144,
+      "actual": 262144,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.local_conv_512_512",
+      "passed": true,
+      "expected": ">=2097152",
+      "actual": 2621440,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.local_conv_512_256",
+      "passed": true,
+      "expected": 2147483648,
+      "actual": 2147483648,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.local_conv_512_256",
+      "passed": true,
+      "expected": 131072,
+      "actual": 131072,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.local_conv_512_256",
+      "passed": true,
+      "expected": ">=1048576",
+      "actual": 1310720,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_reduce_dim_256_384",
+      "passed": true,
+      "expected": 50331648,
+      "actual": 50331648,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_reduce_dim_256_384",
+      "passed": true,
+      "expected": 98304,
+      "actual": 98304,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_reduce_dim_256_384",
+      "passed": true,
+      "expected": ">=24576",
+      "actual": 36864,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_position_fc_3_128",
+      "passed": true,
+      "expected": 196608,
+      "actual": 196608,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_position_fc_3_128",
+      "passed": true,
+      "expected": 384,
+      "actual": 384,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_position_fc_3_128",
+      "passed": true,
+      "expected": ">=96",
+      "actual": 4224,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_position_fc_128_384",
+      "passed": true,
+      "expected": 25165824,
+      "actual": 25165824,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_position_fc_128_384",
+      "passed": true,
+      "expected": 49152,
+      "actual": 49152,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_position_fc_128_384",
+      "passed": true,
+      "expected": ">=12288",
+      "actual": 24576,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_transformer_qkv",
+      "passed": true,
+      "expected": 2723217408,
+      "actual": 2723217408,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_transformer_qkv",
+      "passed": true,
+      "expected": 5308416,
+      "actual": 5308416,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_transformer_qkv",
+      "passed": true,
+      "expected": ">=1329696",
+      "actual": 1866672,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_transformer_attention",
+      "passed": true,
+      "expected": 2425365504,
+      "actual": 2425365504,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_transformer_attention",
+      "passed": true,
+      "expected": ">=2368521",
+      "actual": 4056157,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_transformer_o",
+      "passed": true,
+      "expected": 907739136,
+      "actual": 907739136,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_transformer_o",
+      "passed": true,
+      "expected": 1769472,
+      "actual": 1769472,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_transformer_o",
+      "passed": true,
+      "expected": ">=443232",
+      "actual": 622224,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_transformer_mlp_up",
+      "passed": true,
+      "expected": 3630956544,
+      "actual": 3630956544,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_transformer_mlp_up",
+      "passed": true,
+      "expected": 7077888,
+      "actual": 7077888,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_transformer_mlp_up",
+      "passed": true,
+      "expected": ">=1772928",
+      "actual": 2488896,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.point_transformer_mlp_down",
+      "passed": true,
+      "expected": 3630956544,
+      "actual": 3630956544,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.point_transformer_mlp_down",
+      "passed": true,
+      "expected": 7077888,
+      "actual": 7077888,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.point_transformer_mlp_down",
+      "passed": true,
+      "expected": ">=1772928",
+      "actual": 2032272,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.projector_fc0",
+      "passed": true,
+      "expected": 201719808,
+      "actual": 201719808,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.projector_fc0",
+      "passed": true,
+      "expected": 393216,
+      "actual": 393216,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.projector_fc0",
+      "passed": true,
+      "expected": ">=98496",
+      "actual": 138272,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.projector_fc1",
+      "passed": true,
+      "expected": 1075838976,
+      "actual": 1075838976,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.projector_fc1",
+      "passed": true,
+      "expected": 2097152,
+      "actual": 2097152,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.projector_fc1",
+      "passed": true,
+      "expected": ">=525312",
+      "actual": 624704,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.projector_fc2",
+      "passed": true,
+      "expected": 4303355904,
+      "actual": 4303355904,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.projector_fc2",
+      "passed": true,
+      "expected": 8388608,
+      "actual": 8388608,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.projector_fc2",
+      "passed": true,
+      "expected": ">=2101248",
+      "actual": 2363520,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_qkv",
+      "passed": true,
+      "expected": 1236950581248,
+      "actual": 1236950581248,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.prefill_qkv",
+      "passed": true,
+      "expected": 1610612736,
+      "actual": 1610612736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_qkv",
+      "passed": true,
+      "expected": ">=603979776",
+      "actual": 622854144,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_attention",
+      "passed": true,
+      "expected": 154618822656,
+      "actual": 154618822656,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_attention",
+      "passed": true,
+      "expected": ">=150994944",
+      "actual": 202113024,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_o",
+      "passed": true,
+      "expected": 412316860416,
+      "actual": 412316860416,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.prefill_o",
+      "passed": true,
+      "expected": 536870912,
+      "actual": 536870912,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_o",
+      "passed": true,
+      "expected": ">=201326592",
+      "actual": 207618048,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_gate_up",
+      "passed": true,
+      "expected": 2216203124736,
+      "actual": 2216203124736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.prefill_gate_up",
+      "passed": true,
+      "expected": 2885681152,
+      "actual": 2885681152,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_gate_up",
+      "passed": true,
+      "expected": ">=1082130432",
+      "actual": 1115947008,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_down",
+      "passed": true,
+      "expected": 1108101562368,
+      "actual": 1108101562368,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.prefill_down",
+      "passed": true,
+      "expected": 1442840576,
+      "actual": 1442840576,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_down",
+      "passed": true,
+      "expected": ">=541065216",
+      "actual": 547356672,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.prefill_last_token_lm_head",
+      "passed": true,
+      "expected": 131084288,
+      "actual": 131084288,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.prefill_last_token_lm_head",
+      "passed": true,
+      "expected": 131084288,
+      "actual": 131084288,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.prefill_last_token_lm_head",
+      "passed": true,
+      "expected": ">=64006",
+      "actual": 103074,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_qkv",
+      "passed": true,
+      "expected": 206158430208,
+      "actual": 206158430208,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.decode_qkv",
+      "passed": true,
+      "expected": 206158430208,
+      "actual": 206158430208,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_qkv",
+      "passed": true,
+      "expected": ">=100663296",
+      "actual": 162004992,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_o",
+      "passed": true,
+      "expected": 68719476736,
+      "actual": 68719476736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.decode_o",
+      "passed": true,
+      "expected": 68719476736,
+      "actual": 68719476736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_o",
+      "passed": true,
+      "expected": ">=33554432",
+      "actual": 54001664,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_gate_up",
+      "passed": true,
+      "expected": 369367187456,
+      "actual": 369367187456,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.decode_gate_up",
+      "passed": true,
+      "expected": 369367187456,
+      "actual": 369367187456,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_gate_up",
+      "passed": true,
+      "expected": ">=180355072",
+      "actual": 290258944,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_down",
+      "passed": true,
+      "expected": 184683593728,
+      "actual": 184683593728,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.decode_down",
+      "passed": true,
+      "expected": 184683593728,
+      "actual": 184683593728,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_down",
+      "passed": true,
+      "expected": ">=90177536",
+      "actual": 110624768,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t000",
+      "passed": true,
+      "expected": 201326592,
+      "actual": 201326592,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t000",
+      "passed": true,
+      "expected": ">=196608",
+      "actual": 263168,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t001",
+      "passed": true,
+      "expected": 201588736,
+      "actual": 201588736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t001",
+      "passed": true,
+      "expected": ">=196864",
+      "actual": 268460,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t002",
+      "passed": true,
+      "expected": 201850880,
+      "actual": 201850880,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t002",
+      "passed": true,
+      "expected": ">=197120",
+      "actual": 268632,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t003",
+      "passed": true,
+      "expected": 202113024,
+      "actual": 202113024,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t003",
+      "passed": true,
+      "expected": ">=197376",
+      "actual": 268804,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t004",
+      "passed": true,
+      "expected": 202375168,
+      "actual": 202375168,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t004",
+      "passed": true,
+      "expected": ">=197632",
+      "actual": 268976,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t005",
+      "passed": true,
+      "expected": 202637312,
+      "actual": 202637312,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t005",
+      "passed": true,
+      "expected": ">=197888",
+      "actual": 269148,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t006",
+      "passed": true,
+      "expected": 202899456,
+      "actual": 202899456,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t006",
+      "passed": true,
+      "expected": ">=198144",
+      "actual": 269320,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t007",
+      "passed": true,
+      "expected": 203161600,
+      "actual": 203161600,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t007",
+      "passed": true,
+      "expected": ">=198400",
+      "actual": 269492,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t008",
+      "passed": true,
+      "expected": 203423744,
+      "actual": 203423744,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t008",
+      "passed": true,
+      "expected": ">=198656",
+      "actual": 269664,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t009",
+      "passed": true,
+      "expected": 203685888,
+      "actual": 203685888,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t009",
+      "passed": true,
+      "expected": ">=198912",
+      "actual": 269836,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t010",
+      "passed": true,
+      "expected": 203948032,
+      "actual": 203948032,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t010",
+      "passed": true,
+      "expected": ">=199168",
+      "actual": 270008,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t011",
+      "passed": true,
+      "expected": 204210176,
+      "actual": 204210176,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t011",
+      "passed": true,
+      "expected": ">=199424",
+      "actual": 270180,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t012",
+      "passed": true,
+      "expected": 204472320,
+      "actual": 204472320,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t012",
+      "passed": true,
+      "expected": ">=199680",
+      "actual": 270352,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t013",
+      "passed": true,
+      "expected": 204734464,
+      "actual": 204734464,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t013",
+      "passed": true,
+      "expected": ">=199936",
+      "actual": 270524,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t014",
+      "passed": true,
+      "expected": 204996608,
+      "actual": 204996608,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t014",
+      "passed": true,
+      "expected": ">=200192",
+      "actual": 270696,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t015",
+      "passed": true,
+      "expected": 205258752,
+      "actual": 205258752,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t015",
+      "passed": true,
+      "expected": ">=200448",
+      "actual": 270868,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t016",
+      "passed": true,
+      "expected": 205520896,
+      "actual": 205520896,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t016",
+      "passed": true,
+      "expected": ">=200704",
+      "actual": 271040,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t017",
+      "passed": true,
+      "expected": 205783040,
+      "actual": 205783040,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t017",
+      "passed": true,
+      "expected": ">=200960",
+      "actual": 271212,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t018",
+      "passed": true,
+      "expected": 206045184,
+      "actual": 206045184,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t018",
+      "passed": true,
+      "expected": ">=201216",
+      "actual": 271384,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t019",
+      "passed": true,
+      "expected": 206307328,
+      "actual": 206307328,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t019",
+      "passed": true,
+      "expected": ">=201472",
+      "actual": 271556,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t020",
+      "passed": true,
+      "expected": 206569472,
+      "actual": 206569472,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t020",
+      "passed": true,
+      "expected": ">=201728",
+      "actual": 271728,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t021",
+      "passed": true,
+      "expected": 206831616,
+      "actual": 206831616,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t021",
+      "passed": true,
+      "expected": ">=201984",
+      "actual": 271900,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t022",
+      "passed": true,
+      "expected": 207093760,
+      "actual": 207093760,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t022",
+      "passed": true,
+      "expected": ">=202240",
+      "actual": 272072,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t023",
+      "passed": true,
+      "expected": 207355904,
+      "actual": 207355904,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t023",
+      "passed": true,
+      "expected": ">=202496",
+      "actual": 272244,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t024",
+      "passed": true,
+      "expected": 207618048,
+      "actual": 207618048,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t024",
+      "passed": true,
+      "expected": ">=202752",
+      "actual": 272416,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t025",
+      "passed": true,
+      "expected": 207880192,
+      "actual": 207880192,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t025",
+      "passed": true,
+      "expected": ">=203008",
+      "actual": 272588,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t026",
+      "passed": true,
+      "expected": 208142336,
+      "actual": 208142336,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t026",
+      "passed": true,
+      "expected": ">=203264",
+      "actual": 272760,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t027",
+      "passed": true,
+      "expected": 208404480,
+      "actual": 208404480,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t027",
+      "passed": true,
+      "expected": ">=203520",
+      "actual": 272932,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t028",
+      "passed": true,
+      "expected": 208666624,
+      "actual": 208666624,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t028",
+      "passed": true,
+      "expected": ">=203776",
+      "actual": 273104,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t029",
+      "passed": true,
+      "expected": 208928768,
+      "actual": 208928768,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t029",
+      "passed": true,
+      "expected": ">=204032",
+      "actual": 273276,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t030",
+      "passed": true,
+      "expected": 209190912,
+      "actual": 209190912,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t030",
+      "passed": true,
+      "expected": ">=204288",
+      "actual": 273448,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t031",
+      "passed": true,
+      "expected": 209453056,
+      "actual": 209453056,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t031",
+      "passed": true,
+      "expected": ">=204544",
+      "actual": 273620,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t032",
+      "passed": true,
+      "expected": 209715200,
+      "actual": 209715200,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t032",
+      "passed": true,
+      "expected": ">=204800",
+      "actual": 273792,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t033",
+      "passed": true,
+      "expected": 209977344,
+      "actual": 209977344,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t033",
+      "passed": true,
+      "expected": ">=205056",
+      "actual": 279084,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t034",
+      "passed": true,
+      "expected": 210239488,
+      "actual": 210239488,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t034",
+      "passed": true,
+      "expected": ">=205312",
+      "actual": 279256,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t035",
+      "passed": true,
+      "expected": 210501632,
+      "actual": 210501632,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t035",
+      "passed": true,
+      "expected": ">=205568",
+      "actual": 279428,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t036",
+      "passed": true,
+      "expected": 210763776,
+      "actual": 210763776,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t036",
+      "passed": true,
+      "expected": ">=205824",
+      "actual": 279600,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t037",
+      "passed": true,
+      "expected": 211025920,
+      "actual": 211025920,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t037",
+      "passed": true,
+      "expected": ">=206080",
+      "actual": 279772,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t038",
+      "passed": true,
+      "expected": 211288064,
+      "actual": 211288064,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t038",
+      "passed": true,
+      "expected": ">=206336",
+      "actual": 279944,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t039",
+      "passed": true,
+      "expected": 211550208,
+      "actual": 211550208,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t039",
+      "passed": true,
+      "expected": ">=206592",
+      "actual": 280116,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t040",
+      "passed": true,
+      "expected": 211812352,
+      "actual": 211812352,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t040",
+      "passed": true,
+      "expected": ">=206848",
+      "actual": 280288,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t041",
+      "passed": true,
+      "expected": 212074496,
+      "actual": 212074496,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t041",
+      "passed": true,
+      "expected": ">=207104",
+      "actual": 280460,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t042",
+      "passed": true,
+      "expected": 212336640,
+      "actual": 212336640,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t042",
+      "passed": true,
+      "expected": ">=207360",
+      "actual": 280632,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t043",
+      "passed": true,
+      "expected": 212598784,
+      "actual": 212598784,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t043",
+      "passed": true,
+      "expected": ">=207616",
+      "actual": 280804,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t044",
+      "passed": true,
+      "expected": 212860928,
+      "actual": 212860928,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t044",
+      "passed": true,
+      "expected": ">=207872",
+      "actual": 280976,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t045",
+      "passed": true,
+      "expected": 213123072,
+      "actual": 213123072,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t045",
+      "passed": true,
+      "expected": ">=208128",
+      "actual": 281148,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t046",
+      "passed": true,
+      "expected": 213385216,
+      "actual": 213385216,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t046",
+      "passed": true,
+      "expected": ">=208384",
+      "actual": 281320,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t047",
+      "passed": true,
+      "expected": 213647360,
+      "actual": 213647360,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t047",
+      "passed": true,
+      "expected": ">=208640",
+      "actual": 281492,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t048",
+      "passed": true,
+      "expected": 213909504,
+      "actual": 213909504,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t048",
+      "passed": true,
+      "expected": ">=208896",
+      "actual": 281664,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t049",
+      "passed": true,
+      "expected": 214171648,
+      "actual": 214171648,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t049",
+      "passed": true,
+      "expected": ">=209152",
+      "actual": 281836,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t050",
+      "passed": true,
+      "expected": 214433792,
+      "actual": 214433792,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t050",
+      "passed": true,
+      "expected": ">=209408",
+      "actual": 282008,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t051",
+      "passed": true,
+      "expected": 214695936,
+      "actual": 214695936,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t051",
+      "passed": true,
+      "expected": ">=209664",
+      "actual": 282180,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t052",
+      "passed": true,
+      "expected": 214958080,
+      "actual": 214958080,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t052",
+      "passed": true,
+      "expected": ">=209920",
+      "actual": 282352,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t053",
+      "passed": true,
+      "expected": 215220224,
+      "actual": 215220224,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t053",
+      "passed": true,
+      "expected": ">=210176",
+      "actual": 282524,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t054",
+      "passed": true,
+      "expected": 215482368,
+      "actual": 215482368,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t054",
+      "passed": true,
+      "expected": ">=210432",
+      "actual": 282696,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t055",
+      "passed": true,
+      "expected": 215744512,
+      "actual": 215744512,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t055",
+      "passed": true,
+      "expected": ">=210688",
+      "actual": 282868,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t056",
+      "passed": true,
+      "expected": 216006656,
+      "actual": 216006656,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t056",
+      "passed": true,
+      "expected": ">=210944",
+      "actual": 283040,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t057",
+      "passed": true,
+      "expected": 216268800,
+      "actual": 216268800,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t057",
+      "passed": true,
+      "expected": ">=211200",
+      "actual": 283212,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t058",
+      "passed": true,
+      "expected": 216530944,
+      "actual": 216530944,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t058",
+      "passed": true,
+      "expected": ">=211456",
+      "actual": 283384,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t059",
+      "passed": true,
+      "expected": 216793088,
+      "actual": 216793088,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t059",
+      "passed": true,
+      "expected": ">=211712",
+      "actual": 283556,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t060",
+      "passed": true,
+      "expected": 217055232,
+      "actual": 217055232,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t060",
+      "passed": true,
+      "expected": ">=211968",
+      "actual": 283728,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t061",
+      "passed": true,
+      "expected": 217317376,
+      "actual": 217317376,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t061",
+      "passed": true,
+      "expected": ">=212224",
+      "actual": 283900,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t062",
+      "passed": true,
+      "expected": 217579520,
+      "actual": 217579520,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t062",
+      "passed": true,
+      "expected": ">=212480",
+      "actual": 284072,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t063",
+      "passed": true,
+      "expected": 217841664,
+      "actual": 217841664,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t063",
+      "passed": true,
+      "expected": ">=212736",
+      "actual": 284244,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t064",
+      "passed": true,
+      "expected": 218103808,
+      "actual": 218103808,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t064",
+      "passed": true,
+      "expected": ">=212992",
+      "actual": 284416,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t065",
+      "passed": true,
+      "expected": 218365952,
+      "actual": 218365952,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t065",
+      "passed": true,
+      "expected": ">=213248",
+      "actual": 289708,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t066",
+      "passed": true,
+      "expected": 218628096,
+      "actual": 218628096,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t066",
+      "passed": true,
+      "expected": ">=213504",
+      "actual": 289880,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t067",
+      "passed": true,
+      "expected": 218890240,
+      "actual": 218890240,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t067",
+      "passed": true,
+      "expected": ">=213760",
+      "actual": 290052,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t068",
+      "passed": true,
+      "expected": 219152384,
+      "actual": 219152384,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t068",
+      "passed": true,
+      "expected": ">=214016",
+      "actual": 290224,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t069",
+      "passed": true,
+      "expected": 219414528,
+      "actual": 219414528,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t069",
+      "passed": true,
+      "expected": ">=214272",
+      "actual": 290396,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t070",
+      "passed": true,
+      "expected": 219676672,
+      "actual": 219676672,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t070",
+      "passed": true,
+      "expected": ">=214528",
+      "actual": 290568,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t071",
+      "passed": true,
+      "expected": 219938816,
+      "actual": 219938816,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t071",
+      "passed": true,
+      "expected": ">=214784",
+      "actual": 290740,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t072",
+      "passed": true,
+      "expected": 220200960,
+      "actual": 220200960,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t072",
+      "passed": true,
+      "expected": ">=215040",
+      "actual": 290912,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t073",
+      "passed": true,
+      "expected": 220463104,
+      "actual": 220463104,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t073",
+      "passed": true,
+      "expected": ">=215296",
+      "actual": 291084,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t074",
+      "passed": true,
+      "expected": 220725248,
+      "actual": 220725248,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t074",
+      "passed": true,
+      "expected": ">=215552",
+      "actual": 291256,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t075",
+      "passed": true,
+      "expected": 220987392,
+      "actual": 220987392,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t075",
+      "passed": true,
+      "expected": ">=215808",
+      "actual": 291428,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t076",
+      "passed": true,
+      "expected": 221249536,
+      "actual": 221249536,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t076",
+      "passed": true,
+      "expected": ">=216064",
+      "actual": 291600,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t077",
+      "passed": true,
+      "expected": 221511680,
+      "actual": 221511680,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t077",
+      "passed": true,
+      "expected": ">=216320",
+      "actual": 291772,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t078",
+      "passed": true,
+      "expected": 221773824,
+      "actual": 221773824,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t078",
+      "passed": true,
+      "expected": ">=216576",
+      "actual": 291944,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t079",
+      "passed": true,
+      "expected": 222035968,
+      "actual": 222035968,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t079",
+      "passed": true,
+      "expected": ">=216832",
+      "actual": 292116,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t080",
+      "passed": true,
+      "expected": 222298112,
+      "actual": 222298112,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t080",
+      "passed": true,
+      "expected": ">=217088",
+      "actual": 292288,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t081",
+      "passed": true,
+      "expected": 222560256,
+      "actual": 222560256,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t081",
+      "passed": true,
+      "expected": ">=217344",
+      "actual": 292460,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t082",
+      "passed": true,
+      "expected": 222822400,
+      "actual": 222822400,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t082",
+      "passed": true,
+      "expected": ">=217600",
+      "actual": 292632,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t083",
+      "passed": true,
+      "expected": 223084544,
+      "actual": 223084544,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t083",
+      "passed": true,
+      "expected": ">=217856",
+      "actual": 292804,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t084",
+      "passed": true,
+      "expected": 223346688,
+      "actual": 223346688,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t084",
+      "passed": true,
+      "expected": ">=218112",
+      "actual": 292976,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t085",
+      "passed": true,
+      "expected": 223608832,
+      "actual": 223608832,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t085",
+      "passed": true,
+      "expected": ">=218368",
+      "actual": 293148,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t086",
+      "passed": true,
+      "expected": 223870976,
+      "actual": 223870976,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t086",
+      "passed": true,
+      "expected": ">=218624",
+      "actual": 293320,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t087",
+      "passed": true,
+      "expected": 224133120,
+      "actual": 224133120,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t087",
+      "passed": true,
+      "expected": ">=218880",
+      "actual": 293492,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t088",
+      "passed": true,
+      "expected": 224395264,
+      "actual": 224395264,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t088",
+      "passed": true,
+      "expected": ">=219136",
+      "actual": 293664,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t089",
+      "passed": true,
+      "expected": 224657408,
+      "actual": 224657408,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t089",
+      "passed": true,
+      "expected": ">=219392",
+      "actual": 293836,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t090",
+      "passed": true,
+      "expected": 224919552,
+      "actual": 224919552,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t090",
+      "passed": true,
+      "expected": ">=219648",
+      "actual": 294008,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t091",
+      "passed": true,
+      "expected": 225181696,
+      "actual": 225181696,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t091",
+      "passed": true,
+      "expected": ">=219904",
+      "actual": 294180,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t092",
+      "passed": true,
+      "expected": 225443840,
+      "actual": 225443840,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t092",
+      "passed": true,
+      "expected": ">=220160",
+      "actual": 294352,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t093",
+      "passed": true,
+      "expected": 225705984,
+      "actual": 225705984,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t093",
+      "passed": true,
+      "expected": ">=220416",
+      "actual": 294524,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t094",
+      "passed": true,
+      "expected": 225968128,
+      "actual": 225968128,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t094",
+      "passed": true,
+      "expected": ">=220672",
+      "actual": 294696,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t095",
+      "passed": true,
+      "expected": 226230272,
+      "actual": 226230272,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t095",
+      "passed": true,
+      "expected": ">=220928",
+      "actual": 294868,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t096",
+      "passed": true,
+      "expected": 226492416,
+      "actual": 226492416,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t096",
+      "passed": true,
+      "expected": ">=221184",
+      "actual": 295040,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t097",
+      "passed": true,
+      "expected": 226754560,
+      "actual": 226754560,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t097",
+      "passed": true,
+      "expected": ">=221440",
+      "actual": 300332,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t098",
+      "passed": true,
+      "expected": 227016704,
+      "actual": 227016704,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t098",
+      "passed": true,
+      "expected": ">=221696",
+      "actual": 300504,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t099",
+      "passed": true,
+      "expected": 227278848,
+      "actual": 227278848,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t099",
+      "passed": true,
+      "expected": ">=221952",
+      "actual": 300676,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t100",
+      "passed": true,
+      "expected": 227540992,
+      "actual": 227540992,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t100",
+      "passed": true,
+      "expected": ">=222208",
+      "actual": 300848,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t101",
+      "passed": true,
+      "expected": 227803136,
+      "actual": 227803136,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t101",
+      "passed": true,
+      "expected": ">=222464",
+      "actual": 301020,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t102",
+      "passed": true,
+      "expected": 228065280,
+      "actual": 228065280,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t102",
+      "passed": true,
+      "expected": ">=222720",
+      "actual": 301192,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t103",
+      "passed": true,
+      "expected": 228327424,
+      "actual": 228327424,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t103",
+      "passed": true,
+      "expected": ">=222976",
+      "actual": 301364,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t104",
+      "passed": true,
+      "expected": 228589568,
+      "actual": 228589568,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t104",
+      "passed": true,
+      "expected": ">=223232",
+      "actual": 301536,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t105",
+      "passed": true,
+      "expected": 228851712,
+      "actual": 228851712,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t105",
+      "passed": true,
+      "expected": ">=223488",
+      "actual": 301708,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t106",
+      "passed": true,
+      "expected": 229113856,
+      "actual": 229113856,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t106",
+      "passed": true,
+      "expected": ">=223744",
+      "actual": 301880,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t107",
+      "passed": true,
+      "expected": 229376000,
+      "actual": 229376000,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t107",
+      "passed": true,
+      "expected": ">=224000",
+      "actual": 302052,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t108",
+      "passed": true,
+      "expected": 229638144,
+      "actual": 229638144,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t108",
+      "passed": true,
+      "expected": ">=224256",
+      "actual": 302224,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t109",
+      "passed": true,
+      "expected": 229900288,
+      "actual": 229900288,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t109",
+      "passed": true,
+      "expected": ">=224512",
+      "actual": 302396,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t110",
+      "passed": true,
+      "expected": 230162432,
+      "actual": 230162432,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t110",
+      "passed": true,
+      "expected": ">=224768",
+      "actual": 302568,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t111",
+      "passed": true,
+      "expected": 230424576,
+      "actual": 230424576,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t111",
+      "passed": true,
+      "expected": ">=225024",
+      "actual": 302740,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t112",
+      "passed": true,
+      "expected": 230686720,
+      "actual": 230686720,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t112",
+      "passed": true,
+      "expected": ">=225280",
+      "actual": 302912,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t113",
+      "passed": true,
+      "expected": 230948864,
+      "actual": 230948864,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t113",
+      "passed": true,
+      "expected": ">=225536",
+      "actual": 303084,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t114",
+      "passed": true,
+      "expected": 231211008,
+      "actual": 231211008,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t114",
+      "passed": true,
+      "expected": ">=225792",
+      "actual": 303256,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t115",
+      "passed": true,
+      "expected": 231473152,
+      "actual": 231473152,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t115",
+      "passed": true,
+      "expected": ">=226048",
+      "actual": 303428,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t116",
+      "passed": true,
+      "expected": 231735296,
+      "actual": 231735296,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t116",
+      "passed": true,
+      "expected": ">=226304",
+      "actual": 303600,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t117",
+      "passed": true,
+      "expected": 231997440,
+      "actual": 231997440,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t117",
+      "passed": true,
+      "expected": ">=226560",
+      "actual": 303772,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t118",
+      "passed": true,
+      "expected": 232259584,
+      "actual": 232259584,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t118",
+      "passed": true,
+      "expected": ">=226816",
+      "actual": 303944,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t119",
+      "passed": true,
+      "expected": 232521728,
+      "actual": 232521728,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t119",
+      "passed": true,
+      "expected": ">=227072",
+      "actual": 304116,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t120",
+      "passed": true,
+      "expected": 232783872,
+      "actual": 232783872,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t120",
+      "passed": true,
+      "expected": ">=227328",
+      "actual": 304288,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t121",
+      "passed": true,
+      "expected": 233046016,
+      "actual": 233046016,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t121",
+      "passed": true,
+      "expected": ">=227584",
+      "actual": 304460,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t122",
+      "passed": true,
+      "expected": 233308160,
+      "actual": 233308160,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t122",
+      "passed": true,
+      "expected": ">=227840",
+      "actual": 304632,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t123",
+      "passed": true,
+      "expected": 233570304,
+      "actual": 233570304,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t123",
+      "passed": true,
+      "expected": ">=228096",
+      "actual": 304804,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t124",
+      "passed": true,
+      "expected": 233832448,
+      "actual": 233832448,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t124",
+      "passed": true,
+      "expected": ">=228352",
+      "actual": 304976,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t125",
+      "passed": true,
+      "expected": 234094592,
+      "actual": 234094592,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t125",
+      "passed": true,
+      "expected": ">=228608",
+      "actual": 305148,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t126",
+      "passed": true,
+      "expected": 234356736,
+      "actual": 234356736,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t126",
+      "passed": true,
+      "expected": ">=228864",
+      "actual": 305320,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_attention_t127",
+      "passed": true,
+      "expected": 234618880,
+      "actual": 234618880,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_attention_t127",
+      "passed": true,
+      "expected": ">=229120",
+      "actual": 305492,
+      "source": "MAC conservation / configured peak throughput"
+    },
+    {
+      "name": "macs.decode_lm_head",
+      "passed": true,
+      "expected": 16778788864,
+      "actual": 16778788864,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "weight_payload.decode_lm_head",
+      "passed": true,
+      "expected": 16778788864,
+      "actual": 16778788864,
+      "source": "analytical conservation invariant"
+    },
+    {
+      "name": "compute_lower_bound.decode_lm_head",
+      "passed": true,
+      "expected": ">=8192768",
+      "actual": 13193472,
+      "source": "MAC conservation / configured peak throughput"
+    }
+  ]
+}

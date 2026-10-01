@@ -1,8 +1,26 @@
-# PointLLM Phase-Adaptive Architecture Simulator
+# PointLLM Phase-Adaptive Architecture Estimator
 
-This subproject models the proposed **Geometry-Tensor-Streaming Unified (GTSU)** accelerator. It consumes explicit PointLLM operation traces and reports phase cycles, HBM/SRAM traffic, tensor utilization, dataflow selection, and bottlenecks.
+This subproject is an executable analytical estimator for the proposed **Geometry-Tensor-Streaming Unified (GTSU)** accelerator. It consumes explicit PointLLM operation traces and reports estimated phase cycles, HBM/SRAM traffic, tensor utilization, dataflow selection, and bottlenecks.
 
-It is a **trace-driven phase-level analytical model**, not an RTL cycle-accuracy claim. Cross-operation scheduling is conservative and serial. Within an operation, compute, HBM, unpack, and SRAM overlap only when the modeled buffer contract permits it. Energy and area remain disabled until characterized RTL/PTPX/CACTI values are supplied.
+It is **not a complete cycle simulator, C-model, or RTL implementation**. Cross-operation scheduling is conservative and serial; there is no ready/valid event scheduler, bank-conflict model, DRAM timing backend, or RTL correlation yet. Within an operation, compute, HBM, unpack, and SRAM overlap only according to analytical equations. Energy and area remain disabled until characterized RTL/PTPX/CACTI values are supplied.
+
+## Implementation status
+
+| Capability | Status |
+|---|---|
+| PointLLM operation trace and shape contract | Implemented and checked against config/YAML/safetensors headers |
+| Analytical MAC, traffic, tensor mapping, and phase estimates | Implemented with conservation tests |
+| DSE and JSON/CSV/plot output | Implemented |
+| Event-level resource occupancy and stalls | Not implemented |
+| C++/SystemC C-model | Not implemented |
+| Synthesizable RTL | Not implemented |
+| RTL cycle correlation | Not implemented |
+| Characterized area/energy | Not implemented |
+
+Every result is tagged `result_status=exploratory_only`,
+`event_level_model=false`, and `rtl_correlated=false`. Passing the validator
+means shapes and analytical conservation are internally consistent; it does
+not make the latency prediction cycle-accurate or publishable.
 
 ## Why a separate subproject
 
@@ -12,7 +30,7 @@ The structure follows useful boundaries from the locally audited references:
 - `/home/PointAcc/QuickFPS`: persistent state, event/counter output, DMA/memory backend boundaries, and RTL-correlated geometry timing.
 - `/home/PointAcc/Mamba_Reconfigurable_Array_v2`: functional reference, parameterized RTL, golden trace, gate-activity testbench, and PTPX handoff.
 
-No source is copied from those projects. This directory keeps a small, PointLLM-specific JSON contract that can later drive a C++/SystemC implementation or RTL testbench.
+No source is copied from those projects. Their unimplemented handoff plan is documented in [`docs/CMODEL_RTL_ROADMAP.md`](docs/CMODEL_RTL_ROADMAP.md).
 
 ## Modeled architecture
 
@@ -78,6 +96,14 @@ python -m pointllm_archsim sweep \
 python -m pointllm_archsim extract-evidence \
   --repo_root /home/nano-pointllm \
   --output ../results/architecture_simulator/ncu_evidence.json
+
+# Check the workload against the real model files and verify conservation.
+python -m pointllm_archsim validate \
+  --config configs/gtsu_baseline.json \
+  --workload workloads/pointllm_7b_b1_s768_o128.json \
+  --checkpoint_config /mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json \
+  --pointbert_config /home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml \
+  --output ../results/architecture_simulator/validation.json
 ```
 
 ## Output contract
@@ -101,19 +127,15 @@ more tensor PEs helps.
 ## Subproject layout
 
 ```text
-pointllm_archsim/   executable Python analytical model and stable schemas
+pointllm_archsim/   executable Python estimator, validation, and schemas
 configs/            architecture and DSE parameters
-cmodel/             event-level C++/SystemC handoff contract (planned)
-rtl/                synthesizable block/interface contract (planned)
-verification/       golden trace and correlation gates
-characterization/   area/energy parameter provenance and templates
-tests/              analytical invariants and CLI-facing contracts
+docs/               explicit unimplemented C-model/RTL roadmap
+tests/              shape, conservation, mapping, and CLI contracts
 ```
 
-The planned directories deliberately contain interface documentation rather
-than placeholder implementations. A block is promoted from Python to C-model
-or RTL only after its input/output events, counters, and correlation threshold
-are fixed in `verification/`.
+Only executable code is listed as implemented. The future C-model and RTL work
+is intentionally kept under `docs/` rather than represented by empty source
+directories.
 
 ## Fidelity roadmap
 

@@ -117,6 +117,7 @@ class MemoryConfig:
 @dataclass(frozen=True)
 class AttentionConfig:
     fused_online_softmax: bool = True
+    parallelize_heads: bool = True
     softmax_lanes: int = 128
     softmax_passes: float = 1.5
     paged_kv_efficiency: float = 0.85

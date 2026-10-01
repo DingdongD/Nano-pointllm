@@ -357,10 +357,19 @@
 - Accepted the characterization-driven architecture direction: persistent geometry, dense tensor, elastic Split-K decode, precision-aware weight streaming, shared attention, and phase-reconfigurable SRAM.
 - Began auditing `DingdongD/Compiler_Codes` plus the local PointAcc C-model/RTL projects before defining the simulator contract.
 
-## 2026-10-01: Phase-Adaptive Architecture Simulator
+## 2026-10-01: Phase-Adaptive Architecture Estimator
 - Added the standalone `architecture_simulator/` Python package with stable hardware/workload/result JSON contracts and PointLLM-7B presets.
 - Implemented persistent FPS, tensor-distance/top-k KNN, dense and Split-K tensor mappings, precision-aware weight traffic/unpack, fused or materialized attention, paged-KV efficiency, vector operations, phase scheduling, traffic counters, and optional characterization hooks.
 - Added resource-aware DSE across tensor dimensions, Split-K, geometry lanes, HBM, SRAM, and weight-unpack throughput; fixed clamped Split-K duplicate designs.
-- Added explicit C-model, RTL, verification, and characterization handoff contracts based on the audited Compiler_Codes and PointAcc separation patterns without copying source.
-- The architecture tests pass (`10 passed`). The formal `B1/S768/O128` sweep evaluated 320 unique designs and archived 39 Pareto points under `docs/results/architecture_simulator_2026-10-01/`.
+- Added a future C-model/RTL roadmap based on the audited Compiler_Codes and PointAcc separation patterns without copying source. No C-model or RTL was implemented in this phase.
+- The initial architecture tests passed (`10 passed`). The formal `B1/S768/O128` sweep evaluated 320 unique analytical designs and archived 39 Pareto points under `docs/results/architecture_simulator_2026-10-01/`.
 - Full repository regression passed after implementation and plot QA: `155 passed, 1 skipped`.
+
+## 2026-10-01: Architecture Estimator Correctness Correction
+- Audited the previously published implementation after the simulator-completeness claim was challenged. Confirmed that it was not event-level or cycle-accurate and that four apparent implementation directories were documentation-only placeholders.
+- Found and fixed a decoder-attention mapping error that serialized heads and inflated the B1 decode-attention estimate by about `74.21x` over the configured-peak MAC lower bound.
+- Added missing PointBERT bridge/position/vector stages, projector activation, decoder vector/sampling stages, consistent KNN HBM accounting, and correct sub-byte packing.
+- Added real model-file validation and analytical conservation checks. The formal workload passes `374/374`; this is not an RTL or cycle-accuracy validation.
+- Removed the empty C-model/RTL/verification/characterization source directories and consolidated future work under `architecture_simulator/docs/CMODEL_RTL_ROADMAP.md`.
+- Marked CLI warnings, plots, JSON status, READMEs, and result artifacts as `exploratory_only`, `event_level_model=false`, and `rtl_correlated=false`.
+- Regenerated the baseline and 320-point DSE. The old `7082.26 ms` and `1.406x` values are superseded and must not be cited.

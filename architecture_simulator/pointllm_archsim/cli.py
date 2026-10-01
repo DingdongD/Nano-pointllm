@@ -4,12 +4,14 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 from .dse import SweepSpec, latency_resource_pareto, run_sweep
 from .evidence import extract_ncu_evidence
 from .report import plot_simulation, plot_sweep, write_rows_csv
 from .schema import HardwareConfig, Workload
 from .simulator import ArchitectureSimulator, summary_row
+from .validation import validation_report
 from .workload import build_pointllm_7b_workload
 
 
@@ -39,6 +41,17 @@ def build_parser() -> argparse.ArgumentParser:
     evidence = subparsers.add_parser("extract-evidence", help="normalize checked-in NCU summaries")
     evidence.add_argument("--repo_root", type=Path, required=True)
     evidence.add_argument("--output", type=Path, required=True)
+
+    validate = subparsers.add_parser(
+        "validate",
+        help="check model shapes and analytical conservation invariants",
+    )
+    validate.add_argument("--config", type=Path, required=True)
+    validate.add_argument("--checkpoint_config", type=Path, required=True)
+    validate.add_argument("--pointbert_config", type=Path, required=True)
+    validate.add_argument("--workload", type=Path)
+    _workload_arguments(validate)
+    validate.add_argument("--output", type=Path, required=True)
     return parser
 
 
@@ -91,6 +104,29 @@ def main() -> int:
 
     config = HardwareConfig.load(args.config)
     workload = _workload(args)
+    if args.command == "validate":
+        result = ArchitectureSimulator(config).run(workload)
+        payload = validation_report(
+            config,
+            workload,
+            result,
+            checkpoint_config=args.checkpoint_config,
+            pointbert_config=args.pointbert_config,
+        )
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps({
+            "status": payload["status"],
+            "checks_passed": payload["checks_passed"],
+            "checks_total": payload["checks_total"],
+            "output": str(args.output),
+        }, indent=2))
+        return 0 if payload["status"] != "failed" else 1
+
+    print(
+        "WARNING: uncalibrated analytical estimator; not event-level or RTL-correlated.",
+        file=sys.stderr,
+    )
     args.output_dir.mkdir(parents=True, exist_ok=True)
     if args.command == "simulate":
         result = ArchitectureSimulator(config).run(workload)

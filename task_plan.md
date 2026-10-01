@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 30 in progress
+Phase 31 pending
 
 ## Phases
 
@@ -201,16 +201,28 @@ Phase 30 in progress
 - [x] Produce strict B1/B4 representative summaries and unified roofline figure
 - **Status:** complete
 
-### Phase 30: Phase-Adaptive Architecture Simulator
+### Phase 30: Phase-Adaptive Architecture Estimator
 - [x] Audit `DingdongD/Compiler_Codes` and local PointAcc C-model/RTL conventions
-- [x] Define trace, hardware-config, phase, cycle, traffic, and energy/area placeholder contracts
-- [x] Implement geometry/FPS, dense tensor, Split-K GEMV, weight-streaming, attention, SRAM, and phase-scheduler models
+- [x] Define trace, hardware-config, phase, analytical-cycle, and traffic contracts
+- [x] Implement operation-level equations for geometry/FPS, dense tensor, Split-K GEMV, weight-streaming, attention, SRAM, and serial phase accounting
 - [x] Add PointLLM-7B workload presets derived from measured shapes and precision policy candidates
-- [x] Add CLI, DSE sweep, JSON/CSV/plot artifacts, and calibration hooks for NCU data
-- [x] Add unit tests, documentation, example runs, and publishable compact evidence
+- [x] Add CLI, DSE sweep, JSON/CSV/plot artifacts, and NCU evidence ingestion
+- [x] Validate model shapes from config/YAML/safetensors headers and add analytical conservation tests
+- [x] Label every output as uncalibrated, exploratory, non-event-level, and non-RTL-correlated
+- [x] Remove empty C-model/RTL/verification/characterization source placeholders
 - [x] Run full repository regression
 - [x] Publish to GitHub
-- **Status:** complete
+- **Status:** complete as an analytical estimator only; the earlier complete-simulator claim is withdrawn
+
+### Phase 31: Event-Level C-Model And RTL Correlation
+- [ ] Define ready/valid events, finite queues, tile issue order, resource arbitration, and backpressure
+- [ ] Model SRAM banking/conflicts, DMA outstanding limits, and a DRAM timing backend
+- [ ] Build an executable C++/SystemC reference for at least FPS and Split-K GEMV
+- [ ] Generate functional and cycle golden traces for block-level RTL testbenches
+- [ ] Implement and synthesize parameterized RTL blocks
+- [ ] Correlate operation traffic exactly and block cycles within the declared error threshold
+- [ ] Import characterized area and active/idle energy before equal-area DSE claims
+- **Status:** not implemented
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?

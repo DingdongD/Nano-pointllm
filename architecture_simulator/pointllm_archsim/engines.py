@@ -12,6 +12,10 @@ def ceil_div(value: int, divisor: int) -> int:
     return (value + divisor - 1) // divisor
 
 
+def packed_bytes(elements: int, bits: int) -> int:
+    return ceil_div(elements * bits, 8)
+
+
 @dataclass
 class _Estimate:
     cycles: int
@@ -154,13 +158,21 @@ class EngineModels:
 
         macs = operation.m * operation.n * operation.k * operation.repeat
         weight_elements = operation.n * operation.k * operation.repeat
-        weight_payload = ceil_div(weight_elements * operation.weight_bits, 8)
-        scale_count = ceil_div(weight_elements, self.config.memory.weight_scale_group)
+        weight_payload = packed_bytes(weight_elements, operation.weight_bits)
+        scale_count = (
+            ceil_div(weight_elements, self.config.memory.weight_scale_group)
+            if operation.weight_bits < 16 else 0
+        )
         scale_bytes = scale_count * self.config.memory.weight_scale_bytes
         weight_bytes = weight_payload + scale_bytes
-        activation_bytes_per = operation.activation_bits // 8
-        input_bytes = operation.m * operation.k * activation_bytes_per * operation.repeat
-        output_bytes = operation.m * operation.n * activation_bytes_per * operation.repeat
+        input_bytes = packed_bytes(
+            operation.m * operation.k * operation.repeat,
+            operation.activation_bits,
+        )
+        output_bytes = packed_bytes(
+            operation.m * operation.n * operation.repeat,
+            operation.activation_bits,
+        )
         hbm_read_bytes = weight_bytes + input_bytes
         hbm_write_bytes = output_bytes
         memory_cycles = self._hbm_cycles(hbm_read_bytes + hbm_write_bytes)
@@ -297,7 +309,7 @@ class EngineModels:
         index_bytes = operation.batch * operation.m * neighbors * 4
         hbm_read_bytes = input_bytes
         hbm_write_bytes = index_bytes
-        memory_cycles = self._hbm_cycles(input_bytes + distance_matrix_bytes + index_bytes)
+        memory_cycles = self._hbm_cycles(hbm_read_bytes + hbm_write_bytes)
         sram_bytes = input_bytes + distance_matrix_bytes + index_bytes
         sram_cycles = self._sram_cycles(sram_bytes)
         cycles = max(compute_cycles, memory_cycles, sram_cycles)
@@ -325,22 +337,29 @@ class EngineModels:
                 "distance_cycles": distance_cycles,
                 "selection_cycles": selection_cycles,
                 "comparisons": comparisons,
-                "materialized_distance_bytes": distance_matrix_bytes,
+                "on_chip_distance_scratch_bytes": distance_matrix_bytes,
             },
         )
 
     def _attention(self, operation: Operation) -> _Estimate:
         head_dim = operation.hidden // operation.heads
-        repeats = operation.repeat * operation.batch * operation.heads
+        if self.config.attention.parallelize_heads:
+            attention_rows = operation.batch * operation.heads * operation.q_len
+            repeats = operation.repeat
+            mapping = "head_query_parallel"
+        else:
+            attention_rows = operation.q_len
+            repeats = operation.repeat * operation.batch * operation.heads
+            mapping = "head_serial"
         qk_cycles, qk_util = self._dense_tensor_cycles(
-            operation.q_len,
+            attention_rows,
             operation.kv_len,
             head_dim,
             operation.activation_bits,
             repeats,
         )
         av_cycles, av_util = self._dense_tensor_cycles(
-            operation.q_len,
+            attention_rows,
             head_dim,
             operation.kv_len,
             operation.activation_bits,
@@ -358,11 +377,16 @@ class EngineModels:
             self.config.attention.softmax_lanes,
         )
         compute_cycles = qk_cycles + av_cycles + softmax_cycles
-        activation_bytes = operation.activation_bits // 8
-        q_bytes = operation.repeat * operation.batch * operation.q_len * operation.hidden * activation_bytes
-        kv_bytes = 2 * operation.repeat * operation.batch * operation.kv_len * operation.hidden * activation_bytes
+        q_bytes = packed_bytes(
+            operation.repeat * operation.batch * operation.q_len * operation.hidden,
+            operation.activation_bits,
+        )
+        kv_bytes = packed_bytes(
+            2 * operation.repeat * operation.batch * operation.kv_len * operation.hidden,
+            operation.activation_bits,
+        )
         output_bytes = q_bytes
-        score_bytes = score_elements * activation_bytes
+        score_bytes = packed_bytes(score_elements, operation.activation_bits)
         if self.config.attention.fused_online_softmax:
             hbm_read_bytes = q_bytes + kv_bytes
             hbm_write_bytes = output_bytes
@@ -391,7 +415,13 @@ class EngineModels:
             * operation.kv_len
             * operation.hidden
         )
-        tensor_capacity = max(1, (qk_cycles + av_cycles) * self.config.tensor.rows * self.config.tensor.cols)
+        tensor_capacity = max(
+            1,
+            (qk_cycles + av_cycles)
+            * self.config.tensor.rows
+            * self.config.tensor.cols
+            * self.config.tensor.precision_macs_per_cycle[operation.activation_bits],
+        )
         return _Estimate(
             cycles=max(1, cycles),
             compute_cycles=compute_cycles,
@@ -412,6 +442,8 @@ class EngineModels:
                 "softmax_cycles": softmax_cycles,
                 "qk_utilization": qk_util,
                 "av_utilization": av_util,
+                "head_mapping": mapping,
+                "attention_rows": attention_rows,
                 "score_elements": score_elements,
                 "materialized_score_bytes": materialized_score_bytes,
             },
@@ -419,12 +451,21 @@ class EngineModels:
 
     def _vector(self, operation: Operation) -> _Estimate:
         operations_per_element = int(operation.attributes.get("operations_per_element", 1))
-        scalar_ops = operation.elements * operations_per_element * operation.repeat
+        scalar_ops = int(operation.attributes.get(
+            "scalar_operations",
+            operation.elements * operations_per_element * operation.repeat,
+        ))
         throughput = self.config.vector.lanes * self.config.vector.operations_per_lane_cycle
         compute_cycles = ceil_div(scalar_ops, throughput)
-        data_bytes = operation.elements * operation.activation_bits // 8 * operation.repeat
-        memory_cycles = self._hbm_cycles(2 * data_bytes)
-        sram_bytes = 2 * data_bytes
+        read_elements = int(operation.attributes.get("read_elements", operation.elements))
+        write_elements = int(operation.attributes.get("write_elements", operation.elements))
+        read_bytes = packed_bytes(read_elements * operation.repeat, operation.activation_bits)
+        write_bytes = packed_bytes(write_elements * operation.repeat, operation.activation_bits)
+        resident = bool(operation.attributes.get("resident_on_chip", False))
+        hbm_read_bytes = 0 if resident else read_bytes
+        hbm_write_bytes = 0 if resident else write_bytes
+        memory_cycles = self._hbm_cycles(hbm_read_bytes + hbm_write_bytes)
+        sram_bytes = read_bytes + write_bytes
         sram_cycles = self._sram_cycles(sram_bytes)
         cycles = max(compute_cycles, memory_cycles, sram_cycles)
         return _Estimate(
@@ -435,13 +476,18 @@ class EngineModels:
             overhead_cycles=0,
             macs=0,
             flops=scalar_ops,
-            hbm_read_bytes=data_bytes,
-            hbm_write_bytes=data_bytes,
+            hbm_read_bytes=hbm_read_bytes,
+            hbm_write_bytes=hbm_write_bytes,
             sram_bytes=sram_bytes,
             utilization=min(1.0, scalar_ops / max(1, compute_cycles * throughput)),
             bottleneck=self._bottleneck(compute=compute_cycles, hbm=memory_cycles, sram=sram_cycles),
             dataflow="fused_vector_reduction" if operation.attributes.get("fusion_candidate") else "vector",
-            details={"scalar_operations": scalar_ops},
+            details={
+                "scalar_operations": scalar_ops,
+                "resident_on_chip": resident,
+                "read_bytes": read_bytes,
+                "write_bytes": write_bytes,
+            },
         )
 
     def _hbm_cycles(self, byte_count: int) -> int:

@@ -46,6 +46,7 @@
   },
   "attention": {
     "fused_online_softmax": true,
+    "parallelize_heads": true,
     "softmax_lanes": 128,
     "softmax_passes": 1.5,
     "paged_kv_efficiency": 0.85

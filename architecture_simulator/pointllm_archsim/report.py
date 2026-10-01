@@ -47,7 +47,7 @@ def plot_simulation(result: SimulationResult, path: str | Path) -> None:
         axis.tick_params(axis="x", rotation=25)
     for axis in axes:
         axis.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("PointLLM phase-adaptive architecture model")
+    fig.suptitle("Uncalibrated analytical estimate (not RTL-correlated)")
     fig.savefig(path, dpi=180)
     plt.close(fig)
 
@@ -94,6 +94,7 @@ def plot_sweep(rows: list[dict[str, Any]], pareto: list[dict[str, Any]], path: s
     axes[2].set_ylabel("Decode modeled latency (ms)")
     axes[2].set_title("Precision unpack sweep")
     axes[0].legend(frameon=False)
+    fig.suptitle("Exploratory DSE from uncalibrated analytical equations")
     for axis in axes:
         axis.spines[["top", "right"]].set_visible(False)
         axis.grid(alpha=0.2)

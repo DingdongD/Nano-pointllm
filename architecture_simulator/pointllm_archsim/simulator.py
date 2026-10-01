@@ -133,8 +133,11 @@ class ArchitectureSimulator:
             energy_pj=total_energy,
             area_um2=area_um2,
             methodology={
-                "fidelity": "trace-driven phase-level analytical cycle/traffic model",
+                "fidelity": "uncalibrated operation-level analytical estimator",
                 "cycle_accuracy_claim": False,
+                "event_level_model": False,
+                "rtl_correlated": False,
+                "result_status": "exploratory_only",
                 "cross_operation_overlap": False,
                 "intra_operation_overlap": (
                     "compute/HBM/unpack/SRAM overlap is modeled when double-buffer contracts permit"
@@ -163,6 +166,9 @@ def summary_row(result: SimulationResult) -> dict[str, Any]:
         ) / 1e9,
         "energy_mj": result.energy_pj / 1e9 if result.energy_pj is not None else None,
         "area_mm2": result.area_um2 / 1e6 if result.area_um2 is not None else None,
+        "result_status": result.methodology["result_status"],
+        "event_level_model": result.methodology["event_level_model"],
+        "rtl_correlated": result.methodology["rtl_correlated"],
     }
     for phase, phase_result in phases.items():
         row[f"{phase}_ms"] = phase_result.seconds * 1e3

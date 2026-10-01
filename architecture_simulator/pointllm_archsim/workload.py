@@ -88,11 +88,47 @@ def build_pointllm_7b_workload(
         "local_encoder_bn_relu_pool",
         "point_encoder",
         "vector",
-        elements=batch_size * group_count * group_size * (256 + 256),
+        elements=batch_size * group_count * group_size * (128 + 512),
         weight_bits=policy["pointbert"],
-        attributes={"operations_per_element": 3, "fusion_candidate": True},
+        attributes={
+            "operations_per_element": 3,
+            "fusion_candidate": True,
+            "resident_on_chip": True,
+        },
         reference={"ncu_b1_stage_ms": 0.9141, "ncu_b4_stage_ms": 3.0358},
     ))
+    operations.extend([
+        Operation(
+            "point_reduce_dim_256_384",
+            "point_encoder",
+            "linear",
+            m=batch_size * group_count,
+            n=point_hidden,
+            k=256,
+            weight_bits=policy["pointbert"],
+            attributes={"mapping": "dense"},
+        ),
+        Operation(
+            "point_position_fc_3_128",
+            "point_encoder",
+            "linear",
+            m=batch_size * group_count,
+            n=128,
+            k=3,
+            weight_bits=policy["pointbert"],
+            attributes={"mapping": "dense"},
+        ),
+        Operation(
+            "point_position_fc_128_384",
+            "point_encoder",
+            "linear",
+            m=batch_size * group_count,
+            n=point_hidden,
+            k=128,
+            weight_bits=policy["pointbert"],
+            attributes={"mapping": "dense"},
+        ),
+    ])
 
     pt_m = batch_size * point_tokens
     operations.extend([
@@ -157,6 +193,44 @@ def build_pointllm_7b_workload(
             reference={"ncu_b1_combined_stage_ms": 0.4196, "ncu_b4_combined_stage_ms": 0.8883},
         ),
     ])
+    operations.extend([
+        Operation(
+            "point_transformer_norm_residual",
+            "point_encoder",
+            "vector",
+            repeat=point_layers,
+            elements=pt_m * point_hidden,
+            weight_bits=policy["pointbert"],
+            attributes={
+                "operations_per_element": 18,
+                "resident_on_chip": True,
+                "operator": "two_layernorm_pos_add_two_residual",
+            },
+        ),
+        Operation(
+            "point_transformer_gelu",
+            "point_encoder",
+            "vector",
+            repeat=point_layers,
+            elements=pt_m * point_intermediate,
+            weight_bits=policy["pointbert"],
+            attributes={
+                "operations_per_element": 8,
+                "resident_on_chip": True,
+            },
+        ),
+        Operation(
+            "point_transformer_final_norm",
+            "point_encoder",
+            "vector",
+            elements=pt_m * point_hidden,
+            weight_bits=policy["pointbert"],
+            attributes={
+                "operations_per_element": 8,
+                "resident_on_chip": True,
+            },
+        ),
+    ])
 
     projector_dims = (point_hidden, 1024, 2048, llama_hidden)
     for index, (in_features, out_features) in enumerate(zip(projector_dims, projector_dims[1:])):
@@ -170,6 +244,14 @@ def build_pointllm_7b_workload(
             weight_bits=policy["projector"],
             attributes={"mapping": "dense", "gelu_after": index < 2},
         ))
+    operations.append(Operation(
+        "projector_gelu",
+        "projector",
+        "vector",
+        elements=batch_size * point_tokens * (1024 + 2048),
+        weight_bits=policy["projector"],
+        attributes={"operations_per_element": 8, "resident_on_chip": True},
+    ))
 
     prefill_m = batch_size * input_tokens
     operations.extend([
@@ -229,6 +311,27 @@ def build_pointllm_7b_workload(
             k=llama_intermediate,
             weight_bits=policy["decoder_mlp"],
             attributes={"mapping": "dense", "layers": llama_layers},
+        ),
+        Operation(
+            "prefill_norm_rope_silu_residual",
+            "llm_prefill",
+            "vector",
+            repeat=llama_layers,
+            elements=prefill_m * llama_hidden,
+            weight_bits=policy["decoder_mlp"],
+            attributes={
+                "operations_per_element": 36,
+                "resident_on_chip": True,
+                "operator": "rmsnorm_rope_silu_mul_residual",
+            },
+        ),
+        Operation(
+            "prefill_final_norm",
+            "llm_prefill",
+            "vector",
+            elements=prefill_m * llama_hidden,
+            weight_bits=policy["decoder_mlp"],
+            attributes={"operations_per_element": 8, "resident_on_chip": True},
         ),
         Operation(
             "prefill_last_token_lm_head",
@@ -305,6 +408,19 @@ def build_pointllm_7b_workload(
             attributes={"causal": True, "paged": True, "token_index": token_index},
         ))
     operations.append(Operation(
+        "decode_norm_rope_silu_residual",
+        "llm_decode",
+        "vector",
+        repeat=linear_repeat,
+        elements=decode_m * llama_hidden,
+        weight_bits=policy["decoder_mlp"],
+        attributes={
+            "operations_per_element": 36,
+            "resident_on_chip": True,
+            "operator": "rmsnorm_rope_silu_mul_residual",
+        },
+    ))
+    operations.append(Operation(
         "decode_lm_head",
         "llm_decode",
         "linear",
@@ -314,6 +430,19 @@ def build_pointllm_7b_workload(
         k=llama_hidden,
         weight_bits=policy["lm_head"],
         attributes={"mapping": "split_k", "tokens": output_tokens},
+    ))
+    operations.append(Operation(
+        "decode_greedy_sampling",
+        "llm_decode",
+        "vector",
+        repeat=output_tokens,
+        elements=batch_size * vocab,
+        weight_bits=policy["lm_head"],
+        attributes={
+            "operations_per_element": 1,
+            "resident_on_chip": True,
+            "operator": "argmax",
+        },
     ))
 
     workload = Workload(
