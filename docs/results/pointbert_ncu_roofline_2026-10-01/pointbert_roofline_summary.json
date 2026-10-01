@@ -1,0 +1,1759 @@
+{
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "batch_sizes": "1,4",
+    "warmup": 5,
+    "profile_iterations": 1,
+    "peak_hbm_gbps": 1555.0,
+    "peak_compute_tflops": 312.0,
+    "ncu": "/usr/local/cuda/bin/ncu",
+    "python": "/opt/conda/envs/pointllm/bin/python",
+    "replay_mode": "kernel",
+    "output_dir": "results/ncu_pointbert_strict_b1_b4_v1"
+  },
+  "batches": {
+    "1": {
+      "manifest": {
+        "runtime": "PointLLM PointBERT eager PyTorch/CUDA kernels",
+        "batch_size": 1,
+        "num_points": 8192,
+        "num_groups": 512,
+        "group_size": 32,
+        "point_transformer_tokens": 513,
+        "point_transformer_channels": 384,
+        "point_transformer_heads": 6,
+        "point_transformer_layers": 12,
+        "profile_iterations": 1,
+        "dtype": "torch.bfloat16",
+        "stage_ranges": {
+          "fps": "pointbert_fps",
+          "knn": "pointbert_knn",
+          "local_encoder": "pointbert_local_encoder",
+          "pt_qkv": "pointbert_pt_qkv",
+          "pt_attention": "pointbert_pt_attention",
+          "pt_o_proj": "pointbert_pt_o_proj",
+          "pt_mlp": "pointbert_pt_mlp"
+        },
+        "stages": {
+          "fps": {
+            "estimated_flops": 33554432,
+            "compulsory_bytes_lower_bound": 56320,
+            "work_model_note": "Eight distance FLOPs per point/centroid; comparison, index, and gather operations are not counted as FLOPs."
+          },
+          "knn": {
+            "estimated_flops": 37748736,
+            "compulsory_bytes_lower_bound": 183296,
+            "index_element_size": 8,
+            "work_model_note": "Square-distance matmul and elementwise arithmetic are counted; top-k comparisons are not FLOPs."
+          },
+          "local_encoder": {
+            "estimated_flops": 13983809536,
+            "weight_bytes": 858368,
+            "compulsory_bytes_lower_bound": 1317120,
+            "work_model_note": "Conv1d MACs count as two FLOPs; BN, ReLU, concatenation, and reductions are excluded from estimated FLOPs but remain in NCU bytes/time."
+          },
+          "pt_qkv": {
+            "estimated_flops": 5446434816,
+            "weight_bytes": 10616832,
+            "activation_bytes_lower_bound": 18911232,
+            "compulsory_bytes_lower_bound": 29528064,
+            "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only."
+          },
+          "pt_attention": {
+            "estimated_flops": 4945471848,
+            "compulsory_bytes_lower_bound": 56807568,
+            "work_model_note": "QK and AV matmuls plus an approximate five FLOPs per softmax element; eager score-tensor traffic is included once as a lower bound."
+          },
+          "pt_o_proj": {
+            "estimated_flops": 1815478272,
+            "weight_bytes": 3548160,
+            "activation_bytes_lower_bound": 9455616,
+            "compulsory_bytes_lower_bound": 13003776,
+            "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only."
+          },
+          "pt_mlp": {
+            "estimated_flops": 14523826176,
+            "weight_bytes": 28357632,
+            "activation_bytes_lower_bound": 9455616,
+            "compulsory_bytes_lower_bound": 37813248,
+            "work_model_note": "FC1/FC2 MACs count as two FLOPs; GELU and intermediate activation traffic are excluded from the lower-bound traffic model."
+          }
+        },
+        "scope_note": "NCU measured DRAM bytes are the source of truth. Modeled bytes are conservative compulsory lower bounds; modeled FLOPs omit comparisons, indexing, reductions, normalization, and nonlinearities where stated.",
+        "gpu_before": {
+          "timestamp": "2026/10/01 03:20:25.182",
+          "pstate": "P0",
+          "sm_clock_mhz": 210.0,
+          "memory_clock_mhz": 1215.0,
+          "power_w": 35.17,
+          "power_limit_w": 400.0,
+          "gpu_utilization_pct": 0.0,
+          "memory_controller_utilization_pct": 0.0,
+          "memory_used_mb": 20.0,
+          "temperature_c": 48.0
+        },
+        "idle_at_start": true,
+        "idle_check_scope": "orchestrator_before_ncu_attach"
+      },
+      "stage_summaries": {
+        "fps": {
+          "kernel_count": 10,
+          "total_profiled_kernel_time_ms": 2.95088,
+          "duration_weighted_sm_active_pct": 1.111955864013447,
+          "duration_weighted_sm_throughput_pct": 0.29317594751396187,
+          "duration_weighted_dram_throughput_pct": 0.007921270942905168,
+          "measured_dram_read_bytes": 500736.0,
+          "measured_dram_write_bytes": 0.0,
+          "measured_dram_bytes": 500736.0,
+          "estimated_flops": 33554432,
+          "compulsory_bytes_lower_bound": 56320,
+          "modeled_ai_flops_per_byte": 595.7818181818182,
+          "measured_ai_flops_per_byte": 67.01022494887526,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 0.011370991704169605,
+          "roofline_ceiling_tflops_from_measured_ai": 104.20089979550103,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 8.89090909090909,
+          "work_model_note": "Eight distance FLOPs per point/centroid; comparison, index, and gather operations are not counted as FLOPs.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void furthest_point_sampling_kernel<(unsigned int)512>(int, int, int, const float *, float *, int *)",
+              "duration_ns": 2902272.0,
+              "sm_active_pct": 0.93,
+              "sm_throughput_pct": 0.29,
+              "dram_throughput_pct": 0.0,
+              "dram_read_bytes": 139648.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7936.0,
+              "sm_active_pct": 23.14,
+              "sm_throughput_pct": 0.96,
+              "dram_throughput_pct": 0.65,
+              "dram_read_bytes": 79488.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7872.0,
+              "sm_active_pct": 23.55,
+              "sm_throughput_pct": 0.97,
+              "dram_throughput_pct": 0.65,
+              "dram_read_bytes": 79488.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7744.0,
+              "sm_active_pct": 1.63,
+              "sm_throughput_pct": 0.06,
+              "dram_throughput_pct": 0.33,
+              "dram_read_bytes": 40064.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 6176.0,
+              "sm_active_pct": 25.93,
+              "sm_throughput_pct": 1.03,
+              "dram_throughput_pct": 0.71,
+              "dram_read_bytes": 66944.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 5280.0,
+              "sm_active_pct": 2.84,
+              "sm_throughput_pct": 0.09,
+              "dram_throughput_pct": 0.2,
+              "dram_read_bytes": 16256.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "gather_points_kernel(int, int, int, int, const float *, const int *, float *)",
+              "duration_ns": 4512.0,
+              "sm_active_pct": 1.66,
+              "sm_throughput_pct": 0.11,
+              "dram_throughput_pct": 0.99,
+              "dram_read_bytes": 69120.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 3104.0,
+              "sm_active_pct": 1.01,
+              "sm_throughput_pct": 0.02,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3200.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 3040.0,
+              "sm_active_pct": 0.35,
+              "sm_throughput_pct": 0.01,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3328.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 2944.0,
+              "sm_active_pct": 4.64,
+              "sm_throughput_pct": 0.11,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3200.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "knn": {
+          "kernel_count": 19,
+          "total_profiled_kernel_time_ms": 0.29072,
+          "duration_weighted_sm_active_pct": 64.69050853054486,
+          "duration_weighted_sm_throughput_pct": 27.60173472757293,
+          "duration_weighted_dram_throughput_pct": 11.478271876719864,
+          "measured_dram_read_bytes": 51635200.0,
+          "measured_dram_write_bytes": 127232.0,
+          "measured_dram_bytes": 51762432.0,
+          "estimated_flops": 37748736,
+          "compulsory_bytes_lower_bound": 183296,
+          "modeled_ai_flops_per_byte": 205.9441340782123,
+          "measured_ai_flops_per_byte": 0.7292689802519325,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 0.12984567969179966,
+          "roofline_ceiling_tflops_from_measured_ai": 1.134013264291755,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 282.3980446927374,
+          "work_model_note": "Square-distance matmul and elementwise arithmetic are counted; top-k comparisons are not FLOPs.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void at::native::mbtopk::gatherTopK<c10::BFloat16, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, unsigned int, T2, at::cuda::detail::TensorInfo<T1, T2>, T2, at::cuda::detail::TensorInfo<long, T2>, T2, unsigned int, unsigned int, T1 *, unsigned int *, unsigned int *, unsigned int)",
+              "duration_ns": 67584.0,
+              "sm_active_pct": 80.73,
+              "sm_throughput_pct": 31.91,
+              "dram_throughput_pct": 8.07,
+              "dram_read_bytes": 8407296.0,
+              "dram_write_bytes": 65920.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::radixFindKthValues<c10::BFloat16, unsigned int, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, unsigned int, unsigned int *, unsigned int, T2, int, int, unsigned int, T3, unsigned int *, T3 *, short *, T1 *)",
+              "duration_ns": 34976.0,
+              "sm_active_pct": 80.02,
+              "sm_throughput_pct": 34.56,
+              "dram_throughput_pct": 15.5,
+              "dram_read_bytes": 8406400.0,
+              "dram_write_bytes": 5504.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::radixFindKthValues<c10::BFloat16, unsigned int, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, unsigned int, unsigned int *, unsigned int, T2, int, int, unsigned int, T3, unsigned int *, T3 *, short *, T1 *)",
+              "duration_ns": 33728.0,
+              "sm_active_pct": 81.82,
+              "sm_throughput_pct": 30.48,
+              "dram_throughput_pct": 16.05,
+              "dram_read_bytes": 8406400.0,
+              "dram_write_bytes": 2944.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 26656.0,
+              "sm_active_pct": 86.86,
+              "sm_throughput_pct": 48.61,
+              "dram_throughput_pct": 20.36,
+              "dram_read_bytes": 8409344.0,
+              "dram_write_bytes": 3200.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 26560.0,
+              "sm_active_pct": 86.14,
+              "sm_throughput_pct": 48.66,
+              "dram_throughput_pct": 20.44,
+              "dram_read_bytes": 8424832.0,
+              "dram_write_bytes": 5504.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_128x256_tn_align1>(T1::Params)",
+              "duration_ns": 22624.0,
+              "sm_active_pct": 53.24,
+              "sm_throughput_pct": 24.52,
+              "dram_throughput_pct": 0.36,
+              "dram_read_bytes": 119168.0,
+              "dram_write_bytes": 5760.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::AUnaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>, at::detail::Array<char *, (int)2>>(int, T2, T3)",
+              "duration_ns": 12064.0,
+              "sm_active_pct": 75.48,
+              "sm_throughput_pct": 15.71,
+              "dram_throughput_pct": 45.18,
+              "dram_read_bytes": 8392576.0,
+              "dram_write_bytes": 38400.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::computeBlockwiseWithinKCounts<unsigned int>(T1 *, short *, unsigned int, int, bool, unsigned int *, unsigned int)",
+              "duration_ns": 7936.0,
+              "sm_active_pct": 55.29,
+              "sm_throughput_pct": 17.92,
+              "dram_throughput_pct": 3.3,
+              "dram_read_bytes": 403840.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::computeBlockwiseWithinKCounts<unsigned int>(T1 *, short *, unsigned int, int, bool, unsigned int *, unsigned int)",
+              "duration_ns": 7488.0,
+              "sm_active_pct": 56.84,
+              "sm_throughput_pct": 17.71,
+              "dram_throughput_pct": 2.4,
+              "dram_read_bytes": 277504.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::func_wrapper_t<c10::BFloat16, at::native::sum_functor<c10::BFloat16, float, c10::BFloat16>::operator ()(at::TensorIterator &)::[lambda(float, float) (instance 1)]>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 7328.0,
+              "sm_active_pct": 1.08,
+              "sm_throughput_pct": 0.16,
+              "dram_throughput_pct": 0.52,
+              "dram_read_bytes": 58752.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "local_encoder": {
+          "kernel_count": 20,
+          "total_profiled_kernel_time_ms": 0.91408,
+          "duration_weighted_sm_active_pct": 90.65583021179765,
+          "duration_weighted_sm_throughput_pct": 53.76885944337476,
+          "duration_weighted_dram_throughput_pct": 11.337771048485914,
+          "measured_dram_read_bytes": 144522624.0,
+          "measured_dram_write_bytes": 16459264.0,
+          "measured_dram_bytes": 160981888.0,
+          "estimated_flops": 13983809536,
+          "compulsory_bytes_lower_bound": 1317120,
+          "modeled_ai_flops_per_byte": 10616.959378036929,
+          "measured_ai_flops_per_byte": 86.86573197600963,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 15.298233782601084,
+          "roofline_ceiling_tflops_from_measured_ai": 135.07621322269497,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 122.2226433430515,
+          "work_model_note": "Conv1d MACs count as two FLOPs; BN, ReLU, concatenation, and reductions are excluded from estimated FLOPs but remain in NCU bytes/time.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x128_sliced1x2_ldg8_f2f_stages_64x3_nn",
+              "duration_ns": 131520.0,
+              "sm_active_pct": 95.65,
+              "sm_throughput_pct": 55.58,
+              "dram_throughput_pct": 10.47,
+              "dram_read_bytes": 17323392.0,
+              "dram_write_bytes": 4085504.0
+            },
+            {
+              "kernel_name": "void at::native::batch_norm_transform_input_kernel<c10::BFloat16, c10::BFloat16, float, (bool)1, int>(at::GenericPackedTensorAccessor<const T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, T3)",
+              "duration_ns": 129728.0,
+              "sm_active_pct": 95.81,
+              "sm_throughput_pct": 31.95,
+              "dram_throughput_pct": 11.26,
+              "dram_read_bytes": 16787840.0,
+              "dram_write_bytes": 5927552.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::MaxOps<c10::BFloat16>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 116288.0,
+              "sm_active_pct": 96.39,
+              "sm_throughput_pct": 79.56,
+              "dram_throughput_pct": 4.79,
+              "dram_read_bytes": 8457088.0,
+              "dram_write_bytes": 210816.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::MaxOps<c10::BFloat16>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 116288.0,
+              "sm_active_pct": 96.38,
+              "sm_throughput_pct": 79.53,
+              "dram_throughput_pct": 4.78,
+              "dram_read_bytes": 8457344.0,
+              "dram_write_bytes": 176384.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x128_sliced1x2_ldg8_f2f_stages_64x3_nn",
+              "duration_ns": 77216.0,
+              "sm_active_pct": 91.3,
+              "sm_throughput_pct": 47.44,
+              "dram_throughput_pct": 15.25,
+              "dram_read_bytes": 17058176.0,
+              "dram_write_bytes": 1235712.0
+            },
+            {
+              "kernel_name": "void at::native::<unnamed>::CatArrayBatchedCopy<at::native::<unnamed>::OpaqueType<(unsigned int)2>, unsigned int, (int)3, (int)64, (int)64>(T1 *, at::native::<unnamed>::CatArrInputTensorMetadata<T1, T2, T4, T5>, at::native::<unnamed>::TensorSizeStride<T2, (unsigned int)4>, int, T2)",
+              "duration_ns": 68224.0,
+              "sm_active_pct": 90.53,
+              "sm_throughput_pct": 52.31,
+              "dram_throughput_pct": 10.77,
+              "dram_read_bytes": 8656640.0,
+              "dram_write_bytes": 2764160.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 52992.0,
+              "sm_active_pct": 92.39,
+              "sm_throughput_pct": 59.06,
+              "dram_throughput_pct": 22.23,
+              "dram_read_bytes": 16797952.0,
+              "dram_write_bytes": 1507456.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_64x1_nn_align8>(T1::Params)",
+              "duration_ns": 40832.0,
+              "sm_active_pct": 91.92,
+              "sm_throughput_pct": 49.33,
+              "dram_throughput_pct": 6.74,
+              "dram_read_bytes": 4272256.0,
+              "dram_write_bytes": 3456.0
+            },
+            {
+              "kernel_name": "void at::native::batch_norm_transform_input_kernel<c10::BFloat16, c10::BFloat16, float, (bool)1, int>(at::GenericPackedTensorAccessor<const T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, T3)",
+              "duration_ns": 35936.0,
+              "sm_active_pct": 86.53,
+              "sm_throughput_pct": 29.14,
+              "dram_throughput_pct": 7.52,
+              "dram_read_bytes": 4199424.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 29184.0,
+              "sm_active_pct": 88.74,
+              "sm_throughput_pct": 54.21,
+              "dram_throughput_pct": 18.58,
+              "dram_read_bytes": 8408960.0,
+              "dram_write_bytes": 6784.0
+            }
+          ]
+        },
+        "pt_qkv": {
+          "kernel_count": 12,
+          "total_profiled_kernel_time_ms": 0.137792,
+          "duration_weighted_sm_active_pct": 54.49977241058987,
+          "duration_weighted_sm_throughput_pct": 19.053701811425917,
+          "duration_weighted_dram_throughput_pct": 7.288372039015328,
+          "measured_dram_read_bytes": 15546880.0,
+          "measured_dram_write_bytes": 768.0,
+          "measured_dram_bytes": 15547648.0,
+          "estimated_flops": 5446434816,
+          "compulsory_bytes_lower_bound": 29528064,
+          "modeled_ai_flops_per_byte": 184.4494382022472,
+          "measured_ai_flops_per_byte": 350.3060280243031,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 39.52649512308407,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 0.5265380080454987,
+          "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11776.0,
+              "sm_active_pct": 53.26,
+              "sm_throughput_pct": 18.58,
+              "dram_throughput_pct": 7.12,
+              "dram_read_bytes": 1295488.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11648.0,
+              "sm_active_pct": 53.67,
+              "sm_throughput_pct": 18.77,
+              "dram_throughput_pct": 7.19,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11520.0,
+              "sm_active_pct": 54.4,
+              "sm_throughput_pct": 19.02,
+              "dram_throughput_pct": 7.28,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11520.0,
+              "sm_active_pct": 54.31,
+              "sm_throughput_pct": 18.98,
+              "dram_throughput_pct": 7.25,
+              "dram_read_bytes": 1295488.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11488.0,
+              "sm_active_pct": 54.46,
+              "sm_throughput_pct": 19.06,
+              "dram_throughput_pct": 7.29,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11488.0,
+              "sm_active_pct": 54.37,
+              "sm_throughput_pct": 19.01,
+              "dram_throughput_pct": 7.27,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11456.0,
+              "sm_active_pct": 55.46,
+              "sm_throughput_pct": 19.14,
+              "dram_throughput_pct": 7.3,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11424.0,
+              "sm_active_pct": 55.0,
+              "sm_throughput_pct": 19.18,
+              "dram_throughput_pct": 7.33,
+              "dram_read_bytes": 1295488.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11424.0,
+              "sm_active_pct": 54.65,
+              "sm_throughput_pct": 19.15,
+              "dram_throughput_pct": 7.32,
+              "dram_read_bytes": 1295616.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x4_tn",
+              "duration_ns": 11392.0,
+              "sm_active_pct": 54.74,
+              "sm_throughput_pct": 19.2,
+              "dram_throughput_pct": 7.34,
+              "dram_read_bytes": 1295488.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "pt_attention": {
+          "kernel_count": 60,
+          "total_profiled_kernel_time_ms": 1.027968,
+          "duration_weighted_sm_active_pct": 59.23690947578135,
+          "duration_weighted_sm_throughput_pct": 17.322444901008595,
+          "duration_weighted_dram_throughput_pct": 8.411628377537046,
+          "measured_dram_read_bytes": 133873408.0,
+          "measured_dram_write_bytes": 4736.0,
+          "measured_dram_bytes": 133878144.0,
+          "estimated_flops": 4945471848,
+          "compulsory_bytes_lower_bound": 56807568,
+          "modeled_ai_flops_per_byte": 87.05656697009103,
+          "measured_ai_flops_per_byte": 36.94009866166056,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 4.810920036421368,
+          "roofline_ceiling_tflops_from_measured_ai": 57.44185341888218,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 2.3566955726744014,
+          "work_model_note": "QK and AV matmuls plus an approximate five FLOPs per softmax element; eager score-tensor traffic is included once as a lower bound.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30400.0,
+              "sm_active_pct": 43.0,
+              "sm_throughput_pct": 5.28,
+              "dram_throughput_pct": 7.58,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30304.0,
+              "sm_active_pct": 43.19,
+              "sm_throughput_pct": 5.3,
+              "dram_throughput_pct": 7.61,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30304.0,
+              "sm_active_pct": 43.19,
+              "sm_throughput_pct": 5.31,
+              "dram_throughput_pct": 7.62,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30272.0,
+              "sm_active_pct": 43.21,
+              "sm_throughput_pct": 5.31,
+              "dram_throughput_pct": 7.62,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30240.0,
+              "sm_active_pct": 43.18,
+              "sm_throughput_pct": 5.31,
+              "dram_throughput_pct": 7.62,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30240.0,
+              "sm_active_pct": 43.25,
+              "sm_throughput_pct": 5.32,
+              "dram_throughput_pct": 7.63,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30240.0,
+              "sm_active_pct": 43.31,
+              "sm_throughput_pct": 5.32,
+              "dram_throughput_pct": 7.63,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30208.0,
+              "sm_active_pct": 43.34,
+              "sm_throughput_pct": 5.32,
+              "dram_throughput_pct": 7.64,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30176.0,
+              "sm_active_pct": 43.35,
+              "sm_throughput_pct": 5.33,
+              "dram_throughput_pct": 7.65,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 30176.0,
+              "sm_active_pct": 43.27,
+              "sm_throughput_pct": 5.33,
+              "dram_throughput_pct": 7.64,
+              "dram_read_bytes": 3581696.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "pt_o_proj": {
+          "kernel_count": 12,
+          "total_profiled_kernel_time_ms": 0.119104,
+          "duration_weighted_sm_active_pct": 36.89208490059108,
+          "duration_weighted_sm_throughput_pct": 7.23913756045137,
+          "duration_weighted_dram_throughput_pct": 4.5944841483073615,
+          "measured_dram_read_bytes": 8463104.0,
+          "measured_dram_write_bytes": 384.0,
+          "measured_dram_bytes": 8463488.0,
+          "estimated_flops": 1815478272,
+          "compulsory_bytes_lower_bound": 13003776,
+          "modeled_ai_flops_per_byte": 139.611622962438,
+          "measured_ai_flops_per_byte": 214.50710061856293,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 15.242798495432563,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 0.6508484920072447,
+          "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 10080.0,
+              "sm_active_pct": 36.34,
+              "sm_throughput_pct": 7.13,
+              "dram_throughput_pct": 4.53,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 10048.0,
+              "sm_active_pct": 36.62,
+              "sm_throughput_pct": 7.16,
+              "dram_throughput_pct": 4.54,
+              "dram_read_bytes": 705152.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 10016.0,
+              "sm_active_pct": 36.45,
+              "sm_throughput_pct": 7.15,
+              "dram_throughput_pct": 4.55,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 10016.0,
+              "sm_active_pct": 36.55,
+              "sm_throughput_pct": 7.17,
+              "dram_throughput_pct": 4.55,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 10016.0,
+              "sm_active_pct": 36.39,
+              "sm_throughput_pct": 7.17,
+              "dram_throughput_pct": 4.56,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 9984.0,
+              "sm_active_pct": 36.6,
+              "sm_throughput_pct": 7.2,
+              "dram_throughput_pct": 4.57,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 9888.0,
+              "sm_active_pct": 36.84,
+              "sm_throughput_pct": 7.26,
+              "dram_throughput_pct": 4.6,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 9856.0,
+              "sm_active_pct": 37.28,
+              "sm_throughput_pct": 7.3,
+              "dram_throughput_pct": 4.63,
+              "dram_read_bytes": 705152.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 9824.0,
+              "sm_active_pct": 37.35,
+              "sm_throughput_pct": 7.33,
+              "dram_throughput_pct": 4.64,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 9792.0,
+              "sm_active_pct": 37.62,
+              "sm_throughput_pct": 7.34,
+              "dram_throughput_pct": 4.65,
+              "dram_read_bytes": 705280.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "pt_mlp": {
+          "kernel_count": 36,
+          "total_profiled_kernel_time_ms": 0.419616,
+          "duration_weighted_sm_active_pct": 56.71387630595594,
+          "duration_weighted_sm_throughput_pct": 21.80134904293449,
+          "duration_weighted_dram_throughput_pct": 10.996951879813922,
+          "measured_dram_read_bytes": 71406976.0,
+          "measured_dram_write_bytes": 2048.0,
+          "measured_dram_bytes": 71409024.0,
+          "estimated_flops": 14523826176,
+          "compulsory_bytes_lower_bound": 37813248,
+          "modeled_ai_flops_per_byte": 384.09359005605654,
+          "measured_ai_flops_per_byte": 203.38922677335572,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 34.61218393960192,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 1.8884657567633438,
+          "work_model_note": "FC1/FC2 MACs count as two FLOPs; GELU and intermediate activation traffic are excluded from the lower-bound traffic model.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15488.0,
+              "sm_active_pct": 40.81,
+              "sm_throughput_pct": 18.81,
+              "dram_throughput_pct": 11.57,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15488.0,
+              "sm_active_pct": 40.83,
+              "sm_throughput_pct": 18.8,
+              "dram_throughput_pct": 11.57,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15392.0,
+              "sm_active_pct": 41.08,
+              "sm_throughput_pct": 18.91,
+              "dram_throughput_pct": 11.61,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15360.0,
+              "sm_active_pct": 41.13,
+              "sm_throughput_pct": 18.98,
+              "dram_throughput_pct": 11.66,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15360.0,
+              "sm_active_pct": 41.5,
+              "sm_throughput_pct": 18.94,
+              "dram_throughput_pct": 11.64,
+              "dram_read_bytes": 2771840.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15328.0,
+              "sm_active_pct": 41.11,
+              "sm_throughput_pct": 19.0,
+              "dram_throughput_pct": 11.67,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15296.0,
+              "sm_active_pct": 41.28,
+              "sm_throughput_pct": 19.06,
+              "dram_throughput_pct": 11.72,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15296.0,
+              "sm_active_pct": 41.22,
+              "sm_throughput_pct": 19.01,
+              "dram_throughput_pct": 11.67,
+              "dram_read_bytes": 2771840.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15264.0,
+              "sm_active_pct": 41.37,
+              "sm_throughput_pct": 19.08,
+              "dram_throughput_pct": 11.73,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_relu_f2f_stages_64x6_tn",
+              "duration_ns": 15232.0,
+              "sm_active_pct": 41.55,
+              "sm_throughput_pct": 19.12,
+              "dram_throughput_pct": 11.74,
+              "dram_read_bytes": 2771968.0,
+              "dram_write_bytes": 128.0
+            }
+          ]
+        }
+      }
+    },
+    "4": {
+      "manifest": {
+        "runtime": "PointLLM PointBERT eager PyTorch/CUDA kernels",
+        "batch_size": 4,
+        "num_points": 8192,
+        "num_groups": 512,
+        "group_size": 32,
+        "point_transformer_tokens": 513,
+        "point_transformer_channels": 384,
+        "point_transformer_heads": 6,
+        "point_transformer_layers": 12,
+        "profile_iterations": 1,
+        "dtype": "torch.bfloat16",
+        "stage_ranges": {
+          "fps": "pointbert_fps",
+          "knn": "pointbert_knn",
+          "local_encoder": "pointbert_local_encoder",
+          "pt_qkv": "pointbert_pt_qkv",
+          "pt_attention": "pointbert_pt_attention",
+          "pt_o_proj": "pointbert_pt_o_proj",
+          "pt_mlp": "pointbert_pt_mlp"
+        },
+        "stages": {
+          "fps": {
+            "estimated_flops": 134217728,
+            "compulsory_bytes_lower_bound": 225280,
+            "work_model_note": "Eight distance FLOPs per point/centroid; comparison, index, and gather operations are not counted as FLOPs."
+          },
+          "knn": {
+            "estimated_flops": 150994944,
+            "compulsory_bytes_lower_bound": 733184,
+            "index_element_size": 8,
+            "work_model_note": "Square-distance matmul and elementwise arithmetic are counted; top-k comparisons are not FLOPs."
+          },
+          "local_encoder": {
+            "estimated_flops": 55935238144,
+            "weight_bytes": 858368,
+            "compulsory_bytes_lower_bound": 2693376,
+            "work_model_note": "Conv1d MACs count as two FLOPs; BN, ReLU, concatenation, and reductions are excluded from estimated FLOPs but remain in NCU bytes/time."
+          },
+          "pt_qkv": {
+            "estimated_flops": 21785739264,
+            "weight_bytes": 10616832,
+            "activation_bytes_lower_bound": 75644928,
+            "compulsory_bytes_lower_bound": 86261760,
+            "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only."
+          },
+          "pt_attention": {
+            "estimated_flops": 19781887392,
+            "compulsory_bytes_lower_bound": 227230272,
+            "work_model_note": "QK and AV matmuls plus an approximate five FLOPs per softmax element; eager score-tensor traffic is included once as a lower bound."
+          },
+          "pt_o_proj": {
+            "estimated_flops": 7261913088,
+            "weight_bytes": 3548160,
+            "activation_bytes_lower_bound": 37822464,
+            "compulsory_bytes_lower_bound": 41370624,
+            "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only."
+          },
+          "pt_mlp": {
+            "estimated_flops": 58095304704,
+            "weight_bytes": 28357632,
+            "activation_bytes_lower_bound": 37822464,
+            "compulsory_bytes_lower_bound": 66180096,
+            "work_model_note": "FC1/FC2 MACs count as two FLOPs; GELU and intermediate activation traffic are excluded from the lower-bound traffic model."
+          }
+        },
+        "scope_note": "NCU measured DRAM bytes are the source of truth. Modeled bytes are conservative compulsory lower bounds; modeled FLOPs omit comparisons, indexing, reductions, normalization, and nonlinearities where stated.",
+        "gpu_before": {
+          "timestamp": "2026/10/01 03:23:42.685",
+          "pstate": "P0",
+          "sm_clock_mhz": 270.0,
+          "memory_clock_mhz": 1215.0,
+          "power_w": 36.11,
+          "power_limit_w": 400.0,
+          "gpu_utilization_pct": 0.0,
+          "memory_controller_utilization_pct": 0.0,
+          "memory_used_mb": 142.0,
+          "temperature_c": 50.0
+        },
+        "idle_at_start": true,
+        "idle_check_scope": "orchestrator_before_ncu_attach"
+      },
+      "stage_summaries": {
+        "fps": {
+          "kernel_count": 10,
+          "total_profiled_kernel_time_ms": 3.007808,
+          "duration_weighted_sm_active_pct": 4.085892822946144,
+          "duration_weighted_sm_throughput_pct": 1.154507947315786,
+          "duration_weighted_dram_throughput_pct": 0.03213545545460349,
+          "measured_dram_read_bytes": 1567872.0,
+          "measured_dram_write_bytes": 3584.0,
+          "measured_dram_bytes": 1571456.0,
+          "estimated_flops": 134217728,
+          "compulsory_bytes_lower_bound": 225280,
+          "modeled_ai_flops_per_byte": 595.7818181818182,
+          "measured_ai_flops_per_byte": 85.40979066547202,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 0.0446231036023576,
+          "roofline_ceiling_tflops_from_measured_ai": 132.81222448480898,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 6.975568181818182,
+          "work_model_note": "Eight distance FLOPs per point/centroid; comparison, index, and gather operations are not counted as FLOPs.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void furthest_point_sampling_kernel<(unsigned int)512>(int, int, int, const float *, float *, int *)",
+              "duration_ns": 2958592.0,
+              "sm_active_pct": 3.65,
+              "sm_throughput_pct": 1.14,
+              "dram_throughput_pct": 0.01,
+              "dram_read_bytes": 532864.0,
+              "dram_write_bytes": 3456.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7904.0,
+              "sm_active_pct": 55.34,
+              "sm_throughput_pct": 3.85,
+              "dram_throughput_pct": 1.86,
+              "dram_read_bytes": 226944.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7872.0,
+              "sm_active_pct": 55.87,
+              "sm_throughput_pct": 3.9,
+              "dram_throughput_pct": 1.87,
+              "dram_read_bytes": 226944.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)], at::detail::Array<char *, (int)2>, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T3, T4, T5, T6)",
+              "duration_ns": 7584.0,
+              "sm_active_pct": 6.43,
+              "sm_throughput_pct": 0.25,
+              "dram_throughput_pct": 0.5,
+              "dram_read_bytes": 58496.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 7040.0,
+              "sm_active_pct": 57.99,
+              "sm_throughput_pct": 4.41,
+              "dram_throughput_pct": 1.97,
+              "dram_read_bytes": 214400.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 7)]::operator ()() const::[lambda(float) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 5440.0,
+              "sm_active_pct": 11.8,
+              "sm_throughput_pct": 0.4,
+              "dram_throughput_pct": 0.42,
+              "dram_read_bytes": 34688.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "gather_points_kernel(int, int, int, int, const float *, const int *, float *)",
+              "duration_ns": 4544.0,
+              "sm_active_pct": 5.94,
+              "sm_throughput_pct": 0.42,
+              "dram_throughput_pct": 3.76,
+              "dram_read_bytes": 263936.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 3008.0,
+              "sm_active_pct": 17.38,
+              "sm_throughput_pct": 0.42,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3200.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<float>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 2944.0,
+              "sm_active_pct": 3.3,
+              "sm_throughput_pct": 0.08,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3200.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, at::detail::Array<char *, (int)1>>(int, T2, T3)",
+              "duration_ns": 2880.0,
+              "sm_active_pct": 1.15,
+              "sm_throughput_pct": 0.03,
+              "dram_throughput_pct": 0.07,
+              "dram_read_bytes": 3200.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "knn": {
+          "kernel_count": 19,
+          "total_profiled_kernel_time_ms": 0.746176,
+          "duration_weighted_sm_active_pct": 86.22976627498072,
+          "duration_weighted_sm_throughput_pct": 44.594079252079936,
+          "duration_weighted_dram_throughput_pct": 24.408530748777775,
+          "measured_dram_read_bytes": 203885696.0,
+          "measured_dram_write_bytes": 79163648.0,
+          "measured_dram_bytes": 283049344.0,
+          "estimated_flops": 150994944,
+          "compulsory_bytes_lower_bound": 733184,
+          "modeled_ai_flops_per_byte": 205.9441340782123,
+          "measured_ai_flops_per_byte": 0.5334580249018348,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 0.20235834977270778,
+          "roofline_ceiling_tflops_from_measured_ai": 0.8295272287223532,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 386.0549930167598,
+          "work_model_note": "Square-distance matmul and elementwise arithmetic are counted; top-k comparisons are not FLOPs.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void at::native::mbtopk::gatherTopK<c10::BFloat16, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, unsigned int, T2, at::cuda::detail::TensorInfo<T1, T2>, T2, at::cuda::detail::TensorInfo<long, T2>, T2, unsigned int, unsigned int, T1 *, unsigned int *, unsigned int *, unsigned int)",
+              "duration_ns": 198784.0,
+              "sm_active_pct": 89.39,
+              "sm_throughput_pct": 40.5,
+              "dram_throughput_pct": 11.66,
+              "dram_read_bytes": 33576576.0,
+              "dram_write_bytes": 2446336.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 105184.0,
+              "sm_active_pct": 94.85,
+              "sm_throughput_pct": 58.8,
+              "dram_throughput_pct": 31.14,
+              "dram_read_bytes": 33640448.0,
+              "dram_write_bytes": 17271936.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 95008.0,
+              "sm_active_pct": 95.48,
+              "sm_throughput_pct": 53.25,
+              "dram_throughput_pct": 34.42,
+              "dram_read_bytes": 33579264.0,
+              "dram_write_bytes": 17246464.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::radixFindKthValues<c10::BFloat16, unsigned int, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, unsigned int, unsigned int *, unsigned int, T2, int, int, unsigned int, T3, unsigned int *, T3 *, short *, T1 *)",
+              "duration_ns": 83936.0,
+              "sm_active_pct": 90.84,
+              "sm_throughput_pct": 44.71,
+              "dram_throughput_pct": 27.56,
+              "dram_read_bytes": 33583104.0,
+              "dram_write_bytes": 2380672.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::radixFindKthValues<c10::BFloat16, unsigned int, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, unsigned int, unsigned int *, unsigned int, T2, int, int, unsigned int, T3, unsigned int *, T3 *, short *, T1 *)",
+              "duration_ns": 83776.0,
+              "sm_active_pct": 92.23,
+              "sm_throughput_pct": 53.23,
+              "dram_throughput_pct": 27.61,
+              "dram_read_bytes": 33583104.0,
+              "dram_write_bytes": 2368384.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_tn_align1>(T1::Params)",
+              "duration_ns": 63840.0,
+              "sm_active_pct": 94.05,
+              "sm_throughput_pct": 69.03,
+              "dram_throughput_pct": 17.55,
+              "dram_read_bytes": 237824.0,
+              "dram_write_bytes": 17174016.0
+            },
+            {
+              "kernel_name": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::AUnaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float>>, at::detail::Array<char *, (int)2>>(int, T2, T3)",
+              "duration_ns": 44736.0,
+              "sm_active_pct": 90.74,
+              "sm_throughput_pct": 16.55,
+              "dram_throughput_pct": 77.46,
+              "dram_read_bytes": 33559296.0,
+              "dram_write_bytes": 20275840.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::computeBlockwiseWithinKCounts<unsigned int>(T1 *, short *, unsigned int, int, bool, unsigned int *, unsigned int)",
+              "duration_ns": 10784.0,
+              "sm_active_pct": 69.79,
+              "sm_throughput_pct": 25.48,
+              "dram_throughput_pct": 4.83,
+              "dram_read_bytes": 807424.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::mbtopk::computeBlockwiseWithinKCounts<unsigned int>(T1 *, short *, unsigned int, int, bool, unsigned int *, unsigned int)",
+              "duration_ns": 10688.0,
+              "sm_active_pct": 68.55,
+              "sm_throughput_pct": 23.96,
+              "dram_throughput_pct": 3.25,
+              "dram_read_bytes": 537600.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::func_wrapper_t<c10::BFloat16, at::native::sum_functor<c10::BFloat16, float, c10::BFloat16>::operator ()(at::TensorIterator &)::[lambda(float, float) (instance 1)]>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 7520.0,
+              "sm_active_pct": 52.12,
+              "sm_throughput_pct": 10.23,
+              "dram_throughput_pct": 2.18,
+              "dram_read_bytes": 252288.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "local_encoder": {
+          "kernel_count": 20,
+          "total_profiled_kernel_time_ms": 3.03584,
+          "duration_weighted_sm_active_pct": 97.06785970275114,
+          "duration_weighted_sm_throughput_pct": 62.52104195214504,
+          "duration_weighted_dram_throughput_pct": 19.89966543691367,
+          "measured_dram_read_bytes": 574317184.0,
+          "measured_dram_write_bytes": 364911744.0,
+          "measured_dram_bytes": 939228928.0,
+          "estimated_flops": 55935238144,
+          "compulsory_bytes_lower_bound": 2693376,
+          "modeled_ai_flops_per_byte": 20767.70497101036,
+          "measured_ai_flops_per_byte": 59.554424354357195,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 18.424962496047222,
+          "roofline_ceiling_tflops_from_measured_ai": 92.60712987102544,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 348.7180876342553,
+          "work_model_note": "Conv1d MACs count as two FLOPs; BN, ReLU, concatenation, and reductions are excluded from estimated FLOPs but remain in NCU bytes/time.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x128_sliced1x2_ldg8_f2f_stages_64x3_nn",
+              "duration_ns": 478112.0,
+              "sm_active_pct": 98.78,
+              "sm_throughput_pct": 60.55,
+              "dram_throughput_pct": 16.51,
+              "dram_read_bytes": 67651968.0,
+              "dram_write_bytes": 55118720.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::MaxOps<c10::BFloat16>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 440480.0,
+              "sm_active_pct": 99.12,
+              "sm_throughput_pct": 83.09,
+              "dram_throughput_pct": 5.49,
+              "dram_read_bytes": 33623680.0,
+              "dram_write_bytes": 3957632.0
+            },
+            {
+              "kernel_name": "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<c10::BFloat16, at::native::MaxOps<c10::BFloat16>, unsigned int, c10::BFloat16, (int)4>>(T3)",
+              "duration_ns": 440256.0,
+              "sm_active_pct": 99.18,
+              "sm_throughput_pct": 83.16,
+              "dram_throughput_pct": 5.49,
+              "dram_read_bytes": 33623552.0,
+              "dram_write_bytes": 3966848.0
+            },
+            {
+              "kernel_name": "void at::native::batch_norm_transform_input_kernel<c10::BFloat16, c10::BFloat16, float, (bool)1, int>(at::GenericPackedTensorAccessor<const T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, T3)",
+              "duration_ns": 255392.0,
+              "sm_active_pct": 98.59,
+              "sm_throughput_pct": 48.59,
+              "dram_throughput_pct": 31.25,
+              "dram_read_bytes": 67125888.0,
+              "dram_write_bytes": 56978816.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_64x128_sliced1x2_ldg8_f2f_stages_64x3_nn",
+              "duration_ns": 250080.0,
+              "sm_active_pct": 97.23,
+              "sm_throughput_pct": 57.96,
+              "dram_throughput_pct": 24.04,
+              "dram_read_bytes": 67389696.0,
+              "dram_write_bytes": 26083456.0
+            },
+            {
+              "kernel_name": "void at::native::<unnamed>::CatArrayBatchedCopy<at::native::<unnamed>::OpaqueType<(unsigned int)2>, unsigned int, (int)3, (int)64, (int)64>(T1 *, at::native::<unnamed>::CatArrInputTensorMetadata<T1, T2, T4, T5>, at::native::<unnamed>::TensorSizeStride<T2, (unsigned int)4>, int, T2)",
+              "duration_ns": 249504.0,
+              "sm_active_pct": 97.44,
+              "sm_throughput_pct": 55.18,
+              "dram_throughput_pct": 23.37,
+              "dram_read_bytes": 34609280.0,
+              "dram_write_bytes": 56079104.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 208224.0,
+              "sm_active_pct": 97.66,
+              "sm_throughput_pct": 58.98,
+              "dram_throughput_pct": 36.44,
+              "dram_read_bytes": 67131136.0,
+              "dram_write_bytes": 50846336.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_64x1_nn_align8>(T1::Params)",
+              "duration_ns": 141984.0,
+              "sm_active_pct": 97.76,
+              "sm_throughput_pct": 55.6,
+              "dram_throughput_pct": 16.18,
+              "dram_read_bytes": 16855552.0,
+              "dram_write_bytes": 18853888.0
+            },
+            {
+              "kernel_name": "void at::native::batch_norm_transform_input_kernel<c10::BFloat16, c10::BFloat16, float, (bool)1, int>(at::GenericPackedTensorAccessor<const T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<T1, (unsigned long)3, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<std::conditional<T4, T3, T2>::type, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, at::GenericPackedTensorAccessor<const T2, (unsigned long)1, at::RestrictPtrTraits, T5>, T3)",
+              "duration_ns": 129376.0,
+              "sm_active_pct": 95.49,
+              "sm_throughput_pct": 32.01,
+              "dram_throughput_pct": 11.37,
+              "dram_read_bytes": 16783104.0,
+              "dram_write_bytes": 6085248.0
+            },
+            {
+              "kernel_name": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<c10::BFloat16>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+              "duration_ns": 105152.0,
+              "sm_active_pct": 95.52,
+              "sm_throughput_pct": 58.83,
+              "dram_throughput_pct": 31.13,
+              "dram_read_bytes": 33575552.0,
+              "dram_write_bytes": 17295232.0
+            }
+          ]
+        },
+        "pt_qkv": {
+          "kernel_count": 12,
+          "total_profiled_kernel_time_ms": 0.266688,
+          "duration_weighted_sm_active_pct": 68.23986321094313,
+          "duration_weighted_sm_throughput_pct": 41.64588672906167,
+          "duration_weighted_dram_throughput_pct": 7.190585553155748,
+          "measured_dram_read_bytes": 29740032.0,
+          "measured_dram_write_bytes": 0.0,
+          "measured_dram_bytes": 29740032.0,
+          "estimated_flops": 21785739264,
+          "compulsory_bytes_lower_bound": 86261760,
+          "modeled_ai_flops_per_byte": 252.55384615384617,
+          "measured_ai_flops_per_byte": 732.5392004958165,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 81.68998704103672,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 0.34476495726495726,
+          "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22496.0,
+              "sm_active_pct": 67.32,
+              "sm_throughput_pct": 41.08,
+              "dram_throughput_pct": 7.1,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22432.0,
+              "sm_active_pct": 67.55,
+              "sm_throughput_pct": 41.23,
+              "dram_throughput_pct": 7.13,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22304.0,
+              "sm_active_pct": 68.03,
+              "sm_throughput_pct": 41.48,
+              "dram_throughput_pct": 7.17,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22304.0,
+              "sm_active_pct": 67.93,
+              "sm_throughput_pct": 41.46,
+              "dram_throughput_pct": 7.16,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22240.0,
+              "sm_active_pct": 68.29,
+              "sm_throughput_pct": 41.68,
+              "dram_throughput_pct": 7.19,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22208.0,
+              "sm_active_pct": 68.22,
+              "sm_throughput_pct": 41.66,
+              "dram_throughput_pct": 7.2,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22208.0,
+              "sm_active_pct": 68.27,
+              "sm_throughput_pct": 41.7,
+              "dram_throughput_pct": 7.2,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22144.0,
+              "sm_active_pct": 68.6,
+              "sm_throughput_pct": 41.83,
+              "dram_throughput_pct": 7.21,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22112.0,
+              "sm_active_pct": 68.58,
+              "sm_throughput_pct": 41.87,
+              "dram_throughput_pct": 7.23,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+              "duration_ns": 22080.0,
+              "sm_active_pct": 68.85,
+              "sm_throughput_pct": 41.97,
+              "dram_throughput_pct": 7.24,
+              "dram_read_bytes": 2478336.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "pt_attention": {
+          "kernel_count": 96,
+          "total_profiled_kernel_time_ms": 2.347264,
+          "duration_weighted_sm_active_pct": 83.24239448140472,
+          "duration_weighted_sm_throughput_pct": 35.943952857454484,
+          "duration_weighted_dram_throughput_pct": 17.168087577707496,
+          "measured_dram_read_bytes": 589069440.0,
+          "measured_dram_write_bytes": 36124672.0,
+          "measured_dram_bytes": 625194112.0,
+          "estimated_flops": 19781887392,
+          "compulsory_bytes_lower_bound": 227230272,
+          "modeled_ai_flops_per_byte": 87.05656697009103,
+          "measured_ai_flops_per_byte": 31.6411927308746,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 8.427636342567347,
+          "roofline_ceiling_tflops_from_measured_ai": 49.20205469651,
+          "below_ridge_from_measured_ai": true,
+          "measured_to_compulsory_byte_ratio": 2.7513680571574546,
+          "work_model_note": "QK and AV matmuls plus an approximate five FLOPs per softmax element; eager score-tensor traffic is included once as a lower bound.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 57952.0,
+              "sm_active_pct": 87.85,
+              "sm_throughput_pct": 42.35,
+              "dram_throughput_pct": 3.78,
+              "dram_read_bytes": 3181568.0,
+              "dram_write_bytes": 223232.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 57696.0,
+              "sm_active_pct": 88.2,
+              "sm_throughput_pct": 42.54,
+              "dram_throughput_pct": 3.8,
+              "dram_read_bytes": 3181440.0,
+              "dram_write_bytes": 221696.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 57248.0,
+              "sm_active_pct": 88.69,
+              "sm_throughput_pct": 42.84,
+              "dram_throughput_pct": 3.7,
+              "dram_read_bytes": 3181312.0,
+              "dram_write_bytes": 112896.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56960.0,
+              "sm_active_pct": 89.46,
+              "sm_throughput_pct": 43.1,
+              "dram_throughput_pct": 3.92,
+              "dram_read_bytes": 3181696.0,
+              "dram_write_bytes": 286848.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56832.0,
+              "sm_active_pct": 89.53,
+              "sm_throughput_pct": 43.15,
+              "dram_throughput_pct": 3.75,
+              "dram_read_bytes": 3181568.0,
+              "dram_write_bytes": 124672.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56576.0,
+              "sm_active_pct": 90.06,
+              "sm_throughput_pct": 43.42,
+              "dram_throughput_pct": 3.9,
+              "dram_read_bytes": 3181440.0,
+              "dram_write_bytes": 250368.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56480.0,
+              "sm_active_pct": 90.1,
+              "sm_throughput_pct": 43.5,
+              "dram_throughput_pct": 3.93,
+              "dram_read_bytes": 3181568.0,
+              "dram_write_bytes": 263040.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56480.0,
+              "sm_active_pct": 90.18,
+              "sm_throughput_pct": 43.45,
+              "dram_throughput_pct": 3.9,
+              "dram_read_bytes": 3181568.0,
+              "dram_write_bytes": 243968.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56448.0,
+              "sm_active_pct": 90.14,
+              "sm_throughput_pct": 43.54,
+              "dram_throughput_pct": 3.89,
+              "dram_read_bytes": 3181440.0,
+              "dram_write_bytes": 229760.0
+            },
+            {
+              "kernel_name": "void cutlass::Kernel<cutlass_75_tensorop_bf16_s1688gemm_bf16_64x64_nn_align1>(T1::Params)",
+              "duration_ns": 56416.0,
+              "sm_active_pct": 90.37,
+              "sm_throughput_pct": 43.5,
+              "dram_throughput_pct": 3.82,
+              "dram_read_bytes": 3181440.0,
+              "dram_write_bytes": 161792.0
+            }
+          ]
+        },
+        "pt_o_proj": {
+          "kernel_count": 12,
+          "total_profiled_kernel_time_ms": 0.156416,
+          "duration_weighted_sm_active_pct": 68.58951718494272,
+          "duration_weighted_sm_throughput_pct": 20.529351472995092,
+          "duration_weighted_dram_throughput_pct": 9.361074058919803,
+          "measured_dram_read_bytes": 22677120.0,
+          "measured_dram_write_bytes": 0.0,
+          "measured_dram_bytes": 22677120.0,
+          "estimated_flops": 7261913088,
+          "compulsory_bytes_lower_bound": 41370624,
+          "modeled_ai_flops_per_byte": 175.53308086433503,
+          "measured_ai_flops_per_byte": 320.23083566167134,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 46.426919803600654,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 0.5481454666963689,
+          "work_model_note": "Linear MACs count as two FLOPs; compulsory bytes include weights and stage input/output only.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13344.0,
+              "sm_active_pct": 67.15,
+              "sm_throughput_pct": 20.09,
+              "dram_throughput_pct": 9.15,
+              "dram_read_bytes": 1889664.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13344.0,
+              "sm_active_pct": 66.85,
+              "sm_throughput_pct": 20.03,
+              "dram_throughput_pct": 9.15,
+              "dram_read_bytes": 1889664.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13088.0,
+              "sm_active_pct": 68.14,
+              "sm_throughput_pct": 20.48,
+              "dram_throughput_pct": 9.34,
+              "dram_read_bytes": 1889664.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13056.0,
+              "sm_active_pct": 69.02,
+              "sm_throughput_pct": 20.45,
+              "dram_throughput_pct": 9.32,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13024.0,
+              "sm_active_pct": 69.01,
+              "sm_throughput_pct": 20.56,
+              "dram_throughput_pct": 9.37,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13024.0,
+              "sm_active_pct": 68.3,
+              "sm_throughput_pct": 20.57,
+              "dram_throughput_pct": 9.38,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 13024.0,
+              "sm_active_pct": 68.77,
+              "sm_throughput_pct": 20.51,
+              "dram_throughput_pct": 9.36,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 12992.0,
+              "sm_active_pct": 68.47,
+              "sm_throughput_pct": 20.57,
+              "dram_throughput_pct": 9.4,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 12960.0,
+              "sm_active_pct": 69.57,
+              "sm_throughput_pct": 20.69,
+              "dram_throughput_pct": 9.42,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 12960.0,
+              "sm_active_pct": 68.99,
+              "sm_throughput_pct": 20.66,
+              "dram_throughput_pct": 9.4,
+              "dram_read_bytes": 1889792.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        },
+        "pt_mlp": {
+          "kernel_count": 36,
+          "total_profiled_kernel_time_ms": 0.888256,
+          "duration_weighted_sm_active_pct": 63.63381367533684,
+          "duration_weighted_sm_throughput_pct": 39.54954247424166,
+          "duration_weighted_dram_throughput_pct": 14.45084624252468,
+          "measured_dram_read_bytes": 199143296.0,
+          "measured_dram_write_bytes": 640.0,
+          "measured_dram_bytes": 199143936.0,
+          "estimated_flops": 58095304704,
+          "compulsory_bytes_lower_bound": 66180096,
+          "modeled_ai_flops_per_byte": 877.8365130204706,
+          "measured_ai_flops_per_byte": 291.72520073119375,
+          "ridge_point_flops_per_byte": 200.64308681672026,
+          "achieved_tflops_from_estimated_work": 65.40378528712444,
+          "roofline_ceiling_tflops_from_measured_ai": 312.0,
+          "below_ridge_from_measured_ai": false,
+          "measured_to_compulsory_byte_ratio": 3.0091212922991226,
+          "work_model_note": "FC1/FC2 MACs count as two FLOPs; GELU and intermediate activation traffic are excluded from the lower-bound traffic model.",
+          "top_kernels_by_time": [
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34880.0,
+              "sm_active_pct": 43.19,
+              "sm_throughput_pct": 31.35,
+              "dram_throughput_pct": 13.86,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34848.0,
+              "sm_active_pct": 43.27,
+              "sm_throughput_pct": 31.41,
+              "dram_throughput_pct": 13.88,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34816.0,
+              "sm_active_pct": 43.35,
+              "sm_throughput_pct": 31.4,
+              "dram_throughput_pct": 13.88,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34784.0,
+              "sm_active_pct": 43.43,
+              "sm_throughput_pct": 31.47,
+              "dram_throughput_pct": 13.91,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34784.0,
+              "sm_active_pct": 43.57,
+              "sm_throughput_pct": 31.49,
+              "dram_throughput_pct": 13.9,
+              "dram_read_bytes": 7506304.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34784.0,
+              "sm_active_pct": 43.38,
+              "sm_throughput_pct": 31.49,
+              "dram_throughput_pct": 13.9,
+              "dram_read_bytes": 7506304.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34752.0,
+              "sm_active_pct": 43.36,
+              "sm_throughput_pct": 31.47,
+              "dram_throughput_pct": 13.92,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34752.0,
+              "sm_active_pct": 43.43,
+              "sm_throughput_pct": 31.49,
+              "dram_throughput_pct": 13.91,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 0.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34720.0,
+              "sm_active_pct": 43.41,
+              "sm_throughput_pct": 31.49,
+              "dram_throughput_pct": 13.92,
+              "dram_read_bytes": 7506432.0,
+              "dram_write_bytes": 128.0
+            },
+            {
+              "kernel_name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_relu_f2f_stages_64x3_tn",
+              "duration_ns": 34720.0,
+              "sm_active_pct": 43.45,
+              "sm_throughput_pct": 31.5,
+              "dram_throughput_pct": 13.91,
+              "dram_read_bytes": 7506304.0,
+              "dram_write_bytes": 0.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "methodology_note": "NCU measured bytes/time/throughput are hardware counters. FLOPs are an explicit operation model; FPS/KNN comparisons and indexing plus normalization/nonlinear/reduction work are not counted."
+}

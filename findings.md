@@ -312,3 +312,36 @@
 - The formal ModelNet run covered two point clouds, four prompts each, 32 generated tokens, 31 decode passes, and all 32 layers (7,936 layer-token records). At 64-neuron/10.47% budget, current contribution retention was 14.63%, previous-token retention 11.63%, adjacent Jaccard 14.37%, previous recall 24.23%, and cross-prompt Jaccard 16.14%. At 50% budget current retention was only 57.17%; at 75% it was 80.24%.
 - A one-point-cloud Objaverse check closely reproduced the contribution and temporal results (14.67% current retention, 11.66% previous retention, 14.61% adjacent Jaccard at 64/10%), while cross-prompt Jaccard dropped to 8.20%. This supports the conclusion that contiguous MLP block masks are neither strongly sparse nor point-cloud-static, but the Objaverse sample count is not sufficient for a dataset-level confidence interval.
 - BF16-preserving and temporary FP16-storage analyses differed by less than `3.4e-10` in aggregate contribution ratios and produced identical support-overlap metrics; the published/raw canonical run preserves BF16 exactly.
+
+## Structured Sparsity Source Check
+- The NeurIPS 2021 paper "Channel Permutations for N:M Sparsity" treats channel permutation as a function-preserving layout transformation that can increase compatibility with structured N:M patterns; this supports using exact MLP neuron permutations only as an upper-bound test, not as a learned compression method. Source: https://proceedings.neurips.cc/paper_files/paper/2021/hash/6e8404c3b93a9527c8db241a1846599a-Abstract.html
+- SparseGPT reports one-shot pruning without retraining and explicitly generalizes to semi-structured 2:4 and 4:8 patterns. Source: https://arxiv.org/abs/2301.00774
+- Wanda ranks weights using weight magnitude and input-activation statistics, applies masks per output, and requires neither retraining nor a weight update. Its official implementation exposes unstructured, 2:4, and 4:8 modes. Sources: https://arxiv.org/abs/2306.11695 and https://github.com/locuslab/wanda
+
+## Neuron-Level Oracle Gate
+- ModelNet B=1: Gini `0.5800`, normalized entropy `0.9313`, effective-support ratio `0.5321`, top-10% contribution retention `0.4092`, and neuron ratio for 90% contribution `0.5221`.
+- Objaverse B=1 closely matched: Gini `0.5813`, normalized entropy `0.9308`, effective-support ratio `0.5297`, top-10% retention `0.4109`, and ratio for 90% contribution `0.5214`.
+- Grouping rapidly removes the limited neuron-level concentration. On ModelNet, B=32 has normalized entropy `0.9933`, effective-support ratio `0.9636`, top-10% retention `0.1597`, and needs `0.8519` of neurons for 90% contribution.
+- Both datasets trigger the predeclared stop rule (`B=1 retention@10% < 0.50` and `ratio-for-90% > 0.50`). Activation sparsity is therefore closed, and exact permutation/clustering search is gated off: a permutation cannot exceed the arbitrary-neuron oracle.
+
+## Static N:M Wanda Pruning
+- Implemented the official Wanda metric `|W| * sqrt(E[x^2])` from real PointLLM multimodal calibration inputs and exact row-wise contiguous N:M masks across decoder QKV/O/MLP weights. The source checkpoint is never modified.
+- ModelNet two-point/two-prompt/eight-token 2:4 result: KL mean `0.05982`, KL max `0.29026`, teacher-forced top-1 agreement `0.9375`, free-generation token match `0.50`, and exact-request match `0.50`.
+- The matching 4:8 result: KL mean `0.05045`, KL max `0.22979`, top-1 agreement `0.90625`, free-generation token match `0.65625`, and exact-request match `0.50`.
+- Both patterns create exact 50% decoder sparsity but already alter autoregressive outputs on half the requests. Dense PyTorch execution cannot realize N:M speedup, so no runtime claim is made.
+- SparseGPT's official full reconstruction needs a dense input Hessian and Cholesky factor per linear layer; the 11,008-wide MLP down-projection alone requires about 485 MB for one FP32 Hessian and cubic factorization. A full 32-layer run is deferred rather than replacing it with a diagonal approximation mislabeled as SparseGPT.
+
+## Full-Pipeline Precision Sensitivity
+- Per-output-channel W8 simulation preserved all four eight-token free generations for PointBERT, projector, decoder QKV/O/MLP, and LM head; component KL means were between `0.00016` and `0.00037`.
+- W4 sensitivity is strongly component-dependent. LM head produced KL mean `0.99191`, only `21.88%` free-token match, and `0%` exact-request match. Decoder MLP produced KL mean `0.00970` and `75%` exact-request match.
+- PointBERT, projector, decoder QKV, and decoder O retained 100% exact-generation match in this small W4 run, but teacher-forced drift was nonzero and the sample is not large enough to certify a production precision mode.
+- Unified PE guidance from current evidence: support W8 broadly; preserve at least W8 for LM head; allow independently selectable precision for decoder MLP; treat W4 frontend/QKV/O as candidates requiring a larger task-level validation rather than a default.
+
+## Strict PointBERT NCU Roofline
+- Formal B1/B4 runs profiled the real `8192 -> 512x32 -> 513x384` PointBERT and all 12 PointTransformer layers on an idle A100. NCU measured bytes/time/throughput are separated from explicitly modeled FLOPs.
+- B1 total marked-stage time was `5.860 ms`: FPS `2.951 ms` (`50.35%`), PT attention `1.028 ms` (`17.54%`), local encoder `0.914 ms` (`15.60%`), and PT MLP `0.420 ms` (`7.16%`).
+- B4 total marked-stage time was `10.448 ms`: local encoder `3.036 ms` (`29.06%`), FPS `3.008 ms` (`28.79%`), PT attention `2.347 ms` (`22.47%`), and PT MLP `0.888 ms` (`8.50%`).
+- FPS is almost batch-invariant and reaches only `0.29%` SM throughput at B1 and `1.15%` at B4. The first frontend target is a higher-occupancy/fused FPS implementation, not bandwidth compression.
+- PT QKV/O/MLP measured-byte AI is at or above the A100 ridge (`200.64 FLOP/byte`) while DRAM throughput remains `4.6-14.5%`; these 513-token GEMMs do not reproduce the decoder's small-batch weight-bandwidth bottleneck.
+- PT attention remains below the ridge (`36.94` AI B1, `31.64` B4), consumes `17.54-22.47%` of marked time, and materializes eager score tensors. Fused SDPA/FlashAttention is the primary transformer software target.
+- KNN measured AI is low, but radix/top-k and irregular selection dominate. Distance+selection fusion should be evaluated instead of interpreting it as a dense GEMM roofline point.

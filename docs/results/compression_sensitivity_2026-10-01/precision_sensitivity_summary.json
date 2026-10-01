@@ -1,0 +1,895 @@
+{
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "quantization": "per-output-channel symmetric round-to-nearest simulation",
+    "components": [
+      "pointbert",
+      "projector",
+      "decoder_qkv",
+      "decoder_o",
+      "decoder_mlp",
+      "lm_head"
+    ],
+    "bits": [
+      8,
+      4
+    ],
+    "num_samples": 2,
+    "num_prompts": 2,
+    "max_new_tokens": 8
+  },
+  "results": [
+    {
+      "component": "pointbert",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 21808256,
+        "modules": 55,
+        "relative_rmse_parameter_weighted": 0.008297851703464676,
+        "max_abs_error": 0.00390625
+      },
+      "aggregate": {
+        "kl_mean": 0.00035525570638128556,
+        "kl_max": 0.0014966705930419266,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.03188714571297169,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.0003619535418692976,
+          "kl_max": 0.0016148798167705536,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.8984375,
+          "logit_rmse": 0.037311725318431854,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00014622350863646716,
+          "kl_max": 0.0005433466285467148,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.765625,
+          "logit_rmse": 0.03322106972336769,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0005090021877549589,
+          "kl_max": 0.0019196395296603441,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.7578125,
+          "logit_rmse": 0.030039852485060692,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0004038435872644186,
+          "kl_max": 0.001908816397190094,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.7734375,
+          "logit_rmse": 0.026975935325026512,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "pointbert",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 21808256,
+        "modules": 55,
+        "relative_rmse_parameter_weighted": 0.14765587484829598,
+        "max_abs_error": 0.04931640625
+      },
+      "aggregate": {
+        "kl_mean": 0.0012262911186553538,
+        "kl_max": 0.005532043520361185,
+        "top1_agreement": 0.96875,
+        "logit_rmse": 0.13946910575032234,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.001126398565247655,
+          "kl_max": 0.007473250851035118,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.8671875,
+          "logit_rmse": 0.1539342999458313,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0014017693465575576,
+          "kl_max": 0.008701739832758904,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.8125,
+          "logit_rmse": 0.15725089609622955,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.001109959906898439,
+          "kl_max": 0.0031695887446403503,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.11724166572093964,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0012670366559177637,
+          "kl_max": 0.0027835946530103683,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.12944956123828888,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "projector",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 10878976,
+        "modules": 3,
+        "relative_rmse_parameter_weighted": 0.008627141051622758,
+        "max_abs_error": 0.0078125
+      },
+      "aggregate": {
+        "kl_mean": 0.00016387502546422184,
+        "kl_max": 0.0008541624993085861,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.027745204977691174,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.0001255997340194881,
+          "kl_max": 0.0005755666643381119,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.9296875,
+          "logit_rmse": 0.029275167733430862,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00011120660929009318,
+          "kl_max": 0.0005378611385822296,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.7890625,
+          "logit_rmse": 0.028533482924103737,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 6.745939026586711e-05,
+          "kl_max": 0.0004203459247946739,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.024835042655467987,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.00035123436828143895,
+          "kl_max": 0.001882876269519329,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.84375,
+          "logit_rmse": 0.028337126597762108,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "projector",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 10878976,
+        "modules": 3,
+        "relative_rmse_parameter_weighted": 0.15332302271601667,
+        "max_abs_error": 0.13671875
+      },
+      "aggregate": {
+        "kl_mean": 0.0014797672920394689,
+        "kl_max": 0.008639689767733216,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.18356766179203987,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.002221484435722232,
+          "kl_max": 0.013200536370277405,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 4.03125,
+          "logit_rmse": 0.2429191917181015,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0024491145741194487,
+          "kl_max": 0.018235985189676285,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.859375,
+          "logit_rmse": 0.20569771528244019,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0007527396082878113,
+          "kl_max": 0.0021032204385846853,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.7578125,
+          "logit_rmse": 0.13130828738212585,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0004957305500283837,
+          "kl_max": 0.0010190170723944902,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.8203125,
+          "logit_rmse": 0.15434545278549194,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_qkv",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 1610612736,
+        "modules": 96,
+        "relative_rmse_parameter_weighted": 0.010123073656965667,
+        "max_abs_error": 0.004638671875
+      },
+      "aggregate": {
+        "kl_mean": 0.0002223737374151824,
+        "kl_max": 0.00126633356558159,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.03144524758681655,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.00022997314226813614,
+          "kl_max": 0.0015987437218427658,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.9375,
+          "logit_rmse": 0.030324717983603477,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 8.276435983134434e-05,
+          "kl_max": 0.0005241371691226959,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.796875,
+          "logit_rmse": 0.031563762575387955,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0003298281808383763,
+          "kl_max": 0.0019280188716948032,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.030039235949516296,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.00024692926672287285,
+          "kl_max": 0.0010144344996660948,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.8125,
+          "logit_rmse": 0.03385327383875847,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_qkv",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 1610612736,
+        "modules": 96,
+        "relative_rmse_parameter_weighted": 0.1801600131827096,
+        "max_abs_error": 0.08251953125
+      },
+      "aggregate": {
+        "kl_mean": 0.006425757776014507,
+        "kl_max": 0.03670919360592961,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.3925080671906471,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.006854978855699301,
+          "kl_max": 0.04600101709365845,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.7109375,
+          "logit_rmse": 0.4541584551334381,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.009914295747876167,
+          "kl_max": 0.07227401435375214,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.5546875,
+          "logit_rmse": 0.40117502212524414,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0040380870923399925,
+          "kl_max": 0.013879300095140934,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.5625,
+          "logit_rmse": 0.33843496441841125,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.004895669408142567,
+          "kl_max": 0.014682442881166935,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.640625,
+          "logit_rmse": 0.376263827085495,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_o",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 536870912,
+        "modules": 32,
+        "relative_rmse_parameter_weighted": 0.009461126115638763,
+        "max_abs_error": 0.0078125
+      },
+      "aggregate": {
+        "kl_mean": 0.00035439973544271197,
+        "kl_max": 0.0015379349351860583,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.028010360430926085,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 9.01089733815752e-05,
+          "kl_max": 0.000575333833694458,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.9296875,
+          "logit_rmse": 0.028223708271980286,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0002692425041459501,
+          "kl_max": 0.0018861591815948486,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.765625,
+          "logit_rmse": 0.031210405752062798,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00029361341148614883,
+          "kl_max": 0.001783345127478242,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.02653215266764164,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0007646340527571738,
+          "kl_max": 0.0019069015979766846,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.796875,
+          "logit_rmse": 0.026075175032019615,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_o",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 536870912,
+        "modules": 32,
+        "relative_rmse_parameter_weighted": 0.1683675986714661,
+        "max_abs_error": 0.1171875
+      },
+      "aggregate": {
+        "kl_mean": 0.0012369610485620797,
+        "kl_max": 0.006952175695914775,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.15500811114907265,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.0008762640645727515,
+          "kl_max": 0.005843892693519592,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.8984375,
+          "logit_rmse": 0.15321122109889984,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.001905458397231996,
+          "kl_max": 0.012129008769989014,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.765625,
+          "logit_rmse": 0.1756521612405777,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0004907331895083189,
+          "kl_max": 0.0020066502038389444,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.7578125,
+          "logit_rmse": 0.13923312723636627,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0016753885429352522,
+          "kl_max": 0.00782915111631155,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.15193593502044678,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_mlp",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 4328521728,
+        "modules": 96,
+        "relative_rmse_parameter_weighted": 0.009261617572822919,
+        "max_abs_error": 0.015625
+      },
+      "aggregate": {
+        "kl_mean": 0.00036576497222995386,
+        "kl_max": 0.0019541263463906944,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.039953180588781834,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.0004739346622955054,
+          "kl_max": 0.0019302214495837688,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.9453125,
+          "logit_rmse": 0.039986658841371536,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00012238937779329717,
+          "kl_max": 0.000807683914899826,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.7265625,
+          "logit_rmse": 0.04249648004770279,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00019437281298451126,
+          "kl_max": 0.0008981057908385992,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.75,
+          "logit_rmse": 0.04240607097744942,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0006723630358465016,
+          "kl_max": 0.004180494230240583,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.7734375,
+          "logit_rmse": 0.03492351248860359,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "decoder_mlp",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 4328521728,
+        "modules": 96,
+        "relative_rmse_parameter_weighted": 0.16533863870427012,
+        "max_abs_error": 0.1787109375
+      },
+      "aggregate": {
+        "kl_mean": 0.009700436843559146,
+        "kl_max": 0.051638848846778274,
+        "top1_agreement": 0.9375,
+        "logit_rmse": 0.6853149235248566,
+        "free_generation_token_match": 0.75,
+        "free_generation_exact_match": 0.75
+      },
+      "cases": [
+        {
+          "kl_mean": 0.011484457179903984,
+          "kl_max": 0.0615600049495697,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 4.1171875,
+          "logit_rmse": 0.7910100817680359,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.014865806326270103,
+          "kl_max": 0.10626935958862305,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.96875,
+          "logit_rmse": 0.6110260486602783,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.005040259100496769,
+          "kl_max": 0.013764153234660625,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.7578125,
+          "logit_rmse": 0.5242077708244324,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.007411224767565727,
+          "kl_max": 0.02496187761425972,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.8828125,
+          "logit_rmse": 0.8150157928466797,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 0.0,
+          "free_generation_exact_match": false,
+          "candidate_text": "This is a 3D model of"
+        }
+      ]
+    },
+    {
+      "component": "lm_head",
+      "bits": 8,
+      "weight_error": {
+        "parameters": 131084288,
+        "modules": 1,
+        "relative_rmse_parameter_weighted": 0.010930389165878296,
+        "max_abs_error": 0.001953125
+      },
+      "aggregate": {
+        "kl_mean": 0.0003604712037486024,
+        "kl_max": 0.0015826596354600042,
+        "top1_agreement": 1.0,
+        "logit_rmse": 0.02352215489372611,
+        "free_generation_token_match": 1.0,
+        "free_generation_exact_match": 1.0
+      },
+      "cases": [
+        {
+          "kl_mean": 0.00042388250585645437,
+          "kl_max": 0.002121465280652046,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 3.9140625,
+          "logit_rmse": 0.023869264870882034,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.00010128068970516324,
+          "kl_max": 0.0006409650668501854,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.8046875,
+          "logit_rmse": 0.024090280756354332,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "This is a 3D model of"
+        },
+        {
+          "kl_mean": 0.0003113985003437847,
+          "kl_max": 0.0016184252453967929,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.7421875,
+          "logit_rmse": 0.023356180638074875,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        },
+        {
+          "kl_mean": 0.0006053231190890074,
+          "kl_max": 0.0019497829489409924,
+          "top1_agreement": 1.0,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.8359375,
+          "logit_rmse": 0.0227728933095932,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 1.0,
+          "free_generation_exact_match": true,
+          "candidate_text": "The 3D object model is a"
+        }
+      ]
+    },
+    {
+      "component": "lm_head",
+      "bits": 4,
+      "weight_error": {
+        "parameters": 131084288,
+        "modules": 1,
+        "relative_rmse_parameter_weighted": 0.19586098194122314,
+        "max_abs_error": 0.0303955078125
+      },
+      "aggregate": {
+        "kl_mean": 0.9919098019599915,
+        "kl_max": 6.70221483707428,
+        "top1_agreement": 0.875,
+        "logit_rmse": 0.7786301523447037,
+        "free_generation_token_match": 0.21875,
+        "free_generation_exact_match": 0.0
+      },
+      "cases": [
+        {
+          "kl_mean": 1.0562708377838135,
+          "kl_max": 4.413990020751953,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.9375,
+          "candidate_margin_mean": 4.1015625,
+          "logit_rmse": 0.7947010397911072,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 0.375,
+          "free_generation_exact_match": false,
+          "candidate_text": "This is a model of a three-"
+        },
+        {
+          "kl_mean": 0.6587364673614502,
+          "kl_max": 4.710211753845215,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.8125,
+          "candidate_margin_mean": 3.9765625,
+          "logit_rmse": 0.7632006406784058,
+          "sample_id": "modelnet-test-1577",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 0.375,
+          "free_generation_exact_match": false,
+          "candidate_text": "This is a model of a rectangular"
+        },
+        {
+          "kl_mean": 1.2697076797485352,
+          "kl_max": 9.994742393493652,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.71875,
+          "candidate_margin_mean": 3.3828125,
+          "logit_rmse": 0.7937900424003601,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-0",
+          "free_generation_token_match": 0.0,
+          "free_generation_exact_match": false,
+          "candidate_text": "This is a three-dimensional model of"
+        },
+        {
+          "kl_mean": 0.982924222946167,
+          "kl_max": 7.689915180206299,
+          "top1_agreement": 0.875,
+          "reference_margin_mean": 3.8515625,
+          "candidate_margin_mean": 3.5,
+          "logit_rmse": 0.7628288865089417,
+          "sample_id": "modelnet-test-1722",
+          "prompt_id": "prompt-1",
+          "free_generation_token_match": 0.125,
+          "free_generation_exact_match": false,
+          "candidate_text": "The object is a modern, sleek"
+        }
+      ]
+    }
+  ],
+  "guardrails": [
+    "Weights are dequantized back to BF16/FP16 for dense execution; this measures sensitivity, not speed.",
+    "Only one component is quantized at a time and original weights are restored before the next experiment.",
+    "Activation quantization is not included."
+  ],
+  "plot": "/home/nano-pointllm/results/precision_sensitivity/modelnet_n2_p2_t8/precision_sensitivity.png"
+}

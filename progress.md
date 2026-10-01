@@ -332,3 +332,23 @@
 - Published compact CSV/PNG evidence and interpretation under `docs/results/mlp_block_trace_modelnet_2026-10-01/`.
 - Full regression passed after the trace implementation: `136 passed, 1 skipped in 6.16s`.
 - Phase 24 completed. The evidence does not support direct contiguous-block MLP sparsification; neuron reordering/clustering or a learned pre-gate predictor should be validated against the measured oracle before kernel implementation.
+
+## 2026-10-01: Neuron-Level Oracle Gate
+- Added B=1/4/8/16/32 contribution-oracle analysis with Gini, entropy, normalized entropy, effective support, fixed-budget retention, and inverse target-support metrics.
+- Added an explicit activation-sparsity stop rule and unit tests against uniform and single-support analytic distributions.
+- ModelNet and Objaverse both triggered the stop rule. Phase 26 permutation/clustering was intentionally gated off because no layout can outperform the failed B=1 arbitrary-neuron oracle.
+
+## 2026-10-01: Static N:M Wanda Pruning
+- Added activation-calibrated Wanda and magnitude N:M mask primitives with exact group validation and unit tests.
+- Added a real PointLLM quality evaluator using teacher-forced KL/top-token metrics and free greedy generation; checkpoint weights remain untouched.
+- Completed 2:4 and 4:8 ModelNet evaluations. Both exact-50%-sparse variants changed free generation on two of four requests, so structured pruning is not treated as accuracy-free.
+- Inspected the official SparseGPT implementation. Full-Hessian reconstruction remains a separate long-running experiment; no diagonal proxy is reported as SparseGPT.
+
+## 2026-10-01: Precision Sensitivity And PointBERT Roofline
+- Added per-output-channel W8/W4 weight-rounding sensitivity for PointBERT, projector, decoder QKV/O/MLP, and LM head, restoring the BF16 baseline after every component run.
+- Real ModelNet calibration found 100% free-generation match for every W8 component in the evaluated four requests. W4 LM head failed all exact requests and decoder MLP retained only 75%; the other W4 components matched these short generations but require broader validation.
+- Added strict PointBERT NCU scopes for FPS, KNN, complete local encoder, and all 12 PointTransformer QKV/attention/O/MLP stages.
+- Fixed the idle methodology so the launch snapshot is taken before NCU itself allocates memory and initializes counters; both B1 and B4 formal runs started at 0% utilization.
+- B1 marked-stage shares were FPS 50.35%, PT attention 17.54%, local encoder 15.60%, and PT MLP 7.16%. FPS reached only 0.29% SM throughput.
+- B4 shares were local encoder 29.06%, FPS 28.79%, PT attention 22.47%, and PT MLP 8.50%. Local encoder reached 62.52% SM throughput.
+- Published compact evidence under `docs/results/compression_sensitivity_2026-10-01/` and `docs/results/pointbert_ncu_roofline_2026-10-01/`.

@@ -148,6 +148,31 @@ PYTHONPATH=/home/PointLLM:. /opt/conda/envs/pointllm/bin/python \
 
 2026-10-01 的 2-point-cloud、4-prompt、32-token ModelNet 结果见 [`docs/results/mlp_block_trace_modelnet_2026-10-01/`](docs/results/mlp_block_trace_modelnet_2026-10-01/README.md)。
 
+### Compression sensitivity and PointBERT roofline
+
+Neuron-level oracle、Wanda 2:4/4:8 与 PointBERT/projector/decoder/LM-head W8/W4 sensitivity 的脚本分别为：
+
+```bash
+python scripts/analyze_mlp_neuron_oracle.py --help
+python scripts/evaluate_nm_pruning_pointllm.py --help
+python scripts/evaluate_precision_sensitivity_pointllm.py --help
+```
+
+当前 neuron oracle 已触发 activation-sparsity stop gate，因此没有继续做 permutation/clustering；Wanda 50% N:M 在小规模真实生成中产生明显漂移；逐组件 sensitivity 表明 W8 是共同起点，而 W4 LM head 明显不可接受。完整结果和限制见 [`docs/results/compression_sensitivity_2026-10-01/`](docs/results/compression_sensitivity_2026-10-01/README.md)。
+
+PointBERT 的严格 NCU B1/B4 profile 使用与 decoder 相同的空卡门禁和 duration-weighted 计数口径：
+
+```bash
+PYTHONPATH=/home/PointLLM:. /opt/conda/envs/pointllm/bin/python \
+  scripts/run_pointbert_ncu_stages.py \
+  --model_path /mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors \
+  --device cuda:0 --batch_sizes 1,4 --warmup 5 \
+  --peak_hbm_gbps 1555 --peak_compute_tflops 312 \
+  --output_dir results/ncu_pointbert_strict_b1_b4
+```
+
+该流程分别输出 FPS、KNN、local encoder、完整 12 层 PointTransformer QKV/attention/O/MLP 的 NCU DRAM bytes、DRAM/SM throughput、显式 FLOP model、measured-byte AI 和统一 roofline 图。正式结果见 [`docs/results/pointbert_ncu_roofline_2026-10-01/`](docs/results/pointbert_ncu_roofline_2026-10-01/README.md)。
+
 **Paged runtime 默认轻量路径**：构造带 `num_kvcache_blocks` 的 `PointLLMLLMEngine` 后，prefill、mixed step 和 eager decode 默认均经 `LightweightLlamaRunner` 绕过 HuggingFace 模型级 `forward`。设置 `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` 才恢复显式 HF fallback，用于 parity/debug；`NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` 启用固定 shape bucket 的 decode graph 并强制轻量路径。  
 分页执行会从 `ForwardContext` 注入每个逻辑请求自己的 position ids，包括 PointLLM 显式向基类传递 `position_ids=None` 的情况；修改运行时代码后需重启已有 Python 服务，确保类级 patch 重新安装。  
 **`torch_loop`**：需 **`transformers.cache_utils`**（含 `DynamicCache`）；若环境缺该模块，运行时会 **自动退回 `hf_inner`** 并打 log，升级 `transformers` 后可走显式逐层路径。  

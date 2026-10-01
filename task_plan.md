@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 24 complete
+Phase 29 complete
 
 ## Phases
 
@@ -170,6 +170,37 @@ Phase 24 complete
 - [x] Update documentation, findings, and progress records
 - **Status:** complete
 
+### Phase 25: Neuron-Level Oracle Gate
+- [x] Sweep neuron groups `B=1/4/8/16/32`
+- [x] Report retained contribution, Gini, normalized entropy, and effective support size
+- [x] Define and apply an explicit activation-sparsity stop criterion
+- [x] Export JSON/CSV/plots for ModelNet and Objaverse traces
+- **Status:** complete
+
+### Phase 26: Exact MLP Neuron Permutation/Clustering Upper Bound
+- [x] Apply the Phase 25 hard gate before spending on clustering
+- [x] Stop the branch because the B=1 oracle failed the concentration criterion on both datasets
+- **Status:** complete (gated off; no clustering performed)
+
+### Phase 27: Static N:M Weight Pruning
+- [x] Implement calibration-based Wanda 2:4 and 4:8 masks
+- [x] Verify exact per-row N:M validity and 50% decoder sparsity
+- [x] Measure logits KL, top-token agreement/margin, and generation parity/quality
+- [ ] Run full SparseGPT reconstruction only if a longer offline pruning window is allocated
+- **Status:** complete for Wanda; SparseGPT full-Hessian run deferred
+
+### Phase 28: Full-Pipeline Precision Sensitivity
+- [x] Evaluate PointBERT, projector, decoder QKV/O, MLP, and LM head independently
+- [x] Measure W8 and W4 simulated weight quantization sensitivity
+- [x] Report logits KL, top-token agreement/margin, and generated-output drift
+- **Status:** complete
+
+### Phase 29: Strict PointBERT NCU Roofline
+- [x] Add NVTX scopes for FPS, KNN, local encoder, and PointTransformer QKV/attention/O/MLP
+- [x] Collect DRAM, SM, duration, modeled bytes/FLOPs, and arithmetic intensity
+- [x] Produce strict B1/B4 representative summaries and unified roofline figure
+- **Status:** complete
+
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
 2. Does paged KV scheduling handle memory pressure safely, including preemption?
@@ -200,6 +231,8 @@ Phase 24 complete
 | Phase 24 progress-log patch expected a non-existent section heading | First attempt to append the MLP trace implementation log | Inspected the actual append-only log layout and appended a dated section instead |
 | Phase 24 artifact inspection used unavailable `jq` and omitted explicit image detail | First smoke artifact inspection | Switched to a read-only Python JSON summary and explicit `detail=high` image inspection |
 | Nested image forwarding still rejected an otherwise valid detail field | Second smoke artifact inspection | Called `view_image` one image at a time and forwarded its `image_url` explicitly |
+| Official pruning-source clone command included a defensive `rm -rf` | First Phase 27 source-inspection attempt; command was rejected before execution | Use fresh `mktemp` directories and never delete existing paths |
+| PointBERT strict idle check saw NCU's own 940 MiB/41% startup activity | First Phase 29 NCU launch | Move the unchanged idle gate before NCU attaches and pass the pre-NCU GPU snapshot into the capture manifest |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.
