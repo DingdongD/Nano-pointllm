@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 22 complete
+Phase 24 complete
 
 ## Phases
 
@@ -161,6 +161,15 @@ Phase 22 complete
 - [x] Capture publishable B1/B8 NCU reports on an idle A100
 - **Status:** complete
 
+### Phase 24: Decode MLP Block Trace
+- [x] Define contribution, overlap, recall, and theoretical weight-byte metrics
+- [x] Capture `SiLU(gate) * up` for all 32 decoder layers and decode tokens
+- [x] Support 32/64/128/256-neuron blocks and cross-prompt point-cloud grouping
+- [x] Export detailed JSON, aggregate CSV/JSON, and diagnostic plots
+- [x] Add unit tests and run real ModelNet and Objaverse analyses
+- [x] Update documentation, findings, and progress records
+- **Status:** complete
+
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
 2. Does paged KV scheduling handle memory pressure safely, including preemption?
@@ -188,6 +197,9 @@ Phase 22 complete
 | Position injection regression test omitted required `ForwardContext` fields | First targeted test run after the position fix | Supplied explicit `None` values for slot mapping, block tables, and context lengths |
 | 20-token native-HF parity diverged on some synthetic point-cloud sequences near token 14 | Extended the corrected 4-token parity beyond the basic gate | Verified same-state lightweight-vs-HF paged logits are exactly equal; classified remaining divergence as existing Triton/BF16 non-bitwise behavior rather than a lightweight routing regression |
 | Phase 22 percentile unit test compared `8.549999999999999` to `8.55` exactly | First final full-suite run | Changed only the assertion to `pytest.approx`; percentile implementation was correct |
+| Phase 24 progress-log patch expected a non-existent section heading | First attempt to append the MLP trace implementation log | Inspected the actual append-only log layout and appended a dated section instead |
+| Phase 24 artifact inspection used unavailable `jq` and omitted explicit image detail | First smoke artifact inspection | Switched to a read-only Python JSON summary and explicit `detail=high` image inspection |
+| Nested image forwarding still rejected an otherwise valid detail field | Second smoke artifact inspection | Called `view_image` one image at a time and forwarded its `image_url` explicitly |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

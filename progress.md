@@ -321,3 +321,14 @@
 - B8 confirmed QKV, O projection, and MLP as weight-bandwidth-bound. LM head remained weight-stream dominated but reached only 24.17% DRAM throughput, so it did not pass the strict threshold.
 - Stage-only scaled shares were B1: MLP 48.65%, attention 21.88%, QKV 20.83%, O 7.31%, LM head 1.33%; B8: MLP 40.66%, attention 34.15%, QKV 15.17%, O 6.26%, LM head 3.77%.
 - Reports and plots are under `docs/results/ncu_weight_bound_2026-09-30/`; raw NCU CSV remains under ignored local `results/ncu_decode_stages/`.
+
+## 2026-10-01: Decode MLP Block Trace
+- Added a disabled-by-default observer to `LightweightMLP` and a runner-level attachment method. It captures the exact `SiLU(gate) * up` tensor in both packed and ordinary MLP paths and rejects CUDA Graph capture explicitly.
+- Added `nanopointllm.analysis.mlp_block_trace` with raw trace serialization and offline metrics for contiguous neuron blocks, retained contribution, adjacent-token Jaccard, previous-token recall, same-point-cloud cross-prompt overlap, and theoretical post-gate/oracle-pre-gate/previous-token MLP weight-byte reduction.
+- Normal inference behavior remains unchanged while no observer is attached.
+- Real PointLLM-7B + ModelNet smoke completed for two prompts, four generated tokens each. It captured all 32 layers over three decode passes per prompt and wrote raw activations, compressed JSONL details, CSV curves, summary JSON, and two PNG diagnostics under `results/mlp_block_trace/modelnet_real_smoke/`.
+- Formal BF16 ModelNet run completed for two point clouds, four prompts each, and 32 generated tokens: 7,936 layer-token records and 176.7 MB of raw activations under `results/mlp_block_trace/modelnet_n2_p4_t32_bf16/`.
+- One-object Objaverse distribution check completed under `results/mlp_block_trace/objaverse_n1_p4_t32_bf16/`; contribution and temporal metrics matched ModelNet while cross-prompt overlap was lower.
+- Published compact CSV/PNG evidence and interpretation under `docs/results/mlp_block_trace_modelnet_2026-10-01/`.
+- Full regression passed after the trace implementation: `136 passed, 1 skipped in 6.16s`.
+- Phase 24 completed. The evidence does not support direct contiguous-block MLP sparsification; neuron reordering/clustering or a learned pre-gate predictor should be validated against the measured oracle before kernel implementation.

@@ -289,6 +289,8 @@ class LightweightMLP(nn.Module):
         self.gateup_weight_layout = gateup_weight_layout
         self.gateup_gemm_impl = gateup_gemm_impl
         self.downproj_gemm_impl = downproj_gemm_impl
+        self.trace_layer_index: int | None = None
+        self.trace_observer = None
         self.packed_gateup_weight = None
         self.packed_gateup_bias = None
         self.packed_gateup_weight_t = None
@@ -354,6 +356,8 @@ class LightweightMLP(nn.Module):
                     f"unsupported gate_up split impl: {self.gateup_split_impl}"
                 )
             fused = self.act_fn(gate) * up
+            if self.trace_observer is not None:
+                self._observe_fused_activation(fused)
             t2 = _mark()
             if self.use_staged_down_proj_decode:
                 down_input = _decode_rows_layout(
@@ -390,12 +394,28 @@ class LightweightMLP(nn.Module):
             fused = _silu_mul_triton(gate, up)
         else:
             fused = self.act_fn(gate) * up
+        if self.trace_observer is not None:
+            self._observe_fused_activation(fused)
         t2 = _mark()
         out = self.down_proj(fused)
         t3 = _mark()
         if self.profile_enabled and hidden_states.is_cuda:
             self._last_profile_events = (t0, t1, t2, None, t3)
         return out
+
+    def _observe_fused_activation(self, fused: torch.Tensor) -> None:
+        observer = self.trace_observer
+        if observer is None:
+            return
+        if fused.is_cuda and torch.cuda.is_current_stream_capturing():
+            raise RuntimeError("MLP activation tracing is incompatible with CUDA Graph capture")
+        if self.trace_layer_index is None:
+            raise RuntimeError("MLP trace observer is missing a decoder layer index")
+        observer(
+            layer_index=self.trace_layer_index,
+            activations=fused,
+            down_proj_weight=self.down_proj.weight,
+        )
 
 
 class LightweightLlamaLayer(nn.Module):
@@ -594,6 +614,13 @@ class LightweightLlamaRunner(nn.Module):
         self.profile_enabled = os.environ.get("NANOPOINTLLM_PROFILE_LAYERS", "0") == "1"
         self.last_profile: list[dict[str, float]] = []
         self.last_global_profile: dict[str, float] = {}
+        for layer_index, layer in enumerate(self.layers):
+            layer.mlp.trace_layer_index = layer_index
+
+    def set_mlp_trace_observer(self, observer) -> None:
+        """Attach a disabled-by-default diagnostic observer to every MLP layer."""
+        for layer in self.layers:
+            layer.mlp.trace_observer = observer
 
     def forward(
         self,

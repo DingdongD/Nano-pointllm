@@ -130,6 +130,24 @@ done
 
 2026-09-30 的 A100 B1/B8 正式结果、图和结论见 [`docs/results/ncu_weight_bound_2026-09-30/`](docs/results/ncu_weight_bound_2026-09-30/README.md)。
 
+### Decode MLP block liveness
+
+`scripts/analyze_decode_mlp_blocks.py` 在普通 eager paged decode 上记录全部 32 层的 `z = SiLU(gate) * up`，并按连续 32/64/128/256 neurons 分块。默认用真实 ModelNet 点云、同一点云的四种 prompt 和 32-token greedy 输出，生成 retained contribution/block-ratio 曲线、相邻 token Jaccard、previous-token recall、同点云跨 prompt overlap，以及三种理论 MLP weight-byte reduction：
+
+```bash
+cd /home/nano-pointllm
+PYTHONPATH=/home/PointLLM:. /opt/conda/envs/pointllm/bin/python \
+  scripts/analyze_decode_mlp_blocks.py \
+  --model_path /mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors \
+  --device cuda:0 --dataset modelnet --num_point_clouds 2 \
+  --max_new_tokens 32 \
+  --output_dir results/mlp_block_trace/modelnet_n2_p4_t32_bf16
+```
+
+原始 BF16 activation 保存在 `mlp_swiglu_activations.pt`；`summary.json`、压缩 JSONL、全局/逐层/逐 token CSV 和两张 PNG 位于同一目录。第一个生成 token 来自 prefill，所以 32-token 输出对应 31 个 decode trace。贡献分数定义为 `|z_i| * ||W_down[:, i]||_2`，block 分数为块内求和。post-gate 只能跳过未选 block 的 `down_proj`；oracle-pre-gate 假定提前知道当前 token support，是不可因果实现的上界；previous-token 使用上一 decode token support，属于可因果预测，其贡献保持率与 overlap 才是是否值得设计稀疏 kernel 的关键。理论 weight bytes 只计算 gate/up/down 权重，不含 activation、索引和元数据流量。
+
+2026-10-01 的 2-point-cloud、4-prompt、32-token ModelNet 结果见 [`docs/results/mlp_block_trace_modelnet_2026-10-01/`](docs/results/mlp_block_trace_modelnet_2026-10-01/README.md)。
+
 **Paged runtime 默认轻量路径**：构造带 `num_kvcache_blocks` 的 `PointLLMLLMEngine` 后，prefill、mixed step 和 eager decode 默认均经 `LightweightLlamaRunner` 绕过 HuggingFace 模型级 `forward`。设置 `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` 才恢复显式 HF fallback，用于 parity/debug；`NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` 启用固定 shape bucket 的 decode graph 并强制轻量路径。  
 分页执行会从 `ForwardContext` 注入每个逻辑请求自己的 position ids，包括 PointLLM 显式向基类传递 `position_ids=None` 的情况；修改运行时代码后需重启已有 Python 服务，确保类级 patch 重新安装。  
 **`torch_loop`**：需 **`transformers.cache_utils`**（含 `DynamicCache`）；若环境缺该模块，运行时会 **自动退回 `hf_inner`** 并打 log，升级 `transformers` 后可走显式逐层路径。  
