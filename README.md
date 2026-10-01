@@ -111,7 +111,7 @@ python scripts/benchmark_pointllm_diagnostics.py \
 **旧版 HF decode 基线栈**（`nanopointllm.engine.decode_stack`）：`build_decode_stack("hf|compile")` 只用于 M3 对照与回归，不是 paged runtime 的默认执行路径。  
 **完整诊断指标口径**：TTFT 是请求提交至首 token，包含点云编码、prefill、LM head 与首 token sampling；TPOT 是首 token 后的 decode 总耗时除以 decode step 数，**不再除以 batch size**；`tokens/s` 是 batch 聚合吞吐。每个 shape 先记录一次 `cold_start_run`，再 warmup，最后以独立的 steady-state runs 报告 mean、median、P10、P90、P95、min/max；正式对比以 median 和 P10/P90 为主。脚本将性能 sweep 与少量代表配置的 CUDA event profiling 分开运行，输出 `metrics.json`、`summary.json`、`latency_throughput.png`、`decode_cuda_breakdown.png` 和 `kv_cache_hbm.png`。HBM 图使用“单次 decoder 权重读取 + KV 读写”的解析流量下界计算有效带宽，并非 Nsight Compute 硬件计数器。PointLLM 的完整 point-token span 决定最短有效输入长度，请勿用截断 point tokens 的方式伪造短输入。  
 **稳态环境控制**：`--require_idle_gpu` 会在加载权重前检查目标 GPU 利用率和显存占用，不满足阈值时直接退出。每个正式配置期间以默认 200ms 周期记录 P-state、SM/显存时钟、功耗、温度、GPU utilization 和 memory-controller utilization；后者只是控制器忙碌度，不能当作 DRAM GB/s。若有管理员权限，可在实验前通过 `nvidia-smi -pm 1` 开启持久模式，并用 `nvidia-smi -lgc <min,max>` 固定 graphics clock；不要在 benchmark 脚本内部切换频率。无权限时保留 telemetry，并检查 SM clock 的 P10/P90 是否漂移。脚本只在阶段开始前清空旧 GPU 工作，以及在读取阶段 CUDA event 时同步；不会为 telemetry 增加计时区间内的同步。自回归 token 回传本身仍有必要的 host/device 依赖。  
-**Nsight Compute 分段验证**：NCU replay 会改变延迟，因此只用于 QKV、attention、O projection、MLP 和 LM head 的硬件计数器，不与 TTFT/TPOT 混用。脚本会禁用 CUDA Graph 以隔离 NVTX stage，但保持相同的 packed projection、paged attention 与 lightweight runner。空卡时分别运行 B1/B8：
+**Nsight Compute 分段验证**：NCU replay 会改变延迟，因此只用于 QKV、attention、O projection、MLP 和 LM head 的硬件计数器，不与 TTFT/TPOT 混用。脚本会禁用 CUDA Graph 以隔离 NVTX stage，但保持相同的 packed projection、paged attention 与 lightweight runner。默认以 `--profile_layer 0` 采同构 decoder 的代表层计数器，完整 32 层仍会执行，只是不进入 NCU replay；这可避免为 7B 模型逐层保存近整卡显存。空卡时分别运行 B1/B8：
 
 ```bash
 cd /home/nano-pointllm
@@ -126,7 +126,7 @@ for B in 1 8; do
 done
 ```
 
-每个目录会生成五组原始 CSV、manifest、stage summary 和 `stage_bottleneck_summary.json`。只有空卡启动、权重占理论强制流量至少 80%、算术强度低于 roofline ridge、实测 DRAM 字节达到理论流量的 50%、DRAM throughput 达阈值且高于 SM throughput 时，线性 stage 才标为 `confirmed_weight_bandwidth_bound`；attention 单独按 paged K/V 流量判断，不能称为 weight-bound。
+每个目录会生成一份完整 `all_stages.csv`、五组按 NVTX 拆分的 CSV、manifest、stage summary、`stage_bottleneck_summary.json` 和图片。只有空卡启动、权重占理论强制流量至少 80%、算术强度低于 roofline ridge、实测 DRAM 字节达到理论流量的 50%、DRAM throughput 达阈值且高于 SM throughput 时，线性 stage 才标为 `confirmed_weight_bandwidth_bound`；attention 单独按 paged K/V 流量判断，不能称为 weight-bound。
 
 **Paged runtime 默认轻量路径**：构造带 `num_kvcache_blocks` 的 `PointLLMLLMEngine` 后，prefill、mixed step 和 eager decode 默认均经 `LightweightLlamaRunner` 绕过 HuggingFace 模型级 `forward`。设置 `NANOPOINTLLM_LIGHTWEIGHT_DECODE=0` 才恢复显式 HF fallback，用于 parity/debug；`NANOPOINTLLM_ENABLE_CUDA_GRAPH=1` 启用固定 shape bucket 的 decode graph 并强制轻量路径。  
 分页执行会从 `ForwardContext` 注入每个逻辑请求自己的 position ids，包括 PointLLM 显式向基类传递 `position_ids=None` 的情况；修改运行时代码后需重启已有 Python 服务，确保类级 patch 重新安装。  

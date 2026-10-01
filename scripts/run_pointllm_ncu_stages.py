@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 import subprocess
@@ -35,12 +36,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input_length", type=int, default=768)
     parser.add_argument("--warmup_decode_steps", type=int, default=10)
     parser.add_argument("--profile_steps", type=int, default=1)
+    parser.add_argument("--profile_layer", type=int, default=0)
     parser.add_argument("--stages", default=",".join(STAGE_RANGES))
     parser.add_argument("--peak_hbm_gbps", type=float, default=1555.0)
     parser.add_argument("--peak_compute_tflops", type=float, default=312.0)
     parser.add_argument("--min_dram_throughput_pct", type=float, default=50.0)
     parser.add_argument("--ncu", default="/usr/local/cuda/bin/ncu")
     parser.add_argument("--python", default=sys.executable)
+    parser.add_argument(
+        "--replay_mode",
+        default="kernel",
+        choices=("application", "kernel"),
+        help="Kernel replay keeps the GPU occupied; layer filtering limits snapshot overhead.",
+    )
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--no_plot", action="store_true")
     return parser.parse_args()
@@ -49,6 +57,41 @@ def parse_args() -> argparse.Namespace:
 def run(command: list[str]) -> None:
     print("+", " ".join(command), flush=True)
     subprocess.run(command, check=True)
+
+
+def read_ncu_rows(path: Path) -> list[dict[str, str]]:
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    header_index = next(
+        (index for index, line in enumerate(lines) if line.startswith('"ID","Process ID"')),
+        None,
+    )
+    if header_index is None:
+        raise ValueError("Nsight Compute CSV header was not found")
+    return list(csv.DictReader(lines[header_index:]))
+
+
+def rows_for_stage(rows: list[dict[str, str]], nvtx_range: str) -> list[dict[str, str]]:
+    nvtx_columns = [
+        key
+        for key in rows[0]
+        if key and ("Push/Pop_Range" in key or "Start/Stop_Range" in key)
+    ]
+    if not nvtx_columns:
+        raise ValueError("Nsight Compute CSV contains no NVTX range columns")
+    return [
+        row
+        for row in rows
+        if any(nvtx_range in (row.get(column) or "") for column in nvtx_columns)
+    ]
+
+
+def write_ncu_rows(path: Path, rows: list[dict[str, str]]) -> None:
+    if not rows:
+        raise ValueError(f"cannot write empty stage CSV: {path}")
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def plot_stage_summary(summaries: dict, output: Path) -> None:
@@ -120,35 +163,46 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     repo = Path(__file__).resolve().parents[1]
     summaries = {}
+    combined_csv_path = output_dir / "all_stages.csv"
+    manifest_path = output_dir / "manifest.json"
+    profile_command = [
+        args.python,
+        str(repo / "scripts/profile_pointllm_ncu.py"),
+        "--model_path", args.model_path,
+        "--device", args.device,
+        "--dtype", args.dtype,
+        "--batch_size", str(args.batch_size),
+        "--input_length", str(args.input_length),
+        "--warmup_decode_steps", str(args.warmup_decode_steps),
+        "--profile_steps", str(args.profile_steps),
+        "--profile_layer", str(args.profile_layer),
+        "--manifest_output", str(manifest_path),
+        "--require_idle_gpu",
+    ]
+    ncu_command = [
+        args.ncu,
+        "--target-processes", "all",
+        "--replay-mode", args.replay_mode,
+        "--nvtx",
+    ]
+    for stage in stages:
+        ncu_command.extend(("--nvtx-include", f"{STAGE_RANGES[stage]}/"))
+    ncu_command.extend((
+        "--metrics", ",".join(NCU_METRICS),
+        "--csv",
+        "--log-file", str(combined_csv_path),
+        *profile_command,
+    ))
+    run(ncu_command)
 
+    all_rows = read_ncu_rows(combined_csv_path)
     for stage in stages:
         csv_path = output_dir / f"{stage}.csv"
-        manifest_path = output_dir / f"{stage}_manifest.json"
         summary_path = output_dir / f"{stage}_summary.json"
-        profile_command = [
-            args.python,
-            str(repo / "scripts/profile_pointllm_ncu.py"),
-            "--model_path", args.model_path,
-            "--device", args.device,
-            "--dtype", args.dtype,
-            "--batch_size", str(args.batch_size),
-            "--input_length", str(args.input_length),
-            "--warmup_decode_steps", str(args.warmup_decode_steps),
-            "--profile_steps", str(args.profile_steps),
-            "--manifest_output", str(manifest_path),
-            "--require_idle_gpu",
-        ]
-        ncu_command = [
-            args.ncu,
-            "--target-processes", "all",
-            "--nvtx",
-            "--nvtx-include", f"{STAGE_RANGES[stage]}/",
-            "--metrics", ",".join(NCU_METRICS),
-            "--csv",
-            "--log-file", str(csv_path),
-            *profile_command,
-        ]
-        run(ncu_command)
+        stage_rows = rows_for_stage(all_rows, STAGE_RANGES[stage])
+        if not stage_rows:
+            raise RuntimeError(f"NCU captured no kernels for stage {stage!r}")
+        write_ncu_rows(csv_path, stage_rows)
         run([
             args.python,
             str(repo / "scripts/summarize_ncu_pointllm.py"),
@@ -169,6 +223,7 @@ def main() -> None:
         plot_stage_summary(summaries, plot_path)
     result = {
         "config": vars(args),
+        "combined_ncu_csv": str(combined_csv_path),
         "stage_summaries": summaries,
         "strict_weight_bound_stages": [
             stage

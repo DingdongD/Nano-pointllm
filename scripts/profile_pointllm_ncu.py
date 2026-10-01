@@ -13,7 +13,7 @@ import torch
 from nanopointllm.benchmark_metrics import resize_point_prompt
 from nanopointllm.engine.llm_engine import PointLLMLLMEngine
 from nanopointllm.gpu_telemetry import query_gpu_state
-from nanopointllm.profiling import set_nvtx_stages
+from nanopointllm.profiling import set_nvtx_layer_filter, set_nvtx_stages
 from nanopointllm.parity.engine_test_utils import (
     build_prompt_token_ids,
     load_pointllm_model,
@@ -49,6 +49,7 @@ def build_stage_manifest(
     *,
     batch_size: int,
     context_lengths: list[list[int]],
+    profiled_layer: int | None = None,
 ) -> dict:
     """Build a per-stage compulsory-traffic/FLOP model for the profiled decode steps."""
     runner = engine.runner.lightweight_runner
@@ -58,7 +59,12 @@ def build_stage_manifest(
     qkv_weights: list[torch.Tensor] = []
     o_weights: list[torch.Tensor] = []
     mlp_weights: list[torch.Tensor] = []
-    for layer in runner.layers:
+    selected_layers = (
+        [runner.layers[profiled_layer]]
+        if profiled_layer is not None
+        else list(runner.layers)
+    )
+    for layer in selected_layers:
         attn = layer.self_attn
         packed_qkv = getattr(attn, "packed_qkv_weight", None)
         if packed_qkv is not None:
@@ -79,14 +85,14 @@ def build_stage_manifest(
     kv_read_bytes = sum(
         sum(lengths) * kv_elements_per_token * element_size
         for lengths in context_lengths
-    ) * len(runner.layers)
+    ) * len(selected_layers)
     kv_write_bytes = (
-        steps * batch_size * kv_elements_per_token * element_size * len(runner.layers)
+        steps * batch_size * kv_elements_per_token * element_size * len(selected_layers)
     )
     attention_flops = sum(
         4 * sum(lengths) * first_attn.num_heads * first_attn.head_dim
         for lengths in context_lengths
-    ) * len(runner.layers)
+    ) * len(selected_layers)
     attention_compulsory = kv_read_bytes + kv_write_bytes
     stages = {
         "qkv": _linear_cost(qkv_weights, batch_size, steps),
@@ -115,6 +121,9 @@ def build_stage_manifest(
         "profile_steps": steps,
         "context_lengths_by_step": context_lengths,
         "num_layers": len(runner.layers),
+        "profiled_layers": (
+            [profiled_layer] if profiled_layer is not None else list(range(len(runner.layers)))
+        ),
         "dtype": str(runner.lm_head.weight.dtype),
         "stage_ranges": {
             "qkv": "pointllm_qkv",
@@ -142,6 +151,12 @@ def main() -> None:
     parser.add_argument("--input_length", type=int, default=768)
     parser.add_argument("--warmup_decode_steps", type=int, default=5)
     parser.add_argument("--profile_steps", type=int, default=1)
+    parser.add_argument(
+        "--profile_layer",
+        type=int,
+        default=0,
+        help="Decoder layer to expose through layer-scoped NVTX ranges; -1 profiles all layers.",
+    )
     parser.add_argument("--kvcache_block_size", type=int, default=16)
     parser.add_argument("--num_kvcache_blocks", type=int, default=0)
     parser.add_argument("--manifest_output", default="")
@@ -154,6 +169,9 @@ def main() -> None:
         parser.error("batch_size/profile_steps must be positive and warmup_decode_steps non-negative")
     device = torch.device(args.device)
     dtype = getattr(torch, args.dtype)
+    torch.manual_seed(0)
+    if device.type == "cuda":
+        torch.cuda.manual_seed_all(0)
     os.environ["NANOPOINTLLM_ENABLE_CUDA_GRAPH"] = "0"
     os.environ["NANOPOINTLLM_PROFILE_LAYERS"] = "0"
     os.environ["NANOPOINTLLM_LIGHTWEIGHT_DECODE"] = "1"
@@ -214,6 +232,7 @@ def main() -> None:
             engine,
             batch_size=args.batch_size,
             context_lengths=contexts,
+            profiled_layer=args.profile_layer if args.profile_layer >= 0 else None,
         )
         manifest["gpu_before"] = gpu_before
         manifest["idle_at_start"] = idle_at_start
@@ -221,12 +240,14 @@ def main() -> None:
             output = Path(args.manifest_output)
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        set_nvtx_layer_filter(args.profile_layer if args.profile_layer >= 0 else None)
         set_nvtx_stages(True)
         torch.cuda.nvtx.range_push("pointllm_decode_profile")
         for _ in range(args.profile_steps):
             engine.step()
         torch.cuda.nvtx.range_pop()
         set_nvtx_stages(False)
+        set_nvtx_layer_filter(None)
         torch.cuda.synchronize(device)
 
     print(json.dumps({

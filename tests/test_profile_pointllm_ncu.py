@@ -41,3 +41,13 @@ def test_stage_manifest_separates_weight_and_kv_traffic():
     assert manifest["stages"]["attention"]["weight_bytes"] == 0
     assert manifest["stages"]["attention"]["kv_read_bytes"] == 384
     assert manifest["stages"]["attention"]["estimated_flops"] == 384
+
+    layer_manifest = build_stage_manifest(
+        engine,
+        batch_size=2,
+        context_lengths=[[5, 7]],
+        profiled_layer=0,
+    )
+    assert layer_manifest["profiled_layers"] == [0]
+    assert layer_manifest["stages"]["qkv"]["weight_bytes"] * 2 == manifest["stages"]["qkv"]["weight_bytes"]
+    assert layer_manifest["stages"]["attention"]["kv_read_bytes"] == 192

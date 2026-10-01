@@ -8,7 +8,7 @@ import triton
 import triton.language as tl
 
 from nanopointllm.engine.forward_context import get_forward_context
-from nanopointllm.profiling import nvtx_stage
+from nanopointllm.profiling import nvtx_decoder_layer, nvtx_stage
 
 
 def _env_str(name: str, default: str) -> str:
@@ -636,13 +636,14 @@ class LightweightLlamaRunner(nn.Module):
 
         embed_end = _mark()
 
-        for layer in self.layers:
-            hidden_states = layer(
-                hidden_states,
-                position_embeddings=position_embeddings,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-            )
+        for layer_index, layer in enumerate(self.layers):
+            with nvtx_decoder_layer(layer_index):
+                hidden_states = layer(
+                    hidden_states,
+                    position_embeddings=position_embeddings,
+                    attention_mask=attention_mask,
+                    position_ids=position_ids,
+                )
         layers_end = _mark()
         hidden_states = self.norm(hidden_states)
         norm_end = _mark()
