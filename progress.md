@@ -352,3 +352,15 @@
 - B1 marked-stage shares were FPS 50.35%, PT attention 17.54%, local encoder 15.60%, and PT MLP 7.16%. FPS reached only 0.29% SM throughput.
 - B4 shares were local encoder 29.06%, FPS 28.79%, PT attention 22.47%, and PT MLP 8.50%. Local encoder reached 62.52% SM throughput.
 - Published compact evidence under `docs/results/compression_sensitivity_2026-10-01/` and `docs/results/pointbert_ncu_roofline_2026-10-01/`.
+
+## 2026-10-01: Architecture Simulator Kickoff
+- Accepted the characterization-driven architecture direction: persistent geometry, dense tensor, elastic Split-K decode, precision-aware weight streaming, shared attention, and phase-reconfigurable SRAM.
+- Began auditing `DingdongD/Compiler_Codes` plus the local PointAcc C-model/RTL projects before defining the simulator contract.
+
+## 2026-10-01: Phase-Adaptive Architecture Simulator
+- Added the standalone `architecture_simulator/` Python package with stable hardware/workload/result JSON contracts and PointLLM-7B presets.
+- Implemented persistent FPS, tensor-distance/top-k KNN, dense and Split-K tensor mappings, precision-aware weight traffic/unpack, fused or materialized attention, paged-KV efficiency, vector operations, phase scheduling, traffic counters, and optional characterization hooks.
+- Added resource-aware DSE across tensor dimensions, Split-K, geometry lanes, HBM, SRAM, and weight-unpack throughput; fixed clamped Split-K duplicate designs.
+- Added explicit C-model, RTL, verification, and characterization handoff contracts based on the audited Compiler_Codes and PointAcc separation patterns without copying source.
+- The architecture tests pass (`10 passed`). The formal `B1/S768/O128` sweep evaluated 320 unique designs and archived 39 Pareto points under `docs/results/architecture_simulator_2026-10-01/`.
+- Full repository regression passed after implementation and plot QA: `155 passed, 1 skipped`.

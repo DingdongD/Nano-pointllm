@@ -1,0 +1,10 @@
+{
+  "tensor_rows": [16, 32],
+  "tensor_cols": [16, 32],
+  "split_k": [8, 16, 32],
+  "geometry_lanes": [128, 256],
+  "hbm_bandwidth_gbps": [409.6, 819.2],
+  "weight_unpack_bytes_per_cycle": [128, 256, 512, 1024],
+  "sram_bytes": [16777216, 33554432],
+  "max_designs": 384
+}

@@ -1,0 +1,65 @@
+{
+  "name": "gtsu_32x32_baseline",
+  "schema_version": "0.1",
+  "clock_hz": 1000000000,
+  "phase_reconfiguration_cycles": 64,
+  "tensor": {
+    "rows": 32,
+    "cols": 32,
+    "split_k": 32,
+    "decode_split_k_threshold": 8,
+    "reduction_stage_cycles": 1,
+    "pipeline_fill_cycles": 2,
+    "precision_macs_per_cycle": {
+      "4": 4,
+      "8": 2,
+      "16": 1
+    }
+  },
+  "geometry": {
+    "distance_lanes": 256,
+    "distance_pipeline_cycles": 1,
+    "reduction_stage_cycles": 1,
+    "feedback_cycles": 2,
+    "topk_lanes": 128,
+    "topk_compare_cycles": 1
+  },
+  "memory": {
+    "hbm_bandwidth_gbps": 819.2,
+    "hbm_efficiency": 0.8,
+    "sram_bytes": 33554432,
+    "sram_banks": 32,
+    "sram_bytes_per_bank_cycle": 64,
+    "sram_efficiency": 0.85,
+    "weight_buffer_bytes": 8388608,
+    "weight_tile_bytes": 262144,
+    "weight_unpack_bytes_per_cycle": 256,
+    "weight_scale_group": 128,
+    "weight_scale_bytes": 2,
+    "phase_partitions": {
+      "geometry": {"point": 0.5, "tensor": 0.3, "weight": 0.0, "kv": 0.0},
+      "point_encoder": {"point": 0.1, "tensor": 0.65, "weight": 0.2, "kv": 0.0},
+      "projector": {"point": 0.05, "tensor": 0.65, "weight": 0.25, "kv": 0.0},
+      "llm_prefill": {"point": 0.0, "tensor": 0.55, "weight": 0.25, "kv": 0.15},
+      "llm_decode": {"point": 0.0, "tensor": 0.1, "weight": 0.65, "kv": 0.2}
+    }
+  },
+  "attention": {
+    "fused_online_softmax": true,
+    "softmax_lanes": 128,
+    "softmax_passes": 1.5,
+    "paged_kv_efficiency": 0.85
+  },
+  "vector": {
+    "lanes": 128,
+    "operations_per_lane_cycle": 1
+  },
+  "characterization": {
+    "source": "uncharacterized analytical baseline; supply RTL/PTPX/CACTI values before energy or area claims",
+    "mac_energy_pj": {},
+    "hbm_energy_pj_per_byte": null,
+    "sram_energy_pj_per_byte": null,
+    "block_area_um2": {}
+  },
+  "calibration_scales": {}
+}

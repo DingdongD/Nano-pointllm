@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 29 complete
+Phase 30 in progress
 
 ## Phases
 
@@ -199,6 +199,17 @@ Phase 29 complete
 - [x] Add NVTX scopes for FPS, KNN, local encoder, and PointTransformer QKV/attention/O/MLP
 - [x] Collect DRAM, SM, duration, modeled bytes/FLOPs, and arithmetic intensity
 - [x] Produce strict B1/B4 representative summaries and unified roofline figure
+- **Status:** complete
+
+### Phase 30: Phase-Adaptive Architecture Simulator
+- [x] Audit `DingdongD/Compiler_Codes` and local PointAcc C-model/RTL conventions
+- [x] Define trace, hardware-config, phase, cycle, traffic, and energy/area placeholder contracts
+- [x] Implement geometry/FPS, dense tensor, Split-K GEMV, weight-streaming, attention, SRAM, and phase-scheduler models
+- [x] Add PointLLM-7B workload presets derived from measured shapes and precision policy candidates
+- [x] Add CLI, DSE sweep, JSON/CSV/plot artifacts, and calibration hooks for NCU data
+- [x] Add unit tests, documentation, example runs, and publishable compact evidence
+- [x] Run full repository regression
+- [x] Publish to GitHub
 - **Status:** complete
 
 ## Key Questions

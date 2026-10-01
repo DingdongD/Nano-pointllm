@@ -10,6 +10,8 @@ build/
 
 # Local benchmark/profiler artifacts and downloaded tooling.
 /results/
+architecture_simulator/results/
+/architecture_simulator/workloads/
 codex-*
 
 # Nsight Compute reports can be regenerated from the checked-in scripts.

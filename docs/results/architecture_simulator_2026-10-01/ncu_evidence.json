@@ -1,0 +1,174 @@
+{
+  "schema_version": "0.1",
+  "pointbert": {
+    "1": {
+      "fps": {
+        "time_ms": 2.95088,
+        "dram_pct": 0.007921270942905168,
+        "sm_pct": 0.29317594751396187,
+        "dram_bytes": 500736.0,
+        "measured_ai": 67.01022494887526
+      },
+      "knn": {
+        "time_ms": 0.29072,
+        "dram_pct": 11.478271876719864,
+        "sm_pct": 27.60173472757293,
+        "dram_bytes": 51762432.0,
+        "measured_ai": 0.7292689802519325
+      },
+      "local_encoder": {
+        "time_ms": 0.91408,
+        "dram_pct": 11.337771048485914,
+        "sm_pct": 53.76885944337476,
+        "dram_bytes": 160981888.0,
+        "measured_ai": 86.86573197600963
+      },
+      "pt_qkv": {
+        "time_ms": 0.137792,
+        "dram_pct": 7.288372039015328,
+        "sm_pct": 19.053701811425917,
+        "dram_bytes": 15547648.0,
+        "measured_ai": 350.3060280243031
+      },
+      "pt_attention": {
+        "time_ms": 1.027968,
+        "dram_pct": 8.411628377537046,
+        "sm_pct": 17.322444901008595,
+        "dram_bytes": 133878144.0,
+        "measured_ai": 36.94009866166056
+      },
+      "pt_o_proj": {
+        "time_ms": 0.119104,
+        "dram_pct": 4.5944841483073615,
+        "sm_pct": 7.23913756045137,
+        "dram_bytes": 8463488.0,
+        "measured_ai": 214.50710061856293
+      },
+      "pt_mlp": {
+        "time_ms": 0.419616,
+        "dram_pct": 10.996951879813922,
+        "sm_pct": 21.80134904293449,
+        "dram_bytes": 71409024.0,
+        "measured_ai": 203.38922677335572
+      }
+    },
+    "4": {
+      "fps": {
+        "time_ms": 3.007808,
+        "dram_pct": 0.03213545545460349,
+        "sm_pct": 1.154507947315786,
+        "dram_bytes": 1571456.0,
+        "measured_ai": 85.40979066547202
+      },
+      "knn": {
+        "time_ms": 0.746176,
+        "dram_pct": 24.408530748777775,
+        "sm_pct": 44.594079252079936,
+        "dram_bytes": 283049344.0,
+        "measured_ai": 0.5334580249018348
+      },
+      "local_encoder": {
+        "time_ms": 3.03584,
+        "dram_pct": 19.89966543691367,
+        "sm_pct": 62.52104195214504,
+        "dram_bytes": 939228928.0,
+        "measured_ai": 59.554424354357195
+      },
+      "pt_qkv": {
+        "time_ms": 0.266688,
+        "dram_pct": 7.190585553155748,
+        "sm_pct": 41.64588672906167,
+        "dram_bytes": 29740032.0,
+        "measured_ai": 732.5392004958165
+      },
+      "pt_attention": {
+        "time_ms": 2.347264,
+        "dram_pct": 17.168087577707496,
+        "sm_pct": 35.943952857454484,
+        "dram_bytes": 625194112.0,
+        "measured_ai": 31.6411927308746
+      },
+      "pt_o_proj": {
+        "time_ms": 0.156416,
+        "dram_pct": 9.361074058919803,
+        "sm_pct": 20.529351472995092,
+        "dram_bytes": 22677120.0,
+        "measured_ai": 320.23083566167134
+      },
+      "pt_mlp": {
+        "time_ms": 0.888256,
+        "dram_pct": 14.45084624252468,
+        "sm_pct": 39.54954247424166,
+        "dram_bytes": 199143936.0,
+        "measured_ai": 291.72520073119375
+      }
+    }
+  },
+  "decoder": {
+    "1": {
+      "qkv": {
+        "time_ms": 0.103936,
+        "dram_pct": 73.9326354679803,
+        "sm_pct": 25.627549261083743,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "attention": {
+        "time_ms": 0.109152,
+        "dram_pct": 7.9193286426267955,
+        "sm_pct": 3.516631486367634,
+        "classification": "kv_memory_bound_or_bandwidth_underfilled"
+      },
+      "o_proj": {
+        "time_ms": 0.03648,
+        "dram_pct": 63.35999999999999,
+        "sm_pct": 24.93,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "mlp": {
+        "time_ms": 0.242752,
+        "dram_pct": 73.06484972317426,
+        "sm_pct": 30.029230160822568,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "lm_head": {
+        "time_ms": 0.211968,
+        "dram_pct": 80.29,
+        "sm_pct": 39.15,
+        "classification": "confirmed_weight_bandwidth_bound"
+      }
+    },
+    "8": {
+      "qkv": {
+        "time_ms": 0.08864,
+        "dram_pct": 74.86851263537906,
+        "sm_pct": 30.382202166064975,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "attention": {
+        "time_ms": 0.199584,
+        "dram_pct": 34.982182138848806,
+        "sm_pct": 13.634506974506971,
+        "classification": "kv_memory_bound_or_bandwidth_underfilled"
+      },
+      "o_proj": {
+        "time_ms": 0.036576,
+        "dram_pct": 63.25,
+        "sm_pct": 24.63,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "mlp": {
+        "time_ms": 0.237664,
+        "dram_pct": 74.73033122391276,
+        "sm_pct": 30.582745388447556,
+        "classification": "confirmed_weight_bandwidth_bound"
+      },
+      "lm_head": {
+        "time_ms": 0.704832,
+        "dram_pct": 24.17,
+        "sm_pct": 13.89,
+        "classification": "weight_stream_dominated_but_not_strictly_confirmed"
+      }
+    }
+  },
+  "usage": "Measured GPU data is a workload/bottleneck reference. Do not directly fit ASIC cycles to A100 latency; calibration_scales require an RTL/C-model correlation target."
+}

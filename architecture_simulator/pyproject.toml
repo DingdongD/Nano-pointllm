@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pointllm-archsim"
+version = "0.1.0"
+description = "Trace-driven phase-level architecture simulator for PointLLM inference"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.6"]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+pointllm-archsim = "pointllm_archsim.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pointllm_archsim*"]
