@@ -280,6 +280,7 @@
 - Architecture regression passed: `34 passed` before the final corner-case addition. Final full repository regression passed: `180 passed, 1 skipped`.
 - Strict coverage reports the new `geometry_distance_tile` as correlated while `fps`, `knn_topk`, and full PointLLM remain fail-closed.
 - Added and passed signed INT16 extreme-value RTL correlation (`-32768` versus `32767`) to validate widened subtraction and accumulation.
+- Published the implementation and formal artifacts to `origin/main` as commit `f8e1917` (`feat: correlate PointLLM geometry distance RTL`).
 
 ## 5-Question Reboot Check
 | Question | Answer |

@@ -248,8 +248,8 @@ Phase 33 in progress
 - [x] Implement the smallest reusable distance/FPS/KNN RTL-correlated slice justified by the audit
 - [x] Add functional, event, cycle, and synthesis regression gates
 - [x] Keep `fps` and `knn_topk` coverage false until complete PointLLM semantics are correlated
-- [ ] Run the full regression, record artifacts, commit, and push
-- **Status:** in progress; implementation and regression complete, publication pending
+- [x] Run the full regression, record artifacts, commit, and push
+- **Status:** complete; geometry distance is correlated, while complete FPS/KNN remain fail-closed
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
