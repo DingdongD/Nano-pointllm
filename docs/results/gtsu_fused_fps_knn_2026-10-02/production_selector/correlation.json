@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "production_fused_fps_knn_selector",
+  "config": {
+    "points": 8192,
+    "centers": 512,
+    "neighbors": 32,
+    "physical_lanes": 64,
+    "logical_fps_reduction_lanes": 512,
+    "distance_width": 32,
+    "dual_distance_stream": true
+  },
+  "rtl_cycles": 66048,
+  "input_beats": 65536,
+  "output_rounds": 512,
+  "neighbor_values": 16384,
+  "mismatches": 0,
+  "center_hash_fnv1a64": "2686899410934025872",
+  "neighbor_hash_fnv1a64": "5171529023987649793",
+  "all_center_and_neighbor_values_exact": true,
+  "claim_boundary": {
+    "production_selector_shape_correlated": true,
+    "synthetic_dual_distance_values": true,
+    "fp32_fma_frontend_rtl_correlated": false,
+    "real_payload_rtl_correlated": false,
+    "point_norm_coordinate_sram_integrated": false,
+    "fps_coverage_enabled": false,
+    "knn_topk_coverage_enabled": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

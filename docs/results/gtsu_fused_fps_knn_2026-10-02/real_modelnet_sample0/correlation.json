@@ -1,0 +1,64 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "production_fused_fps_knn_selector_real_payload",
+  "trace": {
+    "points": 8192,
+    "centers": 512,
+    "neighbors": 32,
+    "point_sha256": "f2e2ba577b2cae734dfdb18b3b5539067057b0917e6096bdac5f16bcb07f6453",
+    "files": {
+      "fps": {
+        "path": "/mnt/llm_data/nano_pointllm_geometry_traces/modelnet/modelnet_test_0/fps_distance_bits.bin",
+        "bytes": 16777216,
+        "sha256": "f092a683958441d90dda2554e03d1be376a45d555734bf0c0b566bd9c447d36e"
+      },
+      "knn": {
+        "path": "/mnt/llm_data/nano_pointllm_geometry_traces/modelnet/modelnet_test_0/knn_distance_bits.bin",
+        "bytes": 16777216,
+        "sha256": "f4e8688797a9065c1f9c37f75383e5d057b0e3a52f825f3317739c6506e2c789"
+      },
+      "centers": {
+        "path": "/mnt/llm_data/nano_pointllm_geometry_traces/modelnet/modelnet_test_0/center_indices.bin",
+        "bytes": 2048,
+        "sha256": "375f4988906df1f9bc4a7b42545482e9b39aea6085634b0024977dd78443c657"
+      },
+      "knn_reference": {
+        "path": "/mnt/llm_data/nano_pointllm_geometry_traces/modelnet/modelnet_test_0/knn_reference_indices.bin",
+        "bytes": 65536,
+        "sha256": "572b2fd9371dd05138a89e03f6a4da16d28fb55de4e868aa91326b07324cd6d6"
+      },
+      "fps_valid": {
+        "path": "/mnt/llm_data/nano_pointllm_geometry_traces/modelnet/modelnet_test_0/fps_valid_mask.bin",
+        "bytes": 8192,
+        "sha256": "375f7d49548b645fd7d08eb204ebf190b593b037432c6aab22ff61425a571c37"
+      }
+    },
+    "knn_negative_values": 73,
+    "knn_minimum": -1.1920928955078125e-07,
+    "fps_cuda_contract": "mul.rn(dy,dy); fma.rn(dx,dx,dy2); fma.rn(dz,dz,dxy2)"
+  },
+  "rtl_cycles": 66048,
+  "input_beats": 65536,
+  "rounds": 512,
+  "neighbor_values": 16384,
+  "mismatches": 0,
+  "center_mismatches": 0,
+  "next_center_mismatches": 0,
+  "knn_set_mismatches": 0,
+  "neighbor_index_mismatches": 0,
+  "neighbor_distance_mismatches": 0,
+  "center_hash_fnv1a64": "13661002263769257992",
+  "neighbor_hash_fnv1a64": "2398174549079658292",
+  "claim_boundary": {
+    "production_selector_real_payload_correlated": true,
+    "deployed_fps_center_sequence_exact": true,
+    "pointllm_knn_top32_set_exact": true,
+    "fp32_numeric_order_handles_negative_roundoff": true,
+    "fp32_fma_frontend_rtl_correlated": false,
+    "point_norm_coordinate_sram_integrated": false,
+    "fps_coverage_enabled": false,
+    "knn_topk_coverage_enabled": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

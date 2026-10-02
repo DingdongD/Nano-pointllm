@@ -49,8 +49,10 @@ module gtsu_fused_geometry_pipeline #(
         .DIST_WIDTH(DIST_WIDTH)
     ) selection_stage (
         .clk(clk), .rst_n(rst_n), .in_valid(distance_valid),
-        .in_ready(distance_ready), .in_mask(mask_register),
-        .in_distances(distances), .out_valid(out_valid), .out_ready(out_ready),
+        .in_ready(distance_ready), .in_fps_mask(mask_register),
+        .in_knn_mask(mask_register),
+        .in_fps_distances(distances), .in_knn_distances(distances),
+        .out_valid(out_valid), .out_ready(out_ready),
         .out_center(out_center), .out_next_center(out_next_center),
         .out_neighbor_indices(out_neighbor_indices),
         .out_neighbor_distances(out_neighbor_distances), .done(done)

@@ -12,7 +12,7 @@ module tb_gtsu_fused_fps_knn_controller;
     localparam integer TILES = (POINTS + LANES - 1) / LANES;
     localparam integer TOTAL_BEATS = CENTERS * TILES;
     localparam integer INDEX_WIDTH = (POINTS <= 2) ? 1 : $clog2(POINTS);
-    localparam integer TRACE_WIDTH = LANES + LANES*DIST_WIDTH;
+    localparam integer TRACE_WIDTH = LANES + 2*LANES*DIST_WIDTH;
 
     reg clk = 0;
     reg rst_n = 0;
@@ -31,7 +31,10 @@ module tb_gtsu_fused_fps_knn_controller;
                     (SOURCE_STALL_MOD == 0 || cycle % SOURCE_STALL_MOD != SOURCE_STALL_PHASE);
     wire in_ready;
     wire [LANES-1:0] in_mask = trace[trace_index][LANES-1:0];
-    wire [LANES*DIST_WIDTH-1:0] in_distances = trace[trace_index][TRACE_WIDTH-1:LANES];
+    wire [LANES*DIST_WIDTH-1:0] in_fps_distances =
+        trace[trace_index][LANES +: LANES*DIST_WIDTH];
+    wire [LANES*DIST_WIDTH-1:0] in_knn_distances =
+        trace[trace_index][LANES+LANES*DIST_WIDTH +: LANES*DIST_WIDTH];
     wire out_valid;
     wire out_ready = OUTPUT_STALL_MOD == 0 || cycle % OUTPUT_STALL_MOD != OUTPUT_STALL_PHASE;
     wire [INDEX_WIDTH-1:0] out_center, out_next_center;
@@ -53,7 +56,9 @@ module tb_gtsu_fused_fps_knn_controller;
         .DIST_WIDTH(DIST_WIDTH)
     ) dut (
         .clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_ready(in_ready),
-        .in_mask(in_mask), .in_distances(in_distances),
+        .in_fps_mask(in_mask), .in_knn_mask(in_mask),
+        .in_fps_distances(in_fps_distances),
+        .in_knn_distances(in_knn_distances),
         .out_valid(out_valid), .out_ready(out_ready), .out_center(out_center),
         .out_next_center(out_next_center),
         .out_neighbor_indices(out_neighbor_indices),

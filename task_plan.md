@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 37 in progress
+Phase 38 in progress
 
 ## Phases
 
@@ -339,10 +339,12 @@ Phase 37 in progress
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
 - [x] Implement bounded streaming tile/global Top-K with exact distance/index tie-break semantics in the lock-case controller
-- [ ] Reuse one distance stream for FPS update and KNN candidates where semantics permit
-- [ ] Validate INT8 geometry center equality and KNN recall on ModelNet/Objaverse
+- [x] Prove that one numeric distance stream is not semantically valid; retain one point stream with independent FPS/KNN FP32 distances and validity masks
+- [x] Reject INT8/INT16 strict semantics and validate deployed FP32 FPS centers plus KNN sets on ModelNet and Objaverse
 - [x] Correlate a conflict/tie/backpressure lock before attempting the 8192-point, 512-round production run
-- **Status:** M5a complete; production 8192x512, composed value/cycle, real-data fidelity, and SRAM macro gates remain, so coverage is disabled
+- [x] Correlate the `8192x512xTop32` selector with synthetic dual streams and real ModelNet/Objaverse payloads
+- [ ] Implement and correlate the deployed IEEE FP32 MUL/FMA distance frontend and explicit coordinate/norm/min-state SRAM macros
+- **Status:** M5b selector complete; real payloads are exact, while arithmetic-generation/SRAM composition remains fail-closed, so operator coverage is disabled
 
 ### Phase 39: Geometry-To-Feature Composition
 - [ ] Compose center feedback, Top-32 gather, patch FIFO, local encoder, and PE-pool arbitration
@@ -383,6 +385,9 @@ Phase 37 in progress
 | Sparse clone of `PointKAN_Accel` timed out before checkout, leaving an empty worktree with tracked deletions | 1 | Preserve the pinned Git object database and restore only the required `hw_sim` subtree from `HEAD`; do not modify nano-pointllm state |
 | Directory-level `git archive` on the partial clone triggered multi-gigabyte promisor fetches that survived command timeout | 2 | Terminated only the fetch/archive processes started by this session; switch to individual raw source retrieval and never archive the whole subtree |
 | Initial geometry correlation summary over-counted the final output tile by one `LANES` increment | 1 | Event/value/cycle traces were exact; fixed the testbench to print the post-NBA counter without adding `LANES` again |
+| Real geometry trace extension rejected PointNet2's INT32 center indices | 1 | Convert the deployed center tensor explicitly to contiguous INT64 before indexing; no RTL run or result was accepted from the failed attempt |
+| Real RTL driver reported 210 mismatches although deployed centers and KNN sets were exact | 1 | The redundant C++ FPS oracle updated masked near-origin points; propagate the deployed FPS-valid mask into min-state and argmax while keeping KNN unmasked |
+| Direct real-payload rerun imported a misspelled helper name | 1 | Correct the one-off invocation to `correlate_real_pointllm_fps_knn`; no build or simulation ran |
 | Geometry simulation used 64 lanes while the initial Yosys structural gate used the RTL default of 8 lanes | 1 | Parameterize Yosys with the exact locked simulation widths before accepting the synthesis gate |
 | `raw.githubusercontent.com` returned 404 for pinned PointKAN RTL files although Git remote access works | 1 | Use already fetched pinned blobs from the local partial clone and export only build inputs to `/tmp` |
 | PointKAN full-width top-k RTL simulation did not complete within a bounded 50-second audit window | 1 | Terminated only the reference `vvp`; keep KNN top-k unsupported and design a bounded streaming merge before correlation |
@@ -419,6 +424,7 @@ Phase 37 in progress
 | Icarus emitted malformed VVP syntax for zero-argument wide-vector testbench functions | First dual-output adapter run | Add an ignored one-bit function argument; this avoids the Icarus 12 zero-argument code-generation bug without changing stimulus |
 | Real q-projection dual-output values/events/cycles matched but summary omitted source backpressure | First real-scale dual-output run | Count the always-valid source's blocked cycles in the trace testbench; no datapath or timing behavior changed |
 | First fused FPS/KNN correlation had exact centers, Top-K values, and cycles but differed in one source-backpressure count and an unused input event field | First M5a lock run | Stop presenting a source beat after the final trace entry and canonicalize input events without an unobservable center field; datapath outputs were unchanged |
+| Real ModelNet/Objaverse INT8 geometry changed FPS centers and Top-32 sets severely | First M5b semantic diagnostic | Reject INT8 coordinates as the production semantic path; sweep higher coordinate precision and retain shared INT8 Dot4 only as a non-semantic architectural experiment |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1",
+  "status": "semantic_audit_complete",
+  "oracle": {
+    "fps": "pointnet2_ops.furthest_point_sample",
+    "knn": "PointLLM square_distance plus torch.topk set",
+    "fps_candidate": "FP32 direct-distance CUDA semantic schedule"
+  },
+  "datasets": {
+    "modelnet": [
+      {
+        "cloud_id": "modelnet_test_0",
+        "shape": [
+          8192,
+          3
+        ],
+        "xyz_sha256": "f2e2ba577b2cae734dfdb18b3b5539067057b0917e6096bdac5f16bcb07f6453",
+        "deployed_fps_center_exact": true,
+        "deployed_fps_center_agreement": 1.0,
+        "deployed_fps_first_divergence": null,
+        "single_direct_distance_knn_recall_mean": 0.99993896484375,
+        "single_direct_distance_knn_recall_min": 0.96875,
+        "single_direct_distance_knn_set_exact_rate": 0.998046875,
+        "dual_distance_semantics_required": true,
+        "precision_sweep": [
+          {
+            "coordinate_bits": 8,
+            "center_index_agreement": 0.025390625,
+            "center_exact_prefix": 2,
+            "knn_set_recall_mean": 0.940185546875,
+            "knn_set_exact_rate": 0.07421875
+          },
+          {
+            "coordinate_bits": 10,
+            "center_index_agreement": 0.0546875,
+            "center_exact_prefix": 7,
+            "knn_set_recall_mean": 0.98291015625,
+            "knn_set_exact_rate": 0.5234375
+          },
+          {
+            "coordinate_bits": 12,
+            "center_index_agreement": 0.103515625,
+            "center_exact_prefix": 4,
+            "knn_set_recall_mean": 0.9951171875,
+            "knn_set_exact_rate": 0.84375
+          },
+          {
+            "coordinate_bits": 14,
+            "center_index_agreement": 0.365234375,
+            "center_exact_prefix": 29,
+            "knn_set_recall_mean": 0.99884033203125,
+            "knn_set_exact_rate": 0.962890625
+          },
+          {
+            "coordinate_bits": 16,
+            "center_index_agreement": 0.693359375,
+            "center_exact_prefix": 126,
+            "knn_set_recall_mean": 0.99969482421875,
+            "knn_set_exact_rate": 0.990234375
+          }
+        ]
+      },
+      {
+        "cloud_id": "modelnet_test_1",
+        "shape": [
+          8192,
+          3
+        ],
+        "xyz_sha256": "37c0a809d122dc845174f08b3ff315a7f753caf8d7a9d1efcde77107ef82e17c",
+        "deployed_fps_center_exact": false,
+        "deployed_fps_center_agreement": 0.99609375,
+        "deployed_fps_first_divergence": 424,
+        "single_direct_distance_knn_recall_mean": 1.0,
+        "single_direct_distance_knn_recall_min": 1.0,
+        "single_direct_distance_knn_set_exact_rate": 1.0,
+        "dual_distance_semantics_required": false,
+        "precision_sweep": [
+          {
+            "coordinate_bits": 8,
+            "center_index_agreement": 0.021484375,
+            "center_exact_prefix": 2,
+            "knn_set_recall_mean": 0.93743896484375,
+            "knn_set_exact_rate": 0.05078125
+          },
+          {
+            "coordinate_bits": 10,
+            "center_index_agreement": 0.033203125,
+            "center_exact_prefix": 6,
+            "knn_set_recall_mean": 0.98272705078125,
+            "knn_set_exact_rate": 0.50390625
+          },
+          {
+            "coordinate_bits": 12,
+            "center_index_agreement": 0.09375,
+            "center_exact_prefix": 10,
+            "knn_set_recall_mean": 0.99462890625,
+            "knn_set_exact_rate": 0.83203125
+          },
+          {
+            "coordinate_bits": 14,
+            "center_index_agreement": 0.20703125,
+            "center_exact_prefix": 15,
+            "knn_set_recall_mean": 0.99853515625,
+            "knn_set_exact_rate": 0.953125
+          },
+          {
+            "coordinate_bits": 16,
+            "center_index_agreement": 0.775390625,
+            "center_exact_prefix": 121,
+            "knn_set_recall_mean": 0.99969482421875,
+            "knn_set_exact_rate": 0.990234375
+          }
+        ]
+      }
+    ],
+    "objaverse": [
+      {
+        "cloud_id": "00000054c36d44a2a483bdbff31d8edf",
+        "shape": [
+          8192,
+          3
+        ],
+        "xyz_sha256": "f5c9c35804d3500236c47f536ec75d4fc1d95fe942e030778e89516c7737688c",
+        "deployed_fps_center_exact": true,
+        "deployed_fps_center_agreement": 1.0,
+        "deployed_fps_first_divergence": null,
+        "single_direct_distance_knn_recall_mean": 1.0,
+        "single_direct_distance_knn_recall_min": 1.0,
+        "single_direct_distance_knn_set_exact_rate": 1.0,
+        "dual_distance_semantics_required": false,
+        "precision_sweep": [
+          {
+            "coordinate_bits": 8,
+            "center_index_agreement": 0.0078125,
+            "center_exact_prefix": 3,
+            "knn_set_recall_mean": 0.97528076171875,
+            "knn_set_exact_rate": 0.361328125
+          },
+          {
+            "coordinate_bits": 10,
+            "center_index_agreement": 0.16015625,
+            "center_exact_prefix": 21,
+            "knn_set_recall_mean": 0.99249267578125,
+            "knn_set_exact_rate": 0.765625
+          },
+          {
+            "coordinate_bits": 12,
+            "center_index_agreement": 0.291015625,
+            "center_exact_prefix": 10,
+            "knn_set_recall_mean": 0.99810791015625,
+            "knn_set_exact_rate": 0.939453125
+          },
+          {
+            "coordinate_bits": 14,
+            "center_index_agreement": 0.650390625,
+            "center_exact_prefix": 148,
+            "knn_set_recall_mean": 0.9996337890625,
+            "knn_set_exact_rate": 0.98828125
+          },
+          {
+            "coordinate_bits": 16,
+            "center_index_agreement": 0.671875,
+            "center_exact_prefix": 166,
+            "knn_set_recall_mean": 0.99993896484375,
+            "knn_set_exact_rate": 0.998046875
+          }
+        ]
+      },
+      {
+        "cloud_id": "00001ec0d78549e1b8c2083a06105c29",
+        "shape": [
+          8192,
+          3
+        ],
+        "xyz_sha256": "31f5b248100272ad4a44ba1bd934fb9c1daa7d1e7aeff1c419596b9704d7a782",
+        "deployed_fps_center_exact": true,
+        "deployed_fps_center_agreement": 1.0,
+        "deployed_fps_first_divergence": null,
+        "single_direct_distance_knn_recall_mean": 1.0,
+        "single_direct_distance_knn_recall_min": 1.0,
+        "single_direct_distance_knn_set_exact_rate": 1.0,
+        "dual_distance_semantics_required": false,
+        "precision_sweep": [
+          {
+            "coordinate_bits": 8,
+            "center_index_agreement": 0.08203125,
+            "center_exact_prefix": 4,
+            "knn_set_recall_mean": 0.9630126953125,
+            "knn_set_exact_rate": 0.171875
+          },
+          {
+            "coordinate_bits": 10,
+            "center_index_agreement": 0.263671875,
+            "center_exact_prefix": 19,
+            "knn_set_recall_mean": 0.9896240234375,
+            "knn_set_exact_rate": 0.673828125
+          },
+          {
+            "coordinate_bits": 12,
+            "center_index_agreement": 0.4921875,
+            "center_exact_prefix": 92,
+            "knn_set_recall_mean": 0.997314453125,
+            "knn_set_exact_rate": 0.9140625
+          },
+          {
+            "coordinate_bits": 14,
+            "center_index_agreement": 0.765625,
+            "center_exact_prefix": 55,
+            "knn_set_recall_mean": 0.99951171875,
+            "knn_set_exact_rate": 0.984375
+          },
+          {
+            "coordinate_bits": 16,
+            "center_index_agreement": 0.908203125,
+            "center_exact_prefix": 169,
+            "knn_set_recall_mean": 0.99981689453125,
+            "knn_set_exact_rate": 0.994140625
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "modelnet": {
+      "samples": 2,
+      "fps_all_exact": false,
+      "fps_agreement_mean": 0.998046875,
+      "single_distance_knn_recall_mean": 0.999969482421875,
+      "dual_distance_required": true
+    },
+    "objaverse": {
+      "samples": 2,
+      "fps_all_exact": true,
+      "fps_agreement_mean": 1.0,
+      "single_distance_knn_recall_mean": 1.0,
+      "dual_distance_required": false
+    }
+  },
+  "claim_boundary": {
+    "fp32_fps_semantics_validated": false,
+    "single_numeric_distance_preserves_knn_sets": false,
+    "dual_fp32_distance_interface_required": true,
+    "rtl_production_correlated": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

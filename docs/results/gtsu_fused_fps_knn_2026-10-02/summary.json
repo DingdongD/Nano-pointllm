@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "status": "selector_rtl_correlated",
+  "production_shape": {
+    "points": 8192,
+    "centers": 512,
+    "neighbors": 32,
+    "physical_lanes": 64,
+    "rtl_cycles": 66048
+  },
+  "real_payloads": {
+    "modelnet_sample0_mismatches": 0,
+    "objaverse_sample0_mismatches": 0,
+    "neighbor_values_per_sample": 16384
+  },
+  "semantic_contract": {
+    "shared_point_stream": true,
+    "independent_fps_knn_distances": true,
+    "independent_fps_knn_masks": true,
+    "fp32_numeric_order": true
+  },
+  "claim_boundary": {
+    "production_selector_complete": true,
+    "fp32_fma_frontend_rtl_correlated": false,
+    "coordinate_norm_min_sram_composed": false,
+    "fps_coverage_enabled": false,
+    "knn_topk_coverage_enabled": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

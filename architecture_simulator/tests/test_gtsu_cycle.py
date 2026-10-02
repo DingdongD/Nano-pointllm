@@ -38,6 +38,7 @@ from gtsu_cycle.fused_fps_knn import (
     FusedFpsKnnConfig, golden_fps_knn, run_fused_fps_knn_model,
 )
 from gtsu_cycle.fused_fps_knn_correlation import correlate_fused_fps_knn
+from gtsu_cycle.fused_fps_knn_production import correlate_production_fps_knn
 from gtsu_cycle.shared_dot import (
     SharedDotBeat, SharedDotConfig, SharedDotLane, build_shared_dot_beats,
     functional_outputs as shared_outputs, pointllm_shared_geometry_mapping,
@@ -262,6 +263,15 @@ def test_fused_fps_knn_selection_exactly_matches_rtl():
     assert report["event_trace_exact"] is True
     assert report["center_sequence_exact"] is True
     assert report["topk_exact"] is True
+
+
+@pytest.mark.skipif(shutil.which("verilator") is None, reason="Verilator unavailable")
+def test_production_fps_knn_selector_matches_compiled_rtl():
+    report = correlate_production_fps_knn(rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["input_beats"] == 512 * 128
+    assert report["neighbor_values"] == 512 * 32
+    assert report["mismatches"] == 0
 
 
 def test_shared_dot_functional_and_cycle_outputs_match():

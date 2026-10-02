@@ -520,3 +520,12 @@
 - The tie/stall lock completes five rounds over 16 points in 33 cycles; all 80 distance updates, center choices, neighbor indices/distances, events, counters, and cycles match exactly.
 - Added a synthesizable shared-Dot-to-selection wrapper. Hierarchy composition passes, but a single composed value/event/cycle trace and the production 8192x512 run remain explicit gates.
 - Final repository regression passed `236 passed, 1 skipped` in 375.31 seconds; strict coverage continues to reject both `fps` and `knn_topk`.
+
+## 2026-10-02: Production FPS/KNN Selector And Real Payload Closure
+- Replaced the lock-only flat merge with lane-local sorting plus persistent Top-32 merge and compiled the production `8192x512xTop32` selector through Verilator.
+- Added independent FPS/KNN FP32 distance streams and masks, CUDA lane-bank FPS tie order, and sign-aware FP32 ordering for KNN's negative roundoff values.
+- Added deployed PointLLM trace generation using `pointnet2_ops` centers, exact CUDA `mul/fma/fma` FPS arithmetic, and the original norm/dot KNN expression.
+- ModelNet sample 0 and Objaverse sample 0 both complete in `66,048` RTL cycles with zero center, next-center, neighbor-value, or Top-32-set mismatches.
+- Kept `fps`, `knn_topk`, and full-model coverage disabled because the FP32 arithmetic frontend and explicit coordinate/norm/min-state SRAM macros are not yet composed.
+- Architecture and geometry regression passed `82 passed` in 376.88 seconds after the dual-distance/dual-mask interface change.
+- Full repository regression passed `239 passed, 1 skipped` in 348.64 seconds; coverage remains fail-closed for complete FPS/KNN and full-model cycles.

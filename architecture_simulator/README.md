@@ -27,11 +27,11 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | Dense M/N/K ping-pong controller | Exact counter, edge-tile, K-block, and two-buffer lifecycle correlation for representative PointLLM K classes |
 | INT32-to-A8 requant | Offline FP16-scale compiler, INT32 bias, multiplier/shift RNE, symmetric saturation, exact Python/Icarus correlation |
 | Physical Dense SRAM composition | 16-bank/128-bit/3-cycle SRAM payload, ping-pong 1R1W, response FIFO, 3-column Dot4 plus requant; exact value/event/cycle correlation |
-| Fused FPS/KNN selection controller | Persistent min-state, deterministic argmax and bounded Top-K exactly correlated for a tie/stall lock; production and real-data gates remain disabled |
+| Fused FPS/KNN selection controller | Tie/stall lock plus production `8192x512xTop32` compiled RTL; real ModelNet/Objaverse FP32 payloads exactly match deployed FPS centers and KNN sets |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
-| Production FPS/KNN, attention, vector, sampling RTL | Not implemented |
+| Production FPS/KNN arithmetic/SRAM, attention, vector, sampling RTL | FPS/KNN selector is complete; FP32 FMA frontend/SRAM and remaining operators are not implemented |
 | Full PointLLM RTL cycle correlation | Not implemented; fail-closed |
 | Characterized area/energy | Not implemented |
 
@@ -234,12 +234,15 @@ docs/               fidelity roadmap and boundaries
 tests/              shape, conservation, mapping, and CLI contracts
 ```
 
-The shared geometry path uses
-`||p-c||^2 = ||p||^2 + ||c||^2 - 2 p^T c`. Point norms are precomputed on the
-same dot fabric and stored as 16-bit values; the steady-state distance path
-reads norms and uses only the shared dot, add, subtract, and shift. The M5a
-selection controller now implements persistent FPS min/argmax and deterministic
-KNN Top-K, but the 8192x512 production and real-point-cloud gates remain open.
+The shared geometry audit originally used
+`||p-c||^2 = ||p||^2 + ||c||^2 - 2 p^T c`, but deployed PointLLM does not use
+one numerical expression for both operators. CUDA FPS uses direct differences
+with one FP32 multiply and two RNE FMAs and masks `||p||^2 <= 1e-3`; KNN uses
+the norm/dot expression and keeps every point. M5b therefore shares point
+fetches while carrying independent FP32 distance streams and validity masks.
+The selector is exact for production shape and real ModelNet/Objaverse
+payloads; the synthesizable FP32 arithmetic frontend and explicit SRAM macros
+remain open gates.
 
 The matching fidelity-side W8A8 contract is implemented in
 `nanopointllm/compression/w8a8.py`. A small sequential-QDQ run can be launched
@@ -264,8 +267,8 @@ attention, and end-to-end PointLLM latency remain fail-closed.
 
 ## Fidelity roadmap
 
-1. Replace the M5a lock network with explicit point/norm/min SRAM banks and a
-   hierarchical Top-32 merge, then correlate the 8192x512 production run.
+1. Add IEEE FP32 MUL/FMA RTL matching the deployed CUDA PTX, then compose
+   coordinate/norm/min SRAM banks with the now-correlated production selector.
 2. Connect the implemented tile/address lowering, correlated SRAM ports, and
    DRAMsim3 completions to the Split-K RTL producer/consumer pipeline.
 3. Add production-size multi-client SRAM scheduling and DMA outstanding-credit

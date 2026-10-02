@@ -146,9 +146,13 @@ def write_distance_trace(path: str | Path, config: FusedFpsKnnConfig) -> None:
             for lane, distance in enumerate(beat):
                 if tile * config.lanes + lane < config.points:
                     mask |= 1 << lane
-                value |= distance << (config.lanes + lane * config.distance_width)
+                fps_shift = config.lanes + lane * config.distance_width
+                knn_shift = config.lanes + config.lanes * config.distance_width \
+                    + lane * config.distance_width
+                value |= distance << fps_shift
+                value |= distance << knn_shift
             value |= mask
-            width = config.lanes + config.lanes * config.distance_width
+            width = config.lanes + 2 * config.lanes * config.distance_width
             handle.write(f"{value:0{(width + 3) // 4}x}\n")
 
 

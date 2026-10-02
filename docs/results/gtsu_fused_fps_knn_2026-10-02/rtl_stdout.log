@@ -44,4 +44,4 @@ TRACE 32 NEIGHBOR 4 1 6 41
 TRACE 32 NEIGHBOR 4 2 8 46
 TRACE 32 NEIGHBOR 4 3 13 230
 SUMMARY 33 20 80 5 5 3
-architecture_simulator/rtl/vertical_slice/tb_gtsu_fused_fps_knn_controller.sv:103: $finish called at 365 (1s)
+architecture_simulator/rtl/vertical_slice/tb_gtsu_fused_fps_knn_controller.sv:108: $finish called at 365 (1s)

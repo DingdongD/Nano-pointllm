@@ -64,11 +64,11 @@ COVERAGE = {
     ),
     "fps": OperatorCoverage(
         "fps", False, False, False, False,
-        "Distance tile is correlated, but persistent min/argmax feedback and memory integration are incomplete.",
+        "Production min/argmax selection is correlated with real payloads, but the IEEE FP32 FMA frontend, explicit coordinate/min SRAM, and composed memory timing are incomplete.",
     ),
     "knn_topk": OperatorCoverage(
         "knn_topk", False, False, False, False,
-        "Distance tile is correlated, but exact global top-32 merge and memory integration are incomplete.",
+        "Production global Top-32 selection is correlated with real payloads, but the PointLLM FP32 distance frontend, explicit SRAM, and composed memory timing are incomplete.",
     ),
     "dense_gemm": OperatorCoverage(
         "dense_gemm", True, True, True, True,
