@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 31 in progress
+Phase 33 in progress
 
 ## Phases
 
@@ -241,6 +241,16 @@ Phase 31 in progress
 - [ ] Keep whole-model reports fail-closed until every phase is covered
 - **Status:** in progress; production decoder linear gate is complete, dense GEMM is next
 
+### Phase 33: PointKAN Geometry RTL Audit And PointLLM Correlation
+- [x] Pin and audit `DingdongD/PointKAN_Accel/hw_sim` without treating its constants as PointLLM evidence
+- [x] Document the current nano-pointllm RTL simulation/correlation flow and its fidelity limits
+- [x] Map PointKAN distance/FPS/KNN interfaces and timing assumptions to PointLLM `8192 -> 512`, `K=32`
+- [x] Implement the smallest reusable distance/FPS/KNN RTL-correlated slice justified by the audit
+- [x] Add functional, event, cycle, and synthesis regression gates
+- [x] Keep `fps` and `knn_topk` coverage false until complete PointLLM semantics are correlated
+- [ ] Run the full regression, record artifacts, commit, and push
+- **Status:** in progress; implementation and regression complete, publication pending
+
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
 2. Does paged KV scheduling handle memory pressure safely, including preemption?
@@ -258,6 +268,12 @@ Phase 31 in progress
 ## Errors Encountered
 | Error | Attempt | Resolution |
 |-------|---------|------------|
+| Sparse clone of `PointKAN_Accel` timed out before checkout, leaving an empty worktree with tracked deletions | 1 | Preserve the pinned Git object database and restore only the required `hw_sim` subtree from `HEAD`; do not modify nano-pointllm state |
+| Directory-level `git archive` on the partial clone triggered multi-gigabyte promisor fetches that survived command timeout | 2 | Terminated only the fetch/archive processes started by this session; switch to individual raw source retrieval and never archive the whole subtree |
+| Initial geometry correlation summary over-counted the final output tile by one `LANES` increment | 1 | Event/value/cycle traces were exact; fixed the testbench to print the post-NBA counter without adding `LANES` again |
+| Geometry simulation used 64 lanes while the initial Yosys structural gate used the RTL default of 8 lanes | 1 | Parameterize Yosys with the exact locked simulation widths before accepting the synthesis gate |
+| `raw.githubusercontent.com` returned 404 for pinned PointKAN RTL files although Git remote access works | 1 | Use already fetched pinned blobs from the local partial clone and export only build inputs to `/tmp` |
+| PointKAN full-width top-k RTL simulation did not complete within a bounded 50-second audit window | 1 | Terminated only the reference `vvp`; keep KNN top-k unsupported and design a bounded streaming merge before correlation |
 | `BLOCK_M=8` varlen candidate failed in Triton `tl.dot` compile on PointLLM-7B | Tried head_dim=128 default `M8/N64` | Reverted head_dim=128 default to supported `M16/N64` and added min guards for env overrides |
 | Paged decode benchmark skipped after routing pure decode to `run_decode` | Used `[B, 1]` input_ids with flattened paged attention | Changed decode staging layout to `[1, bucket]`, matching mixed decode semantics |
 | Sampler saw one row for B=8 flattened decode logits | Passed `[1, B, vocab]` logits directly to per-seq sampler | Sliced paged decode logits to `[B, vocab]` before sampling |

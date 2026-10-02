@@ -22,6 +22,12 @@ from gtsu_cycle.production_linear import (
 from gtsu_cycle.production_linear_correlation import correlate_production_linear
 from gtsu_cycle.sram import SramConfig, decode_sram_address, run_sram_model
 from gtsu_cycle.sram_correlation import correlate_banked_sram
+from gtsu_cycle.geometry import (
+    GeometryBeat, GeometryConfig, build_geometry_beats,
+    functional_outputs as geometry_outputs, pointllm_geometry_mapping,
+    run_geometry_model,
+)
+from gtsu_cycle.geometry_correlation import correlate_geometry_distance
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -107,9 +113,75 @@ def test_full_model_accuracy_remains_fail_closed():
     assert result.as_dict()["fidelity"]["full_model_cycle_accurate"] is False
     require_rtl_correlated([
         "w8_splitk_gemv_vertical_slice", "banked_sram_2client",
+        "geometry_distance_tile",
     ])
     with pytest.raises(UnsupportedCycleAccurateOperator, match="attention"):
         require_rtl_correlated(["w8_splitk_gemv_vertical_slice", "attention"])
+
+
+def test_geometry_functional_and_cycle_outputs_match():
+    config = GeometryConfig(
+        lanes=4, tiles=5, source_stall_mod=0,
+        output_stall_mod=2, output_stall_phase=1,
+    )
+    beats = build_geometry_beats(config)
+    result = run_geometry_model(config, beats)
+
+    assert result.outputs == geometry_outputs(beats)
+    assert result.counters["input_tiles"] == 5
+    assert result.counters["output_points"] == 20
+    assert result.counters["source_backpressure_cycles"] > 0
+    assert result.counters["output_backpressure_cycles"] > 0
+
+    mapping = pointllm_geometry_mapping(64)
+    assert mapping["distance_evaluations_per_operator"] == 4_194_304
+    assert mapping["tiles_per_center"] == 128
+    assert mapping["distance_tiles_per_operator"] == 65_536
+    assert mapping["point_coordinate_sram_bytes_int16"] == 49_152
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    GeometryConfig(),
+    GeometryConfig(
+        lanes=4, tiles=9, source_stall_mod=0, output_stall_mod=0,
+    ),
+    GeometryConfig(
+        lanes=16, tiles=6, source_stall_mod=3, source_stall_phase=0,
+        output_stall_mod=2, output_stall_phase=1,
+    ),
+])
+def test_geometry_distance_exactly_matches_rtl(config):
+    report = correlate_geometry_distance(config, rtl_root=RTL_ROOT)
+
+    assert report["status"] == "rtl_correlated"
+    assert report["event_trace_exact"] is True
+    assert report["counter_trace_exact"] is True
+    assert report["functional_output_exact"] is True
+    assert report["cycle_error"] == 0
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+def test_geometry_distance_signed_int16_extremes_match_rtl():
+    config = GeometryConfig(
+        lanes=4, tiles=1, source_stall_mod=0, output_stall_mod=0,
+    )
+    beat = GeometryBeat(
+        tag=7,
+        query=(-32768, 32767, -32768),
+        points=(
+            (32767, -32768, 32767),
+            (-32768, 32767, -32768),
+            (32767, 32767, -32768),
+            (-32768, -32768, 32767),
+        ),
+    )
+    report = correlate_geometry_distance(
+        config, rtl_root=RTL_ROOT, beats=(beat,),
+    )
+
+    assert report["status"] == "rtl_correlated"
+    assert report["functional_output_exact"] is True
 
 
 def test_banked_sram_mapping_conflicts_and_data():

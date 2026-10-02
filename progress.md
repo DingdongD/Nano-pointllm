@@ -263,6 +263,23 @@
 | 2026-04-16 | Chunked prefill benchmark CLI parsed `--max_prefill_chunk_tokens` but did not pass it into `bench_batch` | 1 | Added the argument to the common benchmark kwargs and reran the long-prefill bench |
 | 2026-04-16 | `torch.compile(lightweight_runner)` produced illegal memory access under strict graph on real PointLLM-7B | 1 | Made lightweight runner compilation explicit opt-in via `NANOPOINTLLM_COMPILE_LIGHTWEIGHT=1`; default stays strict graph without compiled runner |
 | 2026-04-16 | Triton RMSNorm/SiLU-mul lightweight ops were slower than torch ops in graph replay | 1 | Kept them as explicit opt-in via `NANOPOINTLLM_TRITON_LIGHTWEIGHT_OPS=1`; default uses faster measured path |
+| 2026-10-01 | Sparse clone of `PointKAN_Accel` timed out before checkout | 1 | Kept pinned Git objects and will materialize only `hw_sim` for audit |
+| 2026-10-01 | Directory-level archive triggered large background promisor fetches | 2 | Stopped the session-owned processes and switched to per-file raw retrieval |
+| 2026-10-01 | Geometry RTL summary over-counted final output points | 1 | Corrected the testbench's post-NBA summary; exact event/value/cycle matching was already observed |
+| 2026-10-01 | Geometry Yosys gate initially used default 8 lanes instead of the formal 64-lane config | 1 | Added explicit `chparam` for all locked datapath widths |
+| 2026-10-01 | GitHub raw endpoint returned 404 for PointKAN RTL | 1 | Kept source provenance pinned and switched the isolated reference build to local Git blobs |
+
+## 2026-10-01: PointKAN Geometry RTL Audit
+- Started Phase 33 to audit the pinned PointKAN `hw_sim` geometry implementation and adapt only RTL-correlatable contracts to PointLLM.
+- Confirmed nano-pointllm remains clean at `3635cd7`; existing `fps` and `knn_topk` coverage remain fail-closed.
+- Indexed the PointKAN `hw_sim` tree from Git objects. It mixes Python timing models, DRAMsim3, QuickFPS RTL, PointACC top-k RTL, and APU RTL rather than providing one integrated cycle-correlated geometry block.
+- Audited the geometry RTL interfaces: the distance array has static packed coordinates and no memory backpressure; top-k is batch-local; the FPS primitive is min-update only. Full PointLLM FPS/KNN therefore remains unsupported.
+- Added an RTL-locked 64-lane signed geometry-distance slice with ready/valid backpressure, widened arithmetic, deterministic trace lowering, Python edge model, Icarus correlation, and parameter-matched Yosys checking.
+- Formal geometry artifact: `docs/results/gtsu_geometry_distance_2026-10-01/`; 12/12 cycles, 448/448 values, exact event/counter/value agreement, 64-lane synthesis gate passed.
+- Reran the pinned PointKAN distance testbench: five cases passed. Its top-k testbench compiled but exceeded the bounded 50-second audit window, so it is not used as a timing oracle.
+- Architecture regression passed: `34 passed` before the final corner-case addition. Final full repository regression passed: `180 passed, 1 skipped`.
+- Strict coverage reports the new `geometry_distance_tile` as correlated while `fps`, `knn_topk`, and full PointLLM remain fail-closed.
+- Added and passed signed INT16 extreme-value RTL correlation (`-32768` versus `32767`) to validate widened subtraction and accumulation.
 
 ## 5-Question Reboot Check
 | Question | Answer |

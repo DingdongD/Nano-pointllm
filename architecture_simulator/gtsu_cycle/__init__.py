@@ -16,6 +16,17 @@ from .sram import (
     decode_sram_address,
     run_sram_model,
 )
+from .geometry import (
+    GeometryBeat,
+    GeometryConfig,
+    GeometryEvent,
+    GeometryOutput,
+    GeometryResult,
+    build_geometry_beats,
+    pointllm_geometry_mapping,
+    run_geometry_model,
+    squared_distance,
+)
 
 __all__ = [
     "GemvBeat",
@@ -30,4 +41,13 @@ __all__ = [
     "SramResult",
     "decode_sram_address",
     "run_sram_model",
+    "GeometryBeat",
+    "GeometryConfig",
+    "GeometryEvent",
+    "GeometryOutput",
+    "GeometryResult",
+    "build_geometry_beats",
+    "pointllm_geometry_mapping",
+    "run_geometry_model",
+    "squared_distance",
 ]

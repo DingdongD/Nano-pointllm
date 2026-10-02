@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "operator": "geometry_distance_tile",
+  "lanes": 64,
+  "coordinate_width": 16,
+  "distance_width": 36,
+  "tag_width": 16,
+  "tiles": 7,
+  "source_stall_mod": 4,
+  "source_stall_phase": 1,
+  "output_stall_mod": 5,
+  "output_stall_phase": 2,
+  "max_cycles": 10000
+}

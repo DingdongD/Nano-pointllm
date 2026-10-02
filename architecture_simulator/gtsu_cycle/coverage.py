@@ -38,13 +38,25 @@ COVERAGE = {
             "two clients, and no foundry SRAM macro characterization."
         ),
     ),
+    "geometry_distance_tile": OperatorCoverage(
+        operator="geometry_distance_tile",
+        functional_model=True,
+        event_cycle_model=True,
+        synthesizable_rtl=True,
+        exact_rtl_cycle_correlation=True,
+        limitation=(
+            "Signed INT16 3-D distance tile with elastic ready/valid only; PointLLM "
+            "FP32 quantization, SRAM/DRAM, FPS min/argmax feedback, and cross-tile "
+            "KNN top-k integration are not validated."
+        ),
+    ),
     "fps": OperatorCoverage(
         "fps", False, False, False, False,
-        "QuickFPS is an external reference; no GTSU-integrated RTL correlation yet.",
+        "Distance tile is correlated, but persistent min/argmax feedback and memory integration are incomplete.",
     ),
     "knn_topk": OperatorCoverage(
         "knn_topk", False, False, False, False,
-        "No GTSU distance/top-k RTL slice or cycle correlation.",
+        "Distance tile is correlated, but exact global top-32 merge and memory integration are incomplete.",
     ),
     "dense_gemm": OperatorCoverage(
         "dense_gemm", False, False, False, False,

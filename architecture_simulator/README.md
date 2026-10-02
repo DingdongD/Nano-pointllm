@@ -22,9 +22,10 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | PointLLM decoder linear lowering | Real safetensors shapes to W8 tiles, DRAM bursts, and SRAM bank/row addresses |
 | DRAM timing | Local pinned DRAMsim3 backend for explicit sampled requests |
 | Production decoder linear controller | Q and non-uniform-K down projection exactly RTL-correlated with DRAMsim3 traces |
+| Geometry distance tile | Signed INT16 3-D distance, elastic ready/valid, exact Python/Icarus event/value/cycle correlation |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
-| FPS/KNN/dense GEMM/attention/vector/LM-head/sampling RTL | Not implemented |
+| FPS min/argmax, KNN global top-k, dense GEMM, attention, vector, sampling RTL | Not implemented |
 | Full PointLLM RTL cycle correlation | Not implemented; fail-closed |
 | Characterized area/energy | Not implemented |
 
@@ -45,6 +46,8 @@ The structure follows useful boundaries from the locally audited references:
 - `/home/PointAcc/Mamba_Reconfigurable_Array_v2`: functional reference, parameterized RTL, golden trace, gate-activity testbench, and PTPX handoff.
 
 No source is copied from those projects. Their unimplemented handoff plan is documented in [`docs/CMODEL_RTL_ROADMAP.md`](docs/CMODEL_RTL_ROADMAP.md).
+The executable RTL simulation and exact-correlation procedure is documented in
+[`docs/RTL_SIMULATION_METHOD.md`](docs/RTL_SIMULATION_METHOD.md).
 
 ## Modeled architecture
 
@@ -133,6 +136,13 @@ python scripts/check_cycle_coverage.py
 python scripts/run_pointllm_memory_correlation.py \
   --output-dir ../docs/results/gtsu_memory_lowering_2026-10-01 \
   --projection q_proj --layer 0 --sample-bursts 64
+
+# Correlate the 64-lane signed geometry distance tile. This is the shared
+# distance front-end, not a complete FPS or KNN cycle result.
+python scripts/run_geometry_rtl_correlation.py \
+  --config configs/gtsu_geometry_rtl_lock.json \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_geometry_distance_2026-10-01
 ```
 
 ## Output contract
@@ -165,15 +175,16 @@ docs/               fidelity roadmap and boundaries
 tests/              shape, conservation, mapping, and CLI contracts
 ```
 
-The W8 Split-K GEMV and locked SRAM port/arbiter slices have executable RTL and
-exact event correlation. Decoder tensors now have checkpoint-backed target
+The W8 Split-K GEMV, geometry distance, and locked SRAM port/arbiter slices have
+executable RTL and exact event correlation. Decoder tensors now have checkpoint-backed target
 layout and memory addresses, and sampled bursts use real DRAMsim3 timing. These
 pieces are not yet one integrated compute/memory RTL pipeline, so generic
 PointLLM linear cycles and all end-to-end latency remain fail-closed.
 
 ## Fidelity roadmap
 
-1. Correlate persistent FPS against the QuickFPS RTL/C-model event contract.
+1. Connect the geometry tile to resident point/min-distance SRAM, then correlate
+   the persistent FPS min/argmax loop and KNN cross-tile top-32 merge.
 2. Connect the implemented tile/address lowering, correlated SRAM ports, and
    DRAMsim3 completions to the Split-K RTL producer/consumer pipeline.
 3. Add production-size multi-client SRAM scheduling and DMA outstanding-credit

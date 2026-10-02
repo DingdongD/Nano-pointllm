@@ -1,0 +1,682 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv; hierarchy -check -top gtsu_geometry_distance_tile; chparam -set LANES 64 -set COORD_WIDTH 16 -set DIST_WIDTH 36 -set TAG_WIDTH 16 gtsu_geometry_distance_tile; hierarchy -check -top gtsu_geometry_distance_tile; proc; memory; opt; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_geometry_distance_tile'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gtsu_geometry_distance_tile
+
+2.2. Analyzing design hierarchy..
+Top module:  \gtsu_geometry_distance_tile
+Removed 0 unused modules.
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_geometry_distance_tile'.
+Parameter \LANES = 64
+Parameter \COORD_WIDTH = 16
+Parameter \DIST_WIDTH = 36
+Parameter \TAG_WIDTH = 16
+Generating RTLIL representation for module `$paramod\gtsu_geometry_distance_tile\LANES=64\COORD_WIDTH=16\DIST_WIDTH=36\TAG_WIDTH=16'.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \gtsu_geometry_distance_tile
+
+4.2. Analyzing design hierarchy..
+Top module:  \gtsu_geometry_distance_tile
+Removed 0 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721 in module gtsu_geometry_distance_tile.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731 in module gtsu_geometry_distance_tile.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_INIT pass (extract init attributes).
+
+5.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721'.
+Found async reset \rst_n in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731'.
+
+5.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+     1/2: $0\out_tag[15:0]
+     2/2: $0\out_valid[0:0]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101'.
+     1/1: $0\out_distance[35:0]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111'.
+     1/1: $0\out_distance[71:36]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121'.
+     1/1: $0\out_distance[107:72]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131'.
+     1/1: $0\out_distance[143:108]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141'.
+     1/1: $0\out_distance[179:144]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151'.
+     1/1: $0\out_distance[215:180]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161'.
+     1/1: $0\out_distance[251:216]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171'.
+     1/1: $0\out_distance[287:252]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181'.
+     1/1: $0\out_distance[323:288]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191'.
+     1/1: $0\out_distance[359:324]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201'.
+     1/1: $0\out_distance[395:360]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211'.
+     1/1: $0\out_distance[431:396]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221'.
+     1/1: $0\out_distance[467:432]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231'.
+     1/1: $0\out_distance[503:468]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241'.
+     1/1: $0\out_distance[539:504]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251'.
+     1/1: $0\out_distance[575:540]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261'.
+     1/1: $0\out_distance[611:576]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271'.
+     1/1: $0\out_distance[647:612]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281'.
+     1/1: $0\out_distance[683:648]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291'.
+     1/1: $0\out_distance[719:684]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301'.
+     1/1: $0\out_distance[755:720]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311'.
+     1/1: $0\out_distance[791:756]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321'.
+     1/1: $0\out_distance[827:792]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331'.
+     1/1: $0\out_distance[863:828]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341'.
+     1/1: $0\out_distance[899:864]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351'.
+     1/1: $0\out_distance[935:900]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361'.
+     1/1: $0\out_distance[971:936]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371'.
+     1/1: $0\out_distance[1007:972]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381'.
+     1/1: $0\out_distance[1043:1008]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391'.
+     1/1: $0\out_distance[1079:1044]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401'.
+     1/1: $0\out_distance[1115:1080]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411'.
+     1/1: $0\out_distance[1151:1116]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421'.
+     1/1: $0\out_distance[1187:1152]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431'.
+     1/1: $0\out_distance[1223:1188]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441'.
+     1/1: $0\out_distance[1259:1224]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451'.
+     1/1: $0\out_distance[1295:1260]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461'.
+     1/1: $0\out_distance[1331:1296]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471'.
+     1/1: $0\out_distance[1367:1332]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481'.
+     1/1: $0\out_distance[1403:1368]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491'.
+     1/1: $0\out_distance[1439:1404]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501'.
+     1/1: $0\out_distance[1475:1440]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511'.
+     1/1: $0\out_distance[1511:1476]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521'.
+     1/1: $0\out_distance[1547:1512]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531'.
+     1/1: $0\out_distance[1583:1548]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541'.
+     1/1: $0\out_distance[1619:1584]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551'.
+     1/1: $0\out_distance[1655:1620]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561'.
+     1/1: $0\out_distance[1691:1656]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571'.
+     1/1: $0\out_distance[1727:1692]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581'.
+     1/1: $0\out_distance[1763:1728]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591'.
+     1/1: $0\out_distance[1799:1764]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601'.
+     1/1: $0\out_distance[1835:1800]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611'.
+     1/1: $0\out_distance[1871:1836]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621'.
+     1/1: $0\out_distance[1907:1872]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631'.
+     1/1: $0\out_distance[1943:1908]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641'.
+     1/1: $0\out_distance[1979:1944]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651'.
+     1/1: $0\out_distance[2015:1980]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661'.
+     1/1: $0\out_distance[2051:2016]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671'.
+     1/1: $0\out_distance[2087:2052]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681'.
+     1/1: $0\out_distance[2123:2088]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691'.
+     1/1: $0\out_distance[2159:2124]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701'.
+     1/1: $0\out_distance[2195:2160]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711'.
+     1/1: $0\out_distance[2231:2196]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721'.
+     1/1: $0\out_distance[2267:2232]
+Creating decoders for process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731'.
+     1/1: $0\out_distance[2303:2268]
+
+5.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_geometry_distance_tile.\out_valid' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+  created $adff cell `$procdff$869' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_tag' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+  created $adff cell `$procdff$870' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [35:0]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101'.
+  created $adff cell `$procdff$871' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [71:36]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111'.
+  created $adff cell `$procdff$872' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [107:72]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121'.
+  created $adff cell `$procdff$873' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [143:108]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131'.
+  created $adff cell `$procdff$874' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [179:144]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141'.
+  created $adff cell `$procdff$875' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [215:180]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151'.
+  created $adff cell `$procdff$876' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [251:216]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161'.
+  created $adff cell `$procdff$877' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [287:252]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171'.
+  created $adff cell `$procdff$878' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [323:288]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181'.
+  created $adff cell `$procdff$879' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [359:324]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191'.
+  created $adff cell `$procdff$880' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [395:360]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201'.
+  created $adff cell `$procdff$881' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [431:396]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211'.
+  created $adff cell `$procdff$882' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [467:432]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221'.
+  created $adff cell `$procdff$883' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [503:468]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231'.
+  created $adff cell `$procdff$884' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [539:504]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241'.
+  created $adff cell `$procdff$885' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [575:540]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251'.
+  created $adff cell `$procdff$886' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [611:576]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261'.
+  created $adff cell `$procdff$887' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [647:612]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271'.
+  created $adff cell `$procdff$888' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [683:648]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281'.
+  created $adff cell `$procdff$889' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [719:684]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291'.
+  created $adff cell `$procdff$890' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [755:720]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301'.
+  created $adff cell `$procdff$891' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [791:756]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311'.
+  created $adff cell `$procdff$892' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [827:792]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321'.
+  created $adff cell `$procdff$893' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [863:828]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331'.
+  created $adff cell `$procdff$894' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [899:864]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341'.
+  created $adff cell `$procdff$895' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [935:900]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351'.
+  created $adff cell `$procdff$896' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [971:936]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361'.
+  created $adff cell `$procdff$897' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1007:972]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371'.
+  created $adff cell `$procdff$898' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1043:1008]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381'.
+  created $adff cell `$procdff$899' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1079:1044]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391'.
+  created $adff cell `$procdff$900' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1115:1080]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401'.
+  created $adff cell `$procdff$901' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1151:1116]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411'.
+  created $adff cell `$procdff$902' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1187:1152]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421'.
+  created $adff cell `$procdff$903' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1223:1188]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431'.
+  created $adff cell `$procdff$904' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1259:1224]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441'.
+  created $adff cell `$procdff$905' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1295:1260]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451'.
+  created $adff cell `$procdff$906' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1331:1296]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461'.
+  created $adff cell `$procdff$907' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1367:1332]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471'.
+  created $adff cell `$procdff$908' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1403:1368]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481'.
+  created $adff cell `$procdff$909' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1439:1404]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491'.
+  created $adff cell `$procdff$910' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1475:1440]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501'.
+  created $adff cell `$procdff$911' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1511:1476]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511'.
+  created $adff cell `$procdff$912' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1547:1512]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521'.
+  created $adff cell `$procdff$913' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1583:1548]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531'.
+  created $adff cell `$procdff$914' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1619:1584]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541'.
+  created $adff cell `$procdff$915' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1655:1620]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551'.
+  created $adff cell `$procdff$916' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1691:1656]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561'.
+  created $adff cell `$procdff$917' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1727:1692]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571'.
+  created $adff cell `$procdff$918' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1763:1728]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581'.
+  created $adff cell `$procdff$919' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1799:1764]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591'.
+  created $adff cell `$procdff$920' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1835:1800]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601'.
+  created $adff cell `$procdff$921' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1871:1836]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611'.
+  created $adff cell `$procdff$922' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1907:1872]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621'.
+  created $adff cell `$procdff$923' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1943:1908]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631'.
+  created $adff cell `$procdff$924' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [1979:1944]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641'.
+  created $adff cell `$procdff$925' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2015:1980]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651'.
+  created $adff cell `$procdff$926' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2051:2016]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661'.
+  created $adff cell `$procdff$927' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2087:2052]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671'.
+  created $adff cell `$procdff$928' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2123:2088]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681'.
+  created $adff cell `$procdff$929' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2159:2124]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691'.
+  created $adff cell `$procdff$930' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2195:2160]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701'.
+  created $adff cell `$procdff$931' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2231:2196]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711'.
+  created $adff cell `$procdff$932' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2267:2232]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721'.
+  created $adff cell `$procdff$933' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_geometry_distance_tile.\out_distance [2303:2268]' using process `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731'.
+  created $adff cell `$procdff$934' with positive edge clock and negative level reset.
+
+5.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:30$91'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$101'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$111'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$121'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$131'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$141'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$151'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$161'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$171'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$181'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$191'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$201'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$211'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$221'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$231'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$241'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$251'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$261'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$271'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$281'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$291'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$301'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$311'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$321'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$331'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$341'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$351'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$361'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$371'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$381'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$391'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$401'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$411'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$421'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$431'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$441'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$451'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$461'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$471'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$481'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$491'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$501'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$511'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$521'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$531'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$541'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$551'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$561'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$571'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$581'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$591'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$601'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$611'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$621'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$631'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$641'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$651'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$661'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$671'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$681'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$691'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$701'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$711'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$721'.
+Found and cleaned up 1 empty switch in `\gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731'.
+Removing empty process `gtsu_geometry_distance_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_geometry_distance_tile.sv:74$731'.
+Cleaned up 66 empty switches.
+
+6. Executing MEMORY pass.
+
+6.1. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+6.2. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_geometry_distance_tile..
+Removed 65 unused cells and 649 unused wires.
+<suppressed ~66 debug messages>
+
+6.3. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_geometry_distance_tile..
+
+6.5. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.6. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_geometry_distance_tile.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_geometry_distance_tile'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_geometry_distance_tile..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~66 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_geometry_distance_tile.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_geometry_distance_tile'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_geometry_distance_tile..
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_geometry_distance_tile.
+
+7.9. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_geometry_distance_tile..
+found and reported 0 problems.
+
+9. Printing statistics.
+
+=== gtsu_geometry_distance_tile ===
+
+   Number of wires:                789
+   Number of wire bits:          25259
+   Number of public wires:         657
+   Number of public wire bits:   20632
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                649
+     $add                          128
+     $adff                          66
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mul                          192
+     $mux                           67
+     $sub                          192
+
+End of script. Logfile hash: 36585d12e5
+CPU: user 1.82s system 0.05s, MEM: 41.88 MB total, 35.14 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 36% 3x opt_clean (0 sec), 19% 1x check (0 sec), ...

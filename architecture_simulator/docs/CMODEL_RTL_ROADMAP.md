@@ -18,11 +18,20 @@ Implemented now:
   SRAM bank conflicts, registered reads, unpack, Split-K partials, and outputs;
 - exact full-shape RTL-controller correlation for Q projection and non-uniform-K
   down projection using their real DRAMsim3 completion traces.
+- a shared signed INT16 3-D geometry distance tile with an elastic ready/valid
+  output register, exact Python/Icarus events, values, cycles, and a Yosys gate.
 
 The production decoder-linear controller is now DRAM-timed and SRAM-integrated.
 Arithmetic values are checked in the separate W8 GEMV datapath slice while the
 production controller checks full-shape traffic and cycles. Dense GEMM,
 attention, vector operations, and whole-graph scheduling remain unsupported.
+
+The geometry tile is deliberately a narrower claim than FPS/KNN. At the
+PointLLM shape, each operator evaluates `8192 * 512 = 4,194,304` distances. A
+64-lane tile issues 65,536 tiles in the no-stall lower bound. FPS additionally
+requires 512 serial persistent-min updates and argmax barriers; KNN additionally
+requires exact top-32 merging over 128 point tiles per center. Neither reduction
+path nor the point/min-state SRAM path is correlated yet.
 
 The legacy Python estimator does not model ready/valid handshakes, queues,
 resource stalls, exact bank mapping, burst timing, or producer/consumer events.
