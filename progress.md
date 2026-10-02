@@ -470,3 +470,12 @@
 - Added a Dense M/N/K ping-pong controller and exact edge model. Representative Local Encoder, PointTransformer, projector, LLM-prefill, and partial-K-block suites all have zero cycle error.
 - Physical 16-bank SRAM payload movement, the floating BF16 dequant path, and controller+Dot4+requant composition remain fail-closed.
 - Passed the full repository regression after the new RTL slices: `209 passed, 1 skipped`.
+
+## 2026-10-02: Physical Dense SRAM Composition Start
+- Started the first physically composed Dense slice rather than another analytical bridge.
+- Locked the minimal payload mapping to `N_TILE=3`: one 128-bit SRAM word carries one INT8x4 activation vector and three INT8x4 weight vectors, allowing one read port to feed three shared Dot4 PEs while the independent write port fills the alternate ping-pong K block.
+- Production `N_TILE=64` will require one A word plus sixteen B words per chunk; that multiword gather is a separate gate and is not implied by this slice.
+- Implemented the physical composition RTL and independent Python edge-state golden, including read-before-write SRAM semantics, fixed-latency responses, outstanding credit, FIFO backpressure, Dot4 accumulation, and parallel requant.
+- The formal lock finishes in 29 cycles with zero cycle error, exact 68-event trace, exact four output vectors, and 10 true read/write overlap cycles.
+- Yosys hierarchy checks pass with one SRAM/controller/FIFO/Dense tile, three Dot4 and three requant lanes, and no composition-top multiplier.
+- Passed the full repository regression with the composed slice: `211 passed, 1 skipped`.

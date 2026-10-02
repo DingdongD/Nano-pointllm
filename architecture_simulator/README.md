@@ -26,6 +26,7 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | Shared-Dot4 dense GEMM microtile | Output-stationary M/K stream, edge-column mask, elastic output, exact Python/Icarus value/event/cycle correlation |
 | Dense M/N/K ping-pong controller | Exact counter, edge-tile, K-block, and two-buffer lifecycle correlation for representative PointLLM K classes |
 | INT32-to-A8 requant | Offline FP16-scale compiler, INT32 bias, multiplier/shift RNE, symmetric saturation, exact Python/Icarus correlation |
+| Physical Dense SRAM composition | 16-bank/128-bit/3-cycle SRAM payload, ping-pong 1R1W, response FIFO, 3-column Dot4 plus requant; exact value/event/cycle correlation |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
@@ -172,6 +173,11 @@ python scripts/run_dense_controller_shape_suite.py \
 python scripts/run_requant_rtl_correlation.py \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_requant_compilercodes_audit_2026-10-01
+
+# Run the first physically composed SRAM -> Dot4 -> requant slice.
+python scripts/run_dense_sram_pipeline_rtl_correlation.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_dense_sram_requant_pipeline_2026-10-02
 ```
 
 ## Output contract

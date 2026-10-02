@@ -38,6 +38,10 @@ from gtsu_cycle.dense_gemm import DenseTileConfig, build_dense_beats, run_dense_
 from gtsu_cycle.dense_gemm_correlation import correlate_dense_tile
 from gtsu_cycle.dense_controller import DenseControllerConfig, run_dense_controller_model
 from gtsu_cycle.dense_controller_correlation import correlate_dense_controller
+from gtsu_cycle.dense_sram_pipeline import (
+    DenseSramPipelineConfig, run_dense_sram_pipeline_model,
+)
+from gtsu_cycle.dense_sram_pipeline_correlation import correlate_dense_sram_pipeline
 from gtsu_cycle.requant import (
     RequantConfig, compile_fp16_requant_scale, locked_requant_vectors,
     requantize_int32,
@@ -280,6 +284,32 @@ def test_dense_controller_exactly_matches_rtl(config):
     assert report["synthesis_check"]["forbidden_arithmetic_cells"] == {
         "$mod": 0, "$mul": 0, "$div": 0,
     }
+
+
+def test_dense_sram_pipeline_model_has_physical_overlap_and_edge_mask():
+    result = run_dense_sram_pipeline_model(DenseSramPipelineConfig())
+    assert result.counters == {
+        "payload_writes": 16,
+        "sram_read_issues": 16,
+        "sram_responses": 16,
+        "dot4_inputs": 16,
+        "output_tiles": 4,
+        "read_write_overlap_cycles": 10,
+    }
+    assert [output.mask for output in result.outputs] == [0x7, 0x3, 0x7, 0x3]
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+def test_dense_sram_pipeline_exactly_matches_rtl():
+    report = correlate_dense_sram_pipeline(
+        DenseSramPipelineConfig(), rtl_root=RTL_ROOT,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["event_trace_exact"] is True
+    assert report["functional_outputs_exact"] is True
+    assert report["counters"]["read_write_overlap_cycles"] == 10
+    assert report["synthesis_check"]["top_direct_multipliers"] == 0
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")

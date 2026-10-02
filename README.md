@@ -226,6 +226,13 @@ Dense M/N/K ping-pong controller 也已在 `K=8/384/2048/4096` 与 partial-K
 与
 [`docs/results/gtsu_dense_mnk_controller_2026-10-01/`](docs/results/gtsu_dense_mnk_controller_2026-10-01/README.md)。
 
+首个物理 Dense 闭环进一步连接了 16-bank/128-bit/3-cycle SRAM、ping-pong
+1R1W、response FIFO、共享 Dot4 与 requant。锁定的 `2x5x16` 切片在 29
+cycles 内完成，全部事件/数值/周期一致，其中 10 cycles 同时读当前 block
+并写下一 block。该证据仍只覆盖 `N_TILE=3` 单 word payload；生产
+`N_TILE=64` 的 17-word gather 与 DRAMsim3 DMA 保持 fail-closed。证据见
+[`docs/results/gtsu_dense_sram_requant_pipeline_2026-10-02/`](docs/results/gtsu_dense_sram_requant_pipeline_2026-10-02/README.md)。
+
 ```bash
 cd /home/nano-pointllm/architecture_simulator
 /opt/conda/envs/pointllm/bin/python -m pointllm_archsim simulate \

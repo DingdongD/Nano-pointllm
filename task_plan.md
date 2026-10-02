@@ -287,7 +287,7 @@ Phase 37 in progress
 - [ ] Correlate Local Encoder, PointTransformer QKV, projector, and LLM prefill shape classes
 - [x] Prove with Yosys that the Dense GEMM microtile introduces no multiplier outside Dot4 PE
 - [ ] Enable `dense_gemm` coverage only after exact value/event/cycle correlation
-- **Status:** in progress; one N-tile/M-stream/K-reduction slice is exact, production M/N controller and SRAM are pending
+- **Status:** in progress; a three-column physical pipeline is exact, while production 64-column multiword SRAM/DMA composition is pending
 
 #### Phase 37A: Compiler_Codes Quant/Memory RTL Audit
 - [x] Pin and inventory synthesizable quantization, scale-buffer, DMU, GEMM-control, and SRAM RTL from `/home/Compiler_Codes`
@@ -296,6 +296,14 @@ Phase 37 in progress
 - [x] Add Python bit golden plus Icarus value/event/cycle and Yosys structure checks
 - [ ] Integrate the validated post-accumulator path with production Dense GEMM and SRAM control
 - **Status:** in progress; requant is exact, floating BF16 dequant and physical Dense/SRAM composition remain pending
+
+#### Phase 37B: Physical Dense SRAM Datapath Composition
+- [x] Pack A plus three B columns into one 128-bit SRAM word for a minimal physical slice
+- [x] Overlap ping-pong payload writes with three-cycle SRAM reads through true 1R1W ports
+- [x] Connect SRAM response FIFO -> shared Dot4 tile -> parallel requant -> output backpressure
+- [x] Correlate payload/read/compute/output events, values, counters, and cycles against Python
+- [x] Prove the RTL hierarchy and keep production `N_TILE=64` multiword expansion explicit
+- **Status:** complete for the `N_TILE=3` physical slice; production 17-word gather and DRAM DMA remain pending
 
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
@@ -371,6 +379,9 @@ Phase 37 in progress
 | Dense GEMM values/events/cycles matched but output summary was one row high | Second Phase 37 test attempt | The `#1` summary samples post-NBA counters, so removed the redundant manual increment; retained all value/event/cycle checks |
 | Scale-compiler patch targeted `requant_correlation.py` twice in one apply operation | First Phase 37A scale-compiler edit | Split the change into one update block per file; no partial edit was applied |
 | Dense controller load events carried a meaningless mask with inconsistent `N<64` defaults | Final Phase 37A review | Canonicalized `LOAD_ACCEPT.column_mask` to zero in Python and RTL before accepting artifacts |
+| Composed-pipeline Yosys script parameterized the top after an initial hierarchy pass removed original child modules | First Phase 37B synthesis attempt | Parameterize the top before the single hierarchy pass; Icarus compilation itself had succeeded |
+| Temporary-output cleanup used a prohibited recursive remove command | Second Phase 37B attempt, before execution | Did not retry deletion; correlation outputs are overwrite-safe, so reran directly in the existing temporary directory |
+| Yosys spent over two minutes expanding the 16x64x128 behavioral SRAM into flops | Second Phase 37B synthesis run | Interrupted the non-informative expansion; retained 16 banks/128-bit/3-cycle timing but reduced the lock model to 4 rows per bank, with production capacity delegated to an SRAM macro |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

@@ -73,8 +73,8 @@ COVERAGE = {
     "dense_gemm": OperatorCoverage(
         "dense_gemm", False, False, False, False,
         "Shared-Dot4, M/N/K ping-pong control, SRAM, and DMA/controller slices "
-        "are correlated separately, but their physical payload composition and "
-        "full production-shape correlation are incomplete.",
+        "exist, and a three-column physical composition is correlated; production "
+        "64-column multiword payload/DMA composition remains incomplete.",
     ),
     "shared_dot4_dense_gemm_microtile": OperatorCoverage(
         "shared_dot4_dense_gemm_microtile", True, True, True, True,
@@ -90,6 +90,12 @@ COVERAGE = {
         "Offline FP16-scale to multiplier/shift compilation plus INT32-domain "
         "bias, RNE, and symmetric [-127,127] saturation; floating BF16 dequant "
         "and integration with Dense GEMM/SRAM remain incomplete.",
+    ),
+    "dense_sram_dot4_requant_physical_slice": OperatorCoverage(
+        "dense_sram_dot4_requant_physical_slice", True, True, True, True,
+        "Composed 16-bank/128-bit/3-cycle behavioral SRAM, ping-pong 1R1W, "
+        "response FIFO, three-column shared-Dot4 tile, and parallel requant; "
+        "production 64-column multiword gather and DRAMsim3 DMA remain incomplete.",
     ),
     "pointllm_splitk_linear": OperatorCoverage(
         "pointllm_splitk_linear", True, True, True, True,
