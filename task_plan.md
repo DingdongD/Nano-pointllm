@@ -283,10 +283,19 @@ Phase 37 in progress
 ### Phase 37: Shared Dense GEMM RTL Mode
 - [ ] Implement tiled M/N/K control using only `gtsu_dot4_pe` multiplier instances
 - [x] Add finite microtile operand/accumulator/output ready-valid state and edge-column handling
+- [x] Correlate standalone M/N/K counters, edge K/N tiles, and ping-pong buffer lifecycle
 - [ ] Correlate Local Encoder, PointTransformer QKV, projector, and LLM prefill shape classes
 - [x] Prove with Yosys that the Dense GEMM microtile introduces no multiplier outside Dot4 PE
 - [ ] Enable `dense_gemm` coverage only after exact value/event/cycle correlation
 - **Status:** in progress; one N-tile/M-stream/K-reduction slice is exact, production M/N controller and SRAM are pending
+
+#### Phase 37A: Compiler_Codes Quant/Memory RTL Audit
+- [x] Pin and inventory synthesizable quantization, scale-buffer, DMU, GEMM-control, and SRAM RTL from `/home/Compiler_Codes`
+- [x] Record exact rounding, saturation, scale format, bias order, handshake, and buffering differences
+- [x] Implement a GTSU INT32-to-A8 requant RTL slice where semantics match the PointLLM W8A8 contract
+- [x] Add Python bit golden plus Icarus value/event/cycle and Yosys structure checks
+- [ ] Integrate the validated post-accumulator path with production Dense GEMM and SRAM control
+- **Status:** in progress; requant is exact, floating BF16 dequant and physical Dense/SRAM composition remain pending
 
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
@@ -360,6 +369,8 @@ Phase 37 in progress
 | Full regression failed collection on local namespace-package imports when invoked through standalone `pytest` entry points | First two Phase 34 full-suite attempts (base and PointLLM env) | Use `/opt/conda/envs/pointllm/bin/python -m pytest`, which preserves the repository root on `sys.path`; all source files were present and directly discoverable |
 | Dense GEMM targeted test collection found a malformed nested list comprehension | First Phase 37 test attempt | Rewrote the deterministic A/B matrix construction as explicit nested comprehensions before any RTL result was accepted |
 | Dense GEMM values/events/cycles matched but output summary was one row high | Second Phase 37 test attempt | The `#1` summary samples post-NBA counters, so removed the redundant manual increment; retained all value/event/cycle checks |
+| Scale-compiler patch targeted `requant_correlation.py` twice in one apply operation | First Phase 37A scale-compiler edit | Split the change into one update block per file; no partial edit was applied |
+| Dense controller load events carried a meaningless mask with inconsistent `N<64` defaults | Final Phase 37A review | Canonicalized `LOAD_ACCEPT.column_mask` to zero in Python and RTL before accepting artifacts |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

@@ -1,0 +1,244 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv; hierarchy -check -top gtsu_dense_mnk_controller; chparam -set M 2 -set N 70 -set K 8 -set N_TILE 64 -set K_BLOCK 8 gtsu_dense_mnk_controller; hierarchy -check -top gtsu_dense_mnk_controller; proc; opt; check -assert; stat; write_json /tmp/gtsu_dense_ctrl_la4ochkc/controller.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dense_mnk_controller'.
+Warning: Replacing memory \buffer_sequence with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:72
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_mnk_controller
+
+2.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_mnk_controller
+Removed 0 unused modules.
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_dense_mnk_controller'.
+Parameter \M = 2
+Parameter \N = 70
+Parameter \K = 8
+Parameter \N_TILE = 64
+Parameter \K_BLOCK = 8
+Generating RTLIL representation for module `$paramod\gtsu_dense_mnk_controller\M=2\N=70\K=8\N_TILE=64\K_BLOCK=8'.
+Warning: Replacing memory \buffer_sequence with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:72
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_mnk_controller
+
+4.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_mnk_controller
+Removed 0 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:107$104'.
+Removing empty process `gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:107$104'.
+Cleaned up 1 empty switch.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101 in module gtsu_dense_mnk_controller.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101 in module gtsu_dense_mnk_controller.
+Marked 8 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82 in module gtsu_dense_mnk_controller.
+Removed a total of 1 dead cases.
+
+5.3. Executing PROC_INIT pass (extract init attributes).
+
+5.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+
+5.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101'.
+     1/2: $1$mem2reg_rd$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:47$53_DATA[31:0]$103
+     2/2: $0$mem2reg_rd$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:47$53_DATA[31:0]$102
+Creating decoders for process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+     1/15: $0\buffer_valid[1:0] [1]
+     2/15: $0\buffer_valid[1:0] [0]
+     3/15: $2$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_DATA[31:0]$89
+     4/15: $1$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_ADDR[0:0]$87
+     5/15: $1$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_DATA[31:0]$86
+     6/15: $0$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_ADDR[0:0]$84
+     7/15: $0$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_DATA[31:0]$83
+     8/15: $0\buffer_sequence[1][31:0]
+     9/15: $0\buffer_sequence[0][31:0]
+    10/15: $0\chunk_counter[0:0]
+    11/15: $0\k_block_counter[0:0]
+    12/15: $0\n_tile_counter[0:0]
+    13/15: $0\row_counter[0:0]
+    14/15: $0\expected_sequence[31:0]
+    15/15: $2$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_ADDR[0:0]$90
+
+5.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gtsu_dense_mnk_controller.$mem2reg_rd$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:47$53_DATA' from process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101'.
+
+5.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_dense_mnk_controller.$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_DATA' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$191' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\buffer_valid' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$192' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\expected_sequence' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$193' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\row_counter' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$194' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\n_tile_counter' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$195' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\k_block_counter' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$196' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\chunk_counter' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$197' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\buffer_sequence[0]' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$198' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.\buffer_sequence[1]' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$199' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_mnk_controller.$mem2reg_wr$\buffer_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:82$54_ADDR' using process `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+  created $adff cell `$procdff$200' with positive edge clock and negative level reset.
+
+5.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101'.
+Removing empty process `gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:1$101'.
+Found and cleaned up 8 empty switches in `\gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+Removing empty process `gtsu_dense_mnk_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_mnk_controller.sv:69$82'.
+Cleaned up 9 empty switches.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_mnk_controller.
+<suppressed ~21 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_mnk_controller'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_mnk_controller..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$144: \load_sequence -> { \load_sequence [31:1] 1'0 }
+      Replacing known input bits on port B of cell $procmux$138: \load_sequence -> { \load_sequence [31:1] 1'1 }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$135.
+    dead port 2/2 on $mux $procmux$135.
+    dead port 1/2 on $mux $procmux$189.
+    dead port 2/2 on $mux $procmux$189.
+Removed 4 multiplexer ports.
+<suppressed ~14 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_mnk_controller.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_mnk_controller'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$200 ($adff) from module gtsu_dense_mnk_controller.
+Removing $procdff$191 ($adff) from module gtsu_dense_mnk_controller.
+Replaced 2 DFF cells.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_mnk_controller..
+Removed 2 unused cells and 77 unused wires.
+<suppressed ~3 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_mnk_controller.
+<suppressed ~1 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_mnk_controller..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_mnk_controller.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_mnk_controller'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_mnk_controller..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_mnk_controller.
+
+6.16. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_dense_mnk_controller..
+found and reported 0 problems.
+
+8. Printing statistics.
+
+=== gtsu_dense_mnk_controller ===
+
+   Number of wires:                 76
+   Number of wire bits:            700
+   Number of public wires:          30
+   Number of public wire bits:     311
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $add                            5
+     $adff                           8
+     $eq                             2
+     $ge                             1
+     $logic_and                      7
+     $logic_not                      1
+     $lt                             1
+     $mux                           31
+     $not                            3
+     $pmux                           1
+     $shiftx                         2
+     $shr                            1
+     $sub                            1
+
+9. Executing JSON backend.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: c03f786431
+CPU: user 0.10s system 0.00s, MEM: 16.85 MB total, 10.81 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 17% 2x opt_clean (0 sec), 16% 3x opt_expr (0 sec), ...

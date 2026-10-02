@@ -1,0 +1,295 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv; hierarchy -check -top gtsu_requantize_int32; proc; opt; check -assert; stat; write_json /tmp/gtsu_requant_up50p1__/requant.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_requantize_int32'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gtsu_requantize_int32
+
+2.2. Analyzing design hierarchy..
+Top module:  \gtsu_requantize_int32
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 5 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4 in module gtsu_requantize_int32.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+     1/48: $4$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize[7:0]$73
+     2/48: $3$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize[7:0]$71
+     3/48: $3$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\round_up[0:0]$55
+     4/48: $3$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\truncated[65:0]$52
+     5/48: $3$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\half[65:0]$54
+     6/48: $3$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\remainder[65:0]$53
+     7/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize[7:0]$34
+     8/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\rounded[66:0]$46
+     9/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\round_up[0:0]$45
+    10/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\half[65:0]$44
+    11/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\remainder[65:0]$43
+    12/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\truncated[65:0]$42
+    13/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\magnitude[65:0]$41
+    14/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\product[65:0]$40
+    15/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\biased[32:0]$39
+    16/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\right_shift[5:0]$38
+    17/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\multiplier[31:0]$37
+    18/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\bias[31:0]$36
+    19/48: $2$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\accumulator[31:0]$35
+    20/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\rounded[66:0]$31
+    21/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\round_up[0:0]$30
+    22/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\half[65:0]$29
+    23/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\remainder[65:0]$28
+    24/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\truncated[65:0]$27
+    25/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\magnitude[65:0]$26
+    26/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\product[65:0]$25
+    27/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\biased[32:0]$24
+    28/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\right_shift[5:0]$23
+    29/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\multiplier[31:0]$22
+    30/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\bias[31:0]$21
+    31/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\accumulator[31:0]$20
+    32/48: $1$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize[7:0]$19
+    33/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\rounded[66:0]$17
+    34/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\round_up[0:0]$16
+    35/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\half[65:0]$15
+    36/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\remainder[65:0]$14
+    37/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\truncated[65:0]$13
+    38/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\magnitude[65:0]$12
+    39/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\product[65:0]$11
+    40/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\biased[32:0]$10
+    41/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\right_shift[5:0]$9
+    42/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\multiplier[31:0]$8
+    43/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\bias[31:0]$7
+    44/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\accumulator[31:0]$6
+    45/48: $0$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize[7:0]$5
+    46/48: $0\out_data_reg[7:0]
+    47/48: $0\out_tag_reg[15:0]
+    48/48: $0\out_valid_reg[0:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_requantize_int32.\out_valid_reg' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$163' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.\out_tag_reg' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$164' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.\out_data_reg' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$165' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\requantize' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$166' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\accumulator' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$167' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\bias' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$168' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\multiplier' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$169' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\right_shift' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$170' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\biased' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$171' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\product' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$172' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\magnitude' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$173' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\truncated' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$174' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\remainder' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$175' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\half' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$176' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\round_up' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$177' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_requantize_int32.$func$\requantize$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:77$1$\rounded' using process `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+  created $adff cell `$procdff$178' with positive edge clock and negative level reset.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 5 empty switches in `\gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+Removing empty process `gtsu_requantize_int32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:66$4'.
+Cleaned up 5 empty switches.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_requantize_int32.
+<suppressed ~1 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_requantize_int32'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_requantize_int32..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $ternary$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:43$50: $mul$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:42$48_Y -> { 1'0 $mul$architecture_simulator/rtl/vertical_slice/gtsu_requantize_int32.sv:42$48_Y [64:0] }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$150.
+    dead port 2/2 on $mux $procmux$150.
+    dead port 1/2 on $mux $procmux$147.
+    dead port 2/2 on $mux $procmux$147.
+    dead port 1/2 on $mux $procmux$144.
+    dead port 2/2 on $mux $procmux$144.
+    dead port 1/2 on $mux $procmux$141.
+    dead port 2/2 on $mux $procmux$141.
+    dead port 1/2 on $mux $procmux$138.
+    dead port 2/2 on $mux $procmux$138.
+    dead port 1/2 on $mux $procmux$135.
+    dead port 2/2 on $mux $procmux$135.
+    dead port 1/2 on $mux $procmux$132.
+    dead port 2/2 on $mux $procmux$132.
+    dead port 1/2 on $mux $procmux$129.
+    dead port 2/2 on $mux $procmux$129.
+    dead port 1/2 on $mux $procmux$126.
+    dead port 2/2 on $mux $procmux$126.
+    dead port 1/2 on $mux $procmux$123.
+    dead port 2/2 on $mux $procmux$123.
+    dead port 1/2 on $mux $procmux$120.
+    dead port 2/2 on $mux $procmux$120.
+    dead port 1/2 on $mux $procmux$117.
+    dead port 2/2 on $mux $procmux$117.
+    dead port 1/2 on $mux $procmux$114.
+    dead port 2/2 on $mux $procmux$114.
+    dead port 1/2 on $mux $procmux$111.
+    dead port 2/2 on $mux $procmux$111.
+    dead port 1/2 on $mux $procmux$109.
+    dead port 2/2 on $mux $procmux$109.
+    dead port 1/2 on $mux $procmux$105.
+    dead port 2/2 on $mux $procmux$105.
+    dead port 1/2 on $mux $procmux$103.
+    dead port 2/2 on $mux $procmux$103.
+    dead port 2/2 on $mux $procmux$87.
+    dead port 2/2 on $mux $procmux$81.
+    dead port 1/2 on $mux $procmux$79.
+Removed 37 multiplexer ports.
+<suppressed ~8 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_requantize_int32.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_requantize_int32'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$171 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$170 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$169 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$177 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$176 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$166 ($adff) from module gtsu_requantize_int32.
+Removing $procdff$178 ($adff) from module gtsu_requantize_int32.
+Replaced 7 DFF cells.
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_requantize_int32..
+Removed 1 unused cells and 114 unused wires.
+<suppressed ~2 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_requantize_int32.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_requantize_int32..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~7 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_requantize_int32.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_requantize_int32'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_requantize_int32..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_requantize_int32.
+
+4.16. Finished OPT passes. (There is nothing left to do.)
+
+5. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_requantize_int32..
+found and reported 0 problems.
+
+6. Printing statistics.
+
+=== gtsu_requantize_int32 ===
+
+   Number of wires:                 49
+   Number of wire bits:           1126
+   Number of public wires:          16
+   Number of public wire bits:     173
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 37
+     $add                            2
+     $adff                           3
+     $and                            1
+     $eq                             1
+     $gt                             2
+     $logic_and                      3
+     $logic_not                      2
+     $logic_or                       2
+     $lt                             1
+     $mul                            1
+     $mux                           12
+     $neg                            2
+     $shl                            2
+     $shr                            1
+     $sub                            2
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: 5d3fce4291
+CPU: user 0.15s system 0.00s, MEM: 17.78 MB total, 11.75 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 16% 2x opt_clean (0 sec), 15% 3x opt_expr (0 sec), ...

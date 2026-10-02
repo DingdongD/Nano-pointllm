@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "reference_repository": "/home/Compiler_Codes",
+  "reference_commit": "ad2c31a",
+  "source_copied": false,
+  "files": [
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/ctc/ct_cluster_ds/pp/act_bit_down.sv", "sha256": "42fdd1ffc60cb94e5e6dcfbddc1b64d88ce397143643884d526ffdc47e584c89", "use": "RNE and saturation semantics reference"},
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/epu/alu/epu_bf16_to_int8.sv", "sha256": "0ff7aef324b743af6ff4b61add3670ae2602812c52bdc9b0e7569151be2ae213", "use": "BF16-to-INT8 boundary audit"},
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/ctc/ct_cluster_ds/pp/pp_unit_ds.sv", "sha256": "8f5a0c883d99f603f5439b611c5a91bdeacfe0fbf05d98c9bf02e19df924eb03", "use": "post-accumulator pipeline-order reference"},
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/buf_mgr/lbuf_wrap_bank.sv", "sha256": "2fd5ea49154defe9ac7c5be5980413dabc4f75b3bf80500e8b1c728c97e5e920", "use": "16-bank 128-bit registered LBUF interface reference"},
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/ctc/ct_cluster_ds/common/int32_fp32.v", "sha256": "6879d2a2862c483b646b2c43163d0c4fd53126aaffc32a61bef15a38abc7f0f4", "use": "future floating dequant reference"},
+    {"path": "rtl/ACTransformer_DS/rtl/hdl/ctc/ct_cluster_ds/common/fp32_bf16.v", "sha256": "ff38026e9eaaede936f6d55aeec6faeef26acf6abc95c09f5bada301143f2b50", "use": "future BF16 output RNE reference"}
+  ],
+  "intentional_differences": [
+    "PointLLM uses symmetric [-127,127], not [-128,127]",
+    "GTSU supports arbitrary offline multiplier/shift ratios, not only power-of-two shifts",
+    "PointLLM scales are stored as FP16; the reference post-process path primarily consumes BF16 scales"
+  ]
+}

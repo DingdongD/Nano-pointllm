@@ -461,3 +461,12 @@
 - Added the shared-Dot4 dense GEMM microtile. A 64-PE `5x61x384` lock case with source/output stalls is exact against Icarus; Yosys confirms zero direct multipliers above the Dot4 instances.
 - Kept production shape control, SRAM double buffering, all-output-row correlation, and generic `dense_gemm` coverage disabled.
 - Passed the final repository regression: `203 passed, 1 skipped`.
+
+## 2026-10-01: Compiler_Codes RTL Reuse Audit Start
+- Confirmed that the existing Nano-pointllm quant/dequant numerical contract and shared-Dot4 RTL were independently implemented; no prior bit-exact `Compiler_Codes` requant/dequant mapping was claimed.
+- Pinned the local reference to `/home/Compiler_Codes@ad2c31a` and started a synthesizable-module audit covering scale buffers, DMU, MAC/EPU post-processing, GEMM control, and SRAM interfaces.
+- Added an independently implemented INT32-to-A8 requant unit informed by the reference post-processing stages. It preserves PointLLM's `[-127,127]` contract rather than the reference converter's `[-128,127]` behavior.
+- Added an FP16 scale-ratio compiler, magnitude-based ties-to-even rounding golden, elastic RTL, Icarus correlation, and Yosys checks. The 12-vector lock completes in 20 cycles with exact events and one synthesized multiplier/no divider.
+- Added a Dense M/N/K ping-pong controller and exact edge model. Representative Local Encoder, PointTransformer, projector, LLM-prefill, and partial-K-block suites all have zero cycle error.
+- Physical 16-bank SRAM payload movement, the floating BF16 dequant path, and controller+Dot4+requant composition remain fail-closed.
+- Passed the full repository regression after the new RTL slices: `209 passed, 1 skipped`.

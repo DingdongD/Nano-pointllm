@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "cases": {
+    "local_encoder_k8": {
+      "config": {
+        "m": 2,
+        "n": 70,
+        "k": 8,
+        "n_tile": 64,
+        "k_block": 8,
+        "source_stall_mod": 4,
+        "source_stall_phase": 1,
+        "compute_stall_mod": 5,
+        "compute_stall_phase": 2,
+        "max_cycles": 100000,
+        "n_tiles": 2,
+        "k_blocks": 1,
+        "total_blocks": 4
+      },
+      "cycles": 11,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true
+    },
+    "point_transformer_k384": {
+      "config": {
+        "m": 2,
+        "n": 70,
+        "k": 384,
+        "n_tile": 64,
+        "k_block": 64,
+        "source_stall_mod": 4,
+        "source_stall_phase": 1,
+        "compute_stall_mod": 5,
+        "compute_stall_phase": 2,
+        "max_cycles": 100000,
+        "n_tiles": 2,
+        "k_blocks": 6,
+        "total_blocks": 24
+      },
+      "cycles": 481,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true
+    },
+    "projector_k2048": {
+      "config": {
+        "m": 1,
+        "n": 70,
+        "k": 2048,
+        "n_tile": 64,
+        "k_block": 64,
+        "source_stall_mod": 4,
+        "source_stall_phase": 1,
+        "compute_stall_mod": 5,
+        "compute_stall_phase": 2,
+        "max_cycles": 100000,
+        "n_tiles": 2,
+        "k_blocks": 32,
+        "total_blocks": 64
+      },
+      "cycles": 1281,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true
+    },
+    "llm_prefill_k4096": {
+      "config": {
+        "m": 1,
+        "n": 70,
+        "k": 4096,
+        "n_tile": 64,
+        "k_block": 64,
+        "source_stall_mod": 4,
+        "source_stall_phase": 1,
+        "compute_stall_mod": 5,
+        "compute_stall_phase": 2,
+        "max_cycles": 100000,
+        "n_tiles": 2,
+        "k_blocks": 64,
+        "total_blocks": 128
+      },
+      "cycles": 2561,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true
+    },
+    "edge_k132": {
+      "config": {
+        "m": 3,
+        "n": 70,
+        "k": 132,
+        "n_tile": 64,
+        "k_block": 64,
+        "source_stall_mod": 4,
+        "source_stall_phase": 1,
+        "compute_stall_mod": 5,
+        "compute_stall_phase": 2,
+        "max_cycles": 100000,
+        "n_tiles": 2,
+        "k_blocks": 3,
+        "total_blocks": 18
+      },
+      "cycles": 250,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true
+    }
+  },
+  "claim_boundary": {
+    "representative_k_shape_controller_correlated": true,
+    "representative_rows_and_edge_n_tile_only": true,
+    "full_production_shape_trace_correlated": false,
+    "physical_banked_sram_integrated": false
+  }
+}

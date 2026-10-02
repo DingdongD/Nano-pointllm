@@ -72,13 +72,24 @@ COVERAGE = {
     ),
     "dense_gemm": OperatorCoverage(
         "dense_gemm", False, False, False, False,
-        "A shared-Dot4 N microtile is correlated separately, but the production "
-        "M/N controller, SRAM double buffering, DMA, and real-shape correlation "
-        "are incomplete.",
+        "Shared-Dot4, M/N/K ping-pong control, SRAM, and DMA/controller slices "
+        "are correlated separately, but their physical payload composition and "
+        "full production-shape correlation are incomplete.",
     ),
     "shared_dot4_dense_gemm_microtile": OperatorCoverage(
         "shared_dot4_dense_gemm_microtile", True, True, True, True,
         "Output-stationary N microtile with K accumulation and edge-column mask; production M/N tiling, SRAM double buffering, and real-shape controller remain incomplete.",
+    ),
+    "dense_mnk_ping_pong_controller": OperatorCoverage(
+        "dense_mnk_ping_pong_controller", True, True, True, True,
+        "M/N/K counters, edge masks, partial K blocks, and two-buffer lifecycle "
+        "are correlated; physical banked-SRAM payload reads and DMA are not integrated.",
+    ),
+    "int32_a8_requant": OperatorCoverage(
+        "int32_a8_requant", True, True, True, True,
+        "Offline FP16-scale to multiplier/shift compilation plus INT32-domain "
+        "bias, RNE, and symmetric [-127,127] saturation; floating BF16 dequant "
+        "and integration with Dense GEMM/SRAM remain incomplete.",
     ),
     "pointllm_splitk_linear": OperatorCoverage(
         "pointllm_splitk_linear", True, True, True, True,

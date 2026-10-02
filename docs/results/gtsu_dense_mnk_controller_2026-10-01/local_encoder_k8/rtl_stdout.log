@@ -1,0 +1,18 @@
+TRACE 0 LOAD_ACCEPT 0 0 0 0 0 0 0 0
+TRACE 1 READ_ISSUE 0 0 0 0 0 ffffffffffffffff 1 0
+TRACE 2 LOAD_ACCEPT 1 0 0 0 0 0 0 0
+TRACE 3 READ_ISSUE 0 0 0 0 1 ffffffffffffffff 0 1
+TRACE 3 BLOCK_RELEASE 0 0 0 0 1 ffffffffffffffff 0 1
+TRACE 4 LOAD_ACCEPT 2 0 0 0 0 0 0 0
+TRACE 4 READ_ISSUE 1 0 1 0 0 3f 1 0
+TRACE 5 READ_ISSUE 1 0 1 0 1 3f 0 1
+TRACE 5 BLOCK_RELEASE 1 0 1 0 1 3f 0 1
+TRACE 6 LOAD_ACCEPT 3 0 0 0 0 0 0 0
+TRACE 6 READ_ISSUE 2 1 0 0 0 ffffffffffffffff 1 0
+TRACE 8 READ_ISSUE 2 1 0 0 1 ffffffffffffffff 0 1
+TRACE 8 BLOCK_RELEASE 2 1 0 0 1 ffffffffffffffff 0 1
+TRACE 9 READ_ISSUE 3 1 1 0 0 3f 1 0
+TRACE 10 READ_ISSUE 3 1 1 0 1 3f 0 1
+TRACE 10 BLOCK_RELEASE 3 1 1 0 1 3f 0 1
+SUMMARY 11 4 8 4 1 1 2 4
+architecture_simulator/rtl/vertical_slice/tb_gtsu_dense_mnk_controller.sv:116: $finish called at 136 (1s)

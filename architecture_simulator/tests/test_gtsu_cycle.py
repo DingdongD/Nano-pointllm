@@ -36,6 +36,13 @@ from gtsu_cycle.shared_dot import (
 from gtsu_cycle.shared_dot_correlation import correlate_shared_dot_geometry
 from gtsu_cycle.dense_gemm import DenseTileConfig, build_dense_beats, run_dense_tile_model
 from gtsu_cycle.dense_gemm_correlation import correlate_dense_tile
+from gtsu_cycle.dense_controller import DenseControllerConfig, run_dense_controller_model
+from gtsu_cycle.dense_controller_correlation import correlate_dense_controller
+from gtsu_cycle.requant import (
+    RequantConfig, compile_fp16_requant_scale, locked_requant_vectors,
+    requantize_int32,
+)
+from gtsu_cycle.requant_correlation import correlate_requant
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -248,6 +255,33 @@ def test_dense_tile_functional_cycle_model():
     assert all(len(row) == 5 for row in result.outputs)
 
 
+def test_dense_controller_covers_mnk_edges_and_overlap():
+    config = DenseControllerConfig(m=2, n=70, k=132)
+    result = run_dense_controller_model(config)
+    reads = [event for event in result.events if event.event == "READ_ISSUE"]
+    assert result.counters["blocks_released"] == config.total_blocks
+    assert result.counters["ping_pong_overlap_cycles"] > 0
+    assert reads[0].first == 1
+    assert reads[-1].last == 1
+    assert reads[-1].column_mask == 0x3F
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    DenseControllerConfig(m=2, n=70, k=132),
+    DenseControllerConfig(
+        m=1, n=64, k=64, source_stall_mod=0, compute_stall_mod=0,
+    ),
+])
+def test_dense_controller_exactly_matches_rtl(config):
+    report = correlate_dense_controller(config, rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["synthesis_check"]["forbidden_arithmetic_cells"] == {
+        "$mod": 0, "$mul": 0, "$div": 0,
+    }
+
+
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 @pytest.mark.parametrize("config", [
     DenseTileConfig(),
@@ -259,6 +293,30 @@ def test_dense_tile_exactly_matches_rtl(config):
     assert report["functional_output_exact"] is True
     assert report["cycle_error"] == 0
     assert report["synthesis_check"]["top_direct_multipliers"] == 0
+
+
+def test_requant_locked_vectors_cover_rne_and_symmetric_saturation():
+    outputs = tuple(requantize_int32(vector) for vector in locked_requant_vectors())
+    assert outputs[3:7] == (2, 4, -2, -4)
+    assert outputs[7:9] == (127, -127)
+
+    compiled = compile_fp16_requant_scale(0.0124359, 0.0036793, 0.03125)
+    assert 0 < compiled.multiplier < (1 << 32)
+    assert 0 <= compiled.right_shift <= 63
+    assert compiled.relative_error < 1e-9
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    RequantConfig(),
+    RequantConfig(source_stall_mod=0, output_stall_mod=0),
+])
+def test_requant_exactly_matches_rtl(config):
+    report = correlate_requant(rtl_root=RTL_ROOT, config=config)
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["synthesis_check"]["multipliers"] == 1
+    assert report["synthesis_check"]["dividers"] == 0
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")

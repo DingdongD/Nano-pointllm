@@ -24,6 +24,8 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | Production decoder linear controller | Q and non-uniform-K down projection exactly RTL-correlated with DRAMsim3 traces |
 | Geometry distance tile | Signed INT16 3-D distance, elastic ready/valid, exact Python/Icarus event/value/cycle correlation |
 | Shared-Dot4 dense GEMM microtile | Output-stationary M/K stream, edge-column mask, elastic output, exact Python/Icarus value/event/cycle correlation |
+| Dense M/N/K ping-pong controller | Exact counter, edge-tile, K-block, and two-buffer lifecycle correlation for representative PointLLM K classes |
+| INT32-to-A8 requant | Offline FP16-scale compiler, INT32 bias, multiplier/shift RNE, symmetric saturation, exact Python/Icarus correlation |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
@@ -159,6 +161,17 @@ python scripts/run_dense_gemm_rtl_correlation.py \
   --rows 5 --columns 61 --n_tile 64 --k 384 \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_dense_gemm_microtile_2026-10-01
+
+# Correlate Local Encoder, PointTransformer, projector, LLM-prefill, and
+# non-divisible K-block controller cases. Payload SRAM remains a separate gate.
+python scripts/run_dense_controller_shape_suite.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_dense_mnk_controller_2026-10-01
+
+# Correlate the Compiler_Codes-informed, PointLLM-contract-specific requant unit.
+python scripts/run_requant_rtl_correlation.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_requant_compilercodes_audit_2026-10-01
 ```
 
 ## Output contract

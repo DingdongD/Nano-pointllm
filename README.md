@@ -215,7 +215,16 @@ backpressure 的 value/event/cycle 精确相关；Yosys 确认 tile 顶层无额
 [`docs/results/gtsu_dense_gemm_microtile_2026-10-01/`](docs/results/gtsu_dense_gemm_microtile_2026-10-01/README.md)
 和
 [`docs/results/pointllm_integer_linear_rtl_2026-10-01/`](docs/results/pointllm_integer_linear_rtl_2026-10-01/README.md)。
-完整 M/N 控制、SRAM 双缓冲、attention 与 vector 仍保持 fail-closed。
+完整 M/N 数据通路组合、物理 SRAM 双缓冲、attention 与 vector 仍保持 fail-closed。
+
+进一步的 `Compiler_Codes@ad2c31a` RTL 审计已固定量化后处理和 LBUF
+参考文件。新增 INT32-to-A8 requant 单元采用 FP16 scale 离线编译、RNE 和
+PointLLM 对称 `[-127,127]` 饱和；12 个边界向量 value/event/cycle 精确一致。
+Dense M/N/K ping-pong controller 也已在 `K=8/384/2048/4096` 与 partial-K
+场景精确相关。物理 SRAM payload 组合和浮点 BF16 dequant 仍未开启。证据见
+[`docs/results/gtsu_requant_compilercodes_audit_2026-10-01/`](docs/results/gtsu_requant_compilercodes_audit_2026-10-01/README.md)
+与
+[`docs/results/gtsu_dense_mnk_controller_2026-10-01/`](docs/results/gtsu_dense_mnk_controller_2026-10-01/README.md)。
 
 ```bash
 cd /home/nano-pointllm/architecture_simulator
