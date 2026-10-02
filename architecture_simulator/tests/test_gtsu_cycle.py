@@ -28,6 +28,12 @@ from gtsu_cycle.geometry import (
     run_geometry_model,
 )
 from gtsu_cycle.geometry_correlation import correlate_geometry_distance
+from gtsu_cycle.shared_dot import (
+    SharedDotBeat, SharedDotConfig, SharedDotLane, build_shared_dot_beats,
+    functional_outputs as shared_outputs, pointllm_shared_geometry_mapping,
+    run_shared_dot_model, signed_int16_product_via_int8,
+)
+from gtsu_cycle.shared_dot_correlation import correlate_shared_dot_geometry
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -182,6 +188,79 @@ def test_geometry_distance_signed_int16_extremes_match_rtl():
 
     assert report["status"] == "rtl_correlated"
     assert report["functional_output_exact"] is True
+
+
+def test_shared_dot_functional_and_cycle_outputs_match():
+    config = SharedDotConfig(
+        pe_count=4, beats=6, source_stall_mod=0,
+        output_stall_mod=2, output_stall_phase=1,
+    )
+    beats = build_shared_dot_beats(config)
+    result = run_shared_dot_model(config, beats)
+
+    assert result.outputs == shared_outputs(beats)
+    assert result.counters["feature_lanes"] == 12
+    assert result.counters["geometry_lanes"] == 12
+    mapping = pointllm_shared_geometry_mapping(64)
+    assert mapping["distance_evaluations"] == 4_194_304
+    assert mapping["distance_dot_cycles"] == 65_536
+    assert mapping["point_norm_precompute_cycles"] == 128
+    assert mapping["int16_fallback_distance_dot_cycles"] == 262_144
+
+
+@pytest.mark.parametrize("left,right", [
+    (-32768, -32768), (-32768, 32767), (32767, 32767),
+    (-1, 1), (0, 32767), (12345, -23456),
+])
+def test_signed_int16_four_int8_product_decomposition(left, right):
+    assert signed_int16_product_via_int8(left, right) == left * right
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+def test_shared_dot_signed_int8_extremes_match_rtl():
+    config = SharedDotConfig(
+        pe_count=2, beats=1, source_stall_mod=0, output_stall_mod=0,
+    )
+    lanes = (
+        SharedDotLane(
+            (-128, 127, -128, 0), (127, -128, 127, 0),
+            2 * 128**2 + 127**2, 2 * 127**2 + 128**2,
+        ),
+        SharedDotLane(
+            (127, 127, 127, 0), (-128, -128, -128, 0),
+            3 * 127**2, 3 * 128**2,
+        ),
+    )
+    report = correlate_shared_dot_geometry(
+        config, rtl_root=RTL_ROOT, beats=(SharedDotBeat(7, True, lanes),),
+    )
+
+    assert report["status"] == "rtl_correlated"
+    assert report["functional_output_exact"] is True
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    SharedDotConfig(),
+    SharedDotConfig(
+        pe_count=4, beats=7, source_stall_mod=0, output_stall_mod=0,
+    ),
+    SharedDotConfig(
+        pe_count=16, beats=6, source_stall_mod=3, source_stall_phase=0,
+        output_stall_mod=2, output_stall_phase=1,
+    ),
+])
+def test_shared_dot_geometry_exactly_matches_rtl(config):
+    report = correlate_shared_dot_geometry(config, rtl_root=RTL_ROOT)
+
+    assert report["status"] == "rtl_correlated"
+    assert report["event_trace_exact"] is True
+    assert report["counter_trace_exact"] is True
+    assert report["functional_output_exact"] is True
+    assert report["cycle_error"] == 0
+    assert report["synthesis_check"]["top_direct_multipliers"] == 0
+    assert report["synthesis_check"]["dot4_multipliers_per_instance"] == 4
+    assert report["synthesis_check"]["dot4_instances"] == config.pe_count
 
 
 def test_banked_sram_mapping_conflicts_and_data():
@@ -345,6 +424,7 @@ def test_splitk_vertical_slice_synthesizes():
             shutil.which("yosys"), "-q", "-p",
             (
                 f"read_verilog -sv {RTL_ROOT / 'gtsu_rv_fifo.sv'} "
+                f"{RTL_ROOT / 'gtsu_dot4_pe.sv'} "
                 f"{RTL_ROOT / 'gtsu_w8_splitk_gemv.sv'}; "
                 "hierarchy -check -top gtsu_w8_splitk_gemv; "
                 "proc; memory; opt; check -assert"

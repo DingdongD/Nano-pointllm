@@ -50,6 +50,18 @@ COVERAGE = {
             "KNN top-k integration are not validated."
         ),
     ),
+    "shared_int8_dot4_feature_geometry": OperatorCoverage(
+        operator="shared_int8_dot4_feature_geometry",
+        functional_model=True,
+        event_cycle_model=True,
+        synthesizable_rtl=True,
+        exact_rtl_cycle_correlation=True,
+        limitation=(
+            "Shared arithmetic slice only: INT8 dot4 plus cached-norm distance "
+            "reconstruction. Point-cloud INT8 fidelity, norm SRAM, FPS control, "
+            "and KNN top-k are not integrated."
+        ),
+    ),
     "fps": OperatorCoverage(
         "fps", False, False, False, False,
         "Distance tile is correlated, but persistent min/argmax feedback and memory integration are incomplete.",

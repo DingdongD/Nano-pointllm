@@ -1,0 +1,772 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv; hierarchy -check -top gtsu_shared_dot_geometry; chparam -set PE_COUNT 64 -set NORM_WIDTH 16 -set DIST_WIDTH 18 -set TAG_WIDTH 16 gtsu_shared_dot_geometry; hierarchy -check -top gtsu_shared_dot_geometry; proc; opt; check -assert; stat; write_json /tmp/gtsu_shared_dot_jh5auyfy/shared_dot_hierarchy.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dot4_pe'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_shared_dot_geometry'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gtsu_shared_dot_geometry
+Used module:     \gtsu_dot4_pe
+
+3.2. Analyzing design hierarchy..
+Top module:  \gtsu_shared_dot_geometry
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_shared_dot_geometry'.
+Parameter \PE_COUNT = 64
+Parameter \NORM_WIDTH = 16
+Parameter \DIST_WIDTH = 18
+Parameter \TAG_WIDTH = 16
+Generating RTLIL representation for module `$paramod\gtsu_shared_dot_geometry\PE_COUNT=64\NORM_WIDTH=16\DIST_WIDTH=18\TAG_WIDTH=16'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \gtsu_shared_dot_geometry
+Used module:     \gtsu_dot4_pe
+
+5.2. Analyzing design hierarchy..
+Top module:  \gtsu_shared_dot_geometry
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:82$667'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:82$667'.
+Cleaned up 2 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216 in module gtsu_shared_dot_geometry.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_INIT pass (extract init attributes).
+
+6.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+
+6.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$346'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$86[31:0]$347
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$351'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$87[31:0]$352
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$356'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$88[31:0]$357
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$361'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$89[31:0]$362
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$366'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$90[31:0]$367
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$371'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$91[31:0]$372
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$376'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$92[31:0]$377
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$381'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$93[31:0]$382
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$386'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$94[31:0]$387
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$391'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$95[31:0]$392
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$396'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$96[31:0]$397
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$401'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$97[31:0]$402
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$406'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$98[31:0]$407
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$411'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$99[31:0]$412
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$416'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$100[31:0]$417
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$421'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$101[31:0]$422
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$426'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$102[31:0]$427
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$431'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$103[31:0]$432
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$436'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$104[31:0]$437
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$441'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$105[31:0]$442
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$446'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$106[31:0]$447
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$451'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$107[31:0]$452
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$456'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$108[31:0]$457
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$461'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$109[31:0]$462
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$466'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$110[31:0]$467
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$471'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$111[31:0]$472
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$476'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$112[31:0]$477
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$481'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$113[31:0]$482
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$486'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$114[31:0]$487
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$491'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$115[31:0]$492
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$496'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$116[31:0]$497
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$501'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$117[31:0]$502
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$506'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$118[31:0]$507
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$511'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$119[31:0]$512
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$516'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$120[31:0]$517
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$521'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$121[31:0]$522
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$526'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$122[31:0]$527
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$531'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$123[31:0]$532
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$536'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$124[31:0]$537
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$541'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$125[31:0]$542
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$546'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$126[31:0]$547
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$551'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$127[31:0]$552
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$556'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$128[31:0]$557
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$561'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$129[31:0]$562
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$566'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$130[31:0]$567
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$571'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$131[31:0]$572
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$576'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$132[31:0]$577
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$581'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$133[31:0]$582
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$586'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$134[31:0]$587
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$591'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$135[31:0]$592
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$596'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$136[31:0]$597
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$601'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$137[31:0]$602
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$606'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$138[31:0]$607
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$611'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$139[31:0]$612
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$616'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$140[31:0]$617
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$621'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$141[31:0]$622
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$626'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$142[31:0]$627
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$631'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$143[31:0]$632
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$636'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$144[31:0]$637
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$641'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$145[31:0]$642
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$646'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$146[31:0]$647
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$651'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$147[31:0]$652
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$656'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$148[31:0]$657
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$661'.
+     1/1: $0$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$149[31:0]$662
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+     1/64: $0\pe_distance[63][17:0]
+     2/64: $0\pe_distance[62][17:0]
+     3/64: $0\pe_distance[61][17:0]
+     4/64: $0\pe_distance[60][17:0]
+     5/64: $0\pe_distance[59][17:0]
+     6/64: $0\pe_distance[58][17:0]
+     7/64: $0\pe_distance[57][17:0]
+     8/64: $0\pe_distance[56][17:0]
+     9/64: $0\pe_distance[55][17:0]
+    10/64: $0\pe_distance[54][17:0]
+    11/64: $0\pe_distance[53][17:0]
+    12/64: $0\pe_distance[52][17:0]
+    13/64: $0\pe_distance[51][17:0]
+    14/64: $0\pe_distance[50][17:0]
+    15/64: $0\pe_distance[49][17:0]
+    16/64: $0\pe_distance[48][17:0]
+    17/64: $0\pe_distance[47][17:0]
+    18/64: $0\pe_distance[46][17:0]
+    19/64: $0\pe_distance[45][17:0]
+    20/64: $0\pe_distance[44][17:0]
+    21/64: $0\pe_distance[43][17:0]
+    22/64: $0\pe_distance[42][17:0]
+    23/64: $0\pe_distance[41][17:0]
+    24/64: $0\pe_distance[40][17:0]
+    25/64: $0\pe_distance[39][17:0]
+    26/64: $0\pe_distance[38][17:0]
+    27/64: $0\pe_distance[37][17:0]
+    28/64: $0\pe_distance[36][17:0]
+    29/64: $0\pe_distance[35][17:0]
+    30/64: $0\pe_distance[34][17:0]
+    31/64: $0\pe_distance[33][17:0]
+    32/64: $0\pe_distance[32][17:0]
+    33/64: $0\pe_distance[31][17:0]
+    34/64: $0\pe_distance[30][17:0]
+    35/64: $0\pe_distance[29][17:0]
+    36/64: $0\pe_distance[28][17:0]
+    37/64: $0\pe_distance[27][17:0]
+    38/64: $0\pe_distance[26][17:0]
+    39/64: $0\pe_distance[25][17:0]
+    40/64: $0\pe_distance[24][17:0]
+    41/64: $0\pe_distance[23][17:0]
+    42/64: $0\pe_distance[22][17:0]
+    43/64: $0\pe_distance[21][17:0]
+    44/64: $0\pe_distance[20][17:0]
+    45/64: $0\pe_distance[19][17:0]
+    46/64: $0\pe_distance[18][17:0]
+    47/64: $0\pe_distance[17][17:0]
+    48/64: $0\pe_distance[16][17:0]
+    49/64: $0\pe_distance[15][17:0]
+    50/64: $0\pe_distance[14][17:0]
+    51/64: $0\pe_distance[13][17:0]
+    52/64: $0\pe_distance[12][17:0]
+    53/64: $0\pe_distance[11][17:0]
+    54/64: $0\pe_distance[10][17:0]
+    55/64: $0\pe_distance[9][17:0]
+    56/64: $0\pe_distance[8][17:0]
+    57/64: $0\pe_distance[7][17:0]
+    58/64: $0\pe_distance[6][17:0]
+    59/64: $0\pe_distance[5][17:0]
+    60/64: $0\pe_distance[4][17:0]
+    61/64: $0\pe_distance[3][17:0]
+    62/64: $0\pe_distance[2][17:0]
+    63/64: $0\pe_distance[1][17:0]
+    64/64: $0\pe_distance[0][17:0]
+Creating decoders for process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+     1/135: $3\lane[31:0]
+     2/135: $0\out_distance_reg[1151:0] [1151:1134]
+     3/135: $0\out_distance_reg[1151:0] [1133:1116]
+     4/135: $0\out_dot_reg[2047:0] [2015:1984]
+     5/135: $0\out_distance_reg[1151:0] [1115:1098]
+     6/135: $0\out_dot_reg[2047:0] [1983:1952]
+     7/135: $0\out_distance_reg[1151:0] [1097:1080]
+     8/135: $0\out_dot_reg[2047:0] [1951:1920]
+     9/135: $0\out_distance_reg[1151:0] [1079:1062]
+    10/135: $0\out_dot_reg[2047:0] [1919:1888]
+    11/135: $0\out_distance_reg[1151:0] [1061:1044]
+    12/135: $0\out_dot_reg[2047:0] [1887:1856]
+    13/135: $0\out_distance_reg[1151:0] [1043:1026]
+    14/135: $0\out_dot_reg[2047:0] [1855:1824]
+    15/135: $0\out_distance_reg[1151:0] [1025:1008]
+    16/135: $0\out_dot_reg[2047:0] [1823:1792]
+    17/135: $0\out_distance_reg[1151:0] [1007:990]
+    18/135: $0\out_dot_reg[2047:0] [1791:1760]
+    19/135: $0\out_distance_reg[1151:0] [989:972]
+    20/135: $0\out_dot_reg[2047:0] [1759:1728]
+    21/135: $0\out_distance_reg[1151:0] [971:954]
+    22/135: $0\out_dot_reg[2047:0] [1727:1696]
+    23/135: $0\out_distance_reg[1151:0] [953:936]
+    24/135: $0\out_dot_reg[2047:0] [1695:1664]
+    25/135: $0\out_distance_reg[1151:0] [935:918]
+    26/135: $0\out_dot_reg[2047:0] [1663:1632]
+    27/135: $0\out_distance_reg[1151:0] [917:900]
+    28/135: $0\out_dot_reg[2047:0] [1631:1600]
+    29/135: $0\out_distance_reg[1151:0] [899:882]
+    30/135: $0\out_dot_reg[2047:0] [1599:1568]
+    31/135: $0\out_distance_reg[1151:0] [881:864]
+    32/135: $0\out_dot_reg[2047:0] [1567:1536]
+    33/135: $0\out_distance_reg[1151:0] [863:846]
+    34/135: $0\out_dot_reg[2047:0] [1535:1504]
+    35/135: $0\out_distance_reg[1151:0] [845:828]
+    36/135: $0\out_dot_reg[2047:0] [1503:1472]
+    37/135: $0\out_distance_reg[1151:0] [827:810]
+    38/135: $0\out_dot_reg[2047:0] [1471:1440]
+    39/135: $0\out_distance_reg[1151:0] [809:792]
+    40/135: $0\out_dot_reg[2047:0] [1439:1408]
+    41/135: $0\out_distance_reg[1151:0] [791:774]
+    42/135: $0\out_dot_reg[2047:0] [1407:1376]
+    43/135: $0\out_distance_reg[1151:0] [773:756]
+    44/135: $0\out_dot_reg[2047:0] [1375:1344]
+    45/135: $0\out_distance_reg[1151:0] [755:738]
+    46/135: $0\out_dot_reg[2047:0] [1343:1312]
+    47/135: $0\out_distance_reg[1151:0] [737:720]
+    48/135: $0\out_dot_reg[2047:0] [1311:1280]
+    49/135: $0\out_distance_reg[1151:0] [719:702]
+    50/135: $0\out_dot_reg[2047:0] [1279:1248]
+    51/135: $0\out_distance_reg[1151:0] [701:684]
+    52/135: $0\out_dot_reg[2047:0] [1247:1216]
+    53/135: $0\out_distance_reg[1151:0] [683:666]
+    54/135: $0\out_dot_reg[2047:0] [1215:1184]
+    55/135: $0\out_distance_reg[1151:0] [665:648]
+    56/135: $0\out_dot_reg[2047:0] [1183:1152]
+    57/135: $0\out_distance_reg[1151:0] [647:630]
+    58/135: $0\out_dot_reg[2047:0] [1151:1120]
+    59/135: $0\out_distance_reg[1151:0] [629:612]
+    60/135: $0\out_dot_reg[2047:0] [1119:1088]
+    61/135: $0\out_distance_reg[1151:0] [611:594]
+    62/135: $0\out_dot_reg[2047:0] [1087:1056]
+    63/135: $0\out_distance_reg[1151:0] [593:576]
+    64/135: $0\out_dot_reg[2047:0] [1055:1024]
+    65/135: $0\out_distance_reg[1151:0] [575:558]
+    66/135: $0\out_dot_reg[2047:0] [1023:992]
+    67/135: $0\out_distance_reg[1151:0] [557:540]
+    68/135: $0\out_dot_reg[2047:0] [991:960]
+    69/135: $0\out_distance_reg[1151:0] [539:522]
+    70/135: $0\out_dot_reg[2047:0] [959:928]
+    71/135: $0\out_distance_reg[1151:0] [521:504]
+    72/135: $0\out_dot_reg[2047:0] [927:896]
+    73/135: $0\out_distance_reg[1151:0] [503:486]
+    74/135: $0\out_dot_reg[2047:0] [895:864]
+    75/135: $0\out_distance_reg[1151:0] [485:468]
+    76/135: $0\out_dot_reg[2047:0] [863:832]
+    77/135: $0\out_distance_reg[1151:0] [467:450]
+    78/135: $0\out_dot_reg[2047:0] [831:800]
+    79/135: $0\out_distance_reg[1151:0] [449:432]
+    80/135: $0\out_dot_reg[2047:0] [799:768]
+    81/135: $0\out_distance_reg[1151:0] [431:414]
+    82/135: $0\out_dot_reg[2047:0] [767:736]
+    83/135: $0\out_distance_reg[1151:0] [413:396]
+    84/135: $0\out_dot_reg[2047:0] [735:704]
+    85/135: $0\out_distance_reg[1151:0] [395:378]
+    86/135: $0\out_dot_reg[2047:0] [703:672]
+    87/135: $0\out_distance_reg[1151:0] [377:360]
+    88/135: $0\out_dot_reg[2047:0] [671:640]
+    89/135: $0\out_distance_reg[1151:0] [359:342]
+    90/135: $0\out_dot_reg[2047:0] [639:608]
+    91/135: $0\out_distance_reg[1151:0] [341:324]
+    92/135: $0\out_dot_reg[2047:0] [607:576]
+    93/135: $0\out_distance_reg[1151:0] [323:306]
+    94/135: $0\out_dot_reg[2047:0] [575:544]
+    95/135: $0\out_distance_reg[1151:0] [305:288]
+    96/135: $0\out_dot_reg[2047:0] [543:512]
+    97/135: $0\out_distance_reg[1151:0] [287:270]
+    98/135: $0\out_dot_reg[2047:0] [511:480]
+    99/135: $0\out_distance_reg[1151:0] [269:252]
+   100/135: $0\out_dot_reg[2047:0] [479:448]
+   101/135: $0\out_distance_reg[1151:0] [251:234]
+   102/135: $0\out_dot_reg[2047:0] [447:416]
+   103/135: $0\out_distance_reg[1151:0] [233:216]
+   104/135: $0\out_dot_reg[2047:0] [415:384]
+   105/135: $0\out_distance_reg[1151:0] [215:198]
+   106/135: $0\out_dot_reg[2047:0] [383:352]
+   107/135: $0\out_distance_reg[1151:0] [197:180]
+   108/135: $0\out_dot_reg[2047:0] [351:320]
+   109/135: $0\out_distance_reg[1151:0] [179:162]
+   110/135: $0\out_dot_reg[2047:0] [319:288]
+   111/135: $0\out_distance_reg[1151:0] [161:144]
+   112/135: $0\out_dot_reg[2047:0] [287:256]
+   113/135: $0\out_distance_reg[1151:0] [143:126]
+   114/135: $0\out_dot_reg[2047:0] [255:224]
+   115/135: $0\out_distance_reg[1151:0] [125:108]
+   116/135: $0\out_dot_reg[2047:0] [223:192]
+   117/135: $0\out_distance_reg[1151:0] [107:90]
+   118/135: $0\out_dot_reg[2047:0] [191:160]
+   119/135: $0\out_distance_reg[1151:0] [89:72]
+   120/135: $0\out_dot_reg[2047:0] [159:128]
+   121/135: $0\out_distance_reg[1151:0] [71:54]
+   122/135: $0\out_dot_reg[2047:0] [127:96]
+   123/135: $0\out_distance_reg[1151:0] [53:36]
+   124/135: $0\out_dot_reg[2047:0] [95:64]
+   125/135: $0\out_distance_reg[1151:0] [35:18]
+   126/135: $0\out_dot_reg[2047:0] [63:32]
+   127/135: $0\out_distance_reg[1151:0] [17:0]
+   128/135: $0\out_dot_reg[2047:0] [31:0]
+   129/135: $1\lane[31:0]
+   130/135: $0\lane[31:0]
+   131/135: $0\out_dot_reg[2047:0] [2047:2016]
+   132/135: $2\lane[31:0]
+   133/135: $0\out_mode_reg[0:0]
+   134/135: $0\out_tag_reg[15:0]
+   135/135: $0\out_valid_reg[0:0]
+
+6.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$86' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$346'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$87' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$351'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$88' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$356'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$89' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$361'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$90' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$366'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$91' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$371'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$92' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$376'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$93' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$381'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$94' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$386'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$95' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$391'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$96' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$396'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$97' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$401'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$98' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$406'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$99' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$411'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$100' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$416'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$101' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$421'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$102' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$426'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$103' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$431'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$104' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$436'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$105' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$441'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$106' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$446'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$107' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$451'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$108' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$456'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$109' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$461'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$110' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$466'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$111' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$471'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$112' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$476'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$113' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$481'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$114' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$486'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$115' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$491'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$116' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$496'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$117' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$501'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$118' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$506'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$119' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$511'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$120' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$516'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$121' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$521'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$122' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$526'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$123' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$531'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$124' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$536'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$125' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$541'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$126' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$546'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$127' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$551'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$128' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$556'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$129' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$561'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$130' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$566'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$131' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$571'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$132' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$576'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$133' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$581'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$134' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$586'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$135' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$591'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$136' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$596'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$137' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$601'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$138' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$606'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$139' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$611'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$140' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$616'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$141' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$621'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$142' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$626'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$143' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$631'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$144' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$636'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$145' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$641'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$146' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$646'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$147' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$651'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$148' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$656'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.$mem2bits$\pe_dot$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$149' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$661'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[0]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[1]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[2]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[3]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[4]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[5]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[6]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[7]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[8]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[9]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[10]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[11]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[12]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[13]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[14]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[15]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[16]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[17]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[18]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[19]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[20]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[21]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[22]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[23]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[24]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[25]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[26]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[27]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[28]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[29]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[30]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[31]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[32]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[33]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[34]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[35]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[36]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[37]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[38]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[39]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[40]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[41]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[42]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[43]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[44]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[45]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[46]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[47]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[48]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[49]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[50]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[51]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[52]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[53]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[54]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[55]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[56]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[57]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[58]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[59]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[60]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[61]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[62]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+No latch inferred for signal `\gtsu_shared_dot_geometry.\pe_distance[63]' from process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+
+6.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_shared_dot_geometry.\out_valid_reg' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $adff cell `$procdff$1460' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_shared_dot_geometry.\out_tag_reg' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $adff cell `$procdff$1461' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_shared_dot_geometry.\out_mode_reg' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $adff cell `$procdff$1462' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_shared_dot_geometry.\out_dot_reg' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $adff cell `$procdff$1463' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_shared_dot_geometry.\out_distance_reg' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $adff cell `$procdff$1464' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_shared_dot_geometry.\lane' using process `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+  created $dff cell `$procdff$1465' with positive edge clock.
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$346'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$351'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$356'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$361'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$366'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$371'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$376'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$381'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$386'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$391'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$396'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$401'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$406'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$411'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$416'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$421'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$426'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$431'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$436'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$441'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$446'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$451'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$456'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$461'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$466'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$471'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$476'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$481'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$486'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$491'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$496'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$501'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$506'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$511'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$516'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$521'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$526'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$531'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$536'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$541'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$546'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$551'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$556'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$561'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$566'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$571'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$576'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$581'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$586'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$591'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$596'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$601'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$606'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$611'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$616'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$621'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$626'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$631'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$636'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$641'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$646'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$651'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$656'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:36$661'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:1$666'.
+Found and cleaned up 2 empty switches in `\gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+Removing empty process `gtsu_shared_dot_geometry.$proc$architecture_simulator/rtl/vertical_slice/gtsu_shared_dot_geometry.sv:61$216'.
+Cleaned up 2 empty switches.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_shared_dot_geometry.
+<suppressed ~64 debug messages>
+Optimizing module gtsu_dot4_pe.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_shared_dot_geometry'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_shared_dot_geometry..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$672.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 1 multiplexer ports.
+<suppressed ~132 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_shared_dot_geometry.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_shared_dot_geometry'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_shared_dot_geometry..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Removed 4 unused cells and 796 unused wires.
+<suppressed ~71 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dot4_pe.
+Optimizing module gtsu_shared_dot_geometry.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \gtsu_shared_dot_geometry..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~131 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dot4_pe.
+  Optimizing cells in module \gtsu_shared_dot_geometry.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dot4_pe'.
+Finding identical cells in module `\gtsu_shared_dot_geometry'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Finding unused cells or wires in module \gtsu_shared_dot_geometry..
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dot4_pe.
+Optimizing module gtsu_shared_dot_geometry.
+
+7.16. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_dot4_pe..
+checking module gtsu_shared_dot_geometry..
+found and reported 0 problems.
+
+9. Printing statistics.
+
+=== gtsu_dot4_pe ===
+
+   Number of wires:                 18
+   Number of wire bits:            276
+   Number of public wires:          18
+   Number of public wire bits:     276
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $add                            3
+     $mul                            4
+
+=== gtsu_shared_dot_geometry ===
+
+   Number of wires:                669
+   Number of wire bits:          34846
+   Number of public wires:         405
+   Number of public wire bits:   24250
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                524
+     $add                           64
+     $adff                           5
+     $logic_not                      1
+     $logic_or                       1
+     $mux                          325
+     $sub                           64
+     gtsu_dot4_pe                   64
+
+=== design hierarchy ===
+
+   gtsu_shared_dot_geometry          1
+     gtsu_dot4_pe                   64
+
+   Number of wires:               1821
+   Number of wire bits:          52510
+   Number of public wires:        1557
+   Number of public wire bits:   41914
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                908
+     $add                          256
+     $adff                           5
+     $logic_not                      1
+     $logic_or                       1
+     $mul                          256
+     $mux                          325
+     $sub                           64
+
+10. Executing JSON backend.
+
+End of script. Logfile hash: 8a0f696b67
+CPU: user 2.65s system 0.03s, MEM: 44.37 MB total, 37.49 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 24% 2x opt_clean (0 sec), 15% 1x check (0 sec), ...

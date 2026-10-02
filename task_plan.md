@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 33 in progress
+Phase 34 in progress
 
 ## Phases
 
@@ -251,6 +251,27 @@ Phase 33 in progress
 - [x] Run the full regression, record artifacts, commit, and push
 - **Status:** complete; geometry distance is correlated, while complete FPS/KNN remain fail-closed
 
+### Phase 34: Shared SIMD4 Geometry-Feature Datapath
+- [x] Extract a reusable signed INT8 SIMD4 dot PE from the Split-K arithmetic contract
+- [x] Implement geometry norm-dot postprocessing without dedicated geometry multipliers
+- [x] Correlate feature-dot and geometry-distance modes exactly against one shared RTL hierarchy
+- [x] Preserve the existing INT16 direct-distance tile as a dedicated baseline
+- [x] Add a Yosys structural proof that geometry mode introduces zero multipliers outside the shared dot PE instances
+- [x] Map INT8 geometry work and INT16-on-INT8 fallback cycles without claiming semantic fidelity
+- [x] Run full regression and emit formal artifacts
+- [x] Commit and push
+- **Status:** complete; shared arithmetic RTL is correlated and full-model coverage remains fail-closed
+
+### Phase 35: Sequential W8A8 Contract And Fidelity Pipeline
+- [ ] Audit existing precision-sensitivity/calibration code and real dataset split support
+- [ ] Lock symmetric rounding, clipping, accumulator, scale precision, and bias/requant rules
+- [ ] Compare per-output-channel W8 against group-128 W8 under the same calibration/evaluation split
+- [ ] Implement static A8, SmoothQuant/static A8, and dynamic per-token A8 calibration paths
+- [ ] Propagate QDQ outputs sequentially through PointTransformer and all 32 LLaMA layers
+- [ ] Evaluate ModelNet and Objaverse with KL/top-1/token/exact/semantic metrics
+- [ ] Keep production W8A8 RTL disabled until both integer-golden and model-fidelity gates pass
+- **Status:** pending; contract audit starts in parallel with Phase 34
+
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
 2. Does paged KV scheduling handle memory pressure safely, including preemption?
@@ -293,6 +314,8 @@ Phase 33 in progress
 | First RTL input beat carried unknown metadata/data | Second Phase 31 correlation attempt after parser repair | Removed procedural combinational stimulus with time-zero sensitivity ambiguity; generate every beat through pure functions and continuous assignments |
 | Direct cycle-correlation scripts could not import `gtsu_cycle` | First standalone CLI execution | Add the architecture-simulator root to each script's import path so source-tree execution matches the documented command |
 | Generated trace CSVs failed `git diff --check` because Python CSV defaulted to CRLF | First Phase 31 commit attempt | Lock the trace writer to LF, regenerate both traces, and rerun exact comparison before commit |
+| Planning-log patch expected a shorter shared-direction bullet than the actual text | First Phase 34 audit update | Located the exact section and appended the audit findings without rewriting prior records |
+| Full regression failed collection on local namespace-package imports when invoked through standalone `pytest` entry points | First two Phase 34 full-suite attempts (base and PointLLM env) | Use `/opt/conda/envs/pointllm/bin/python -m pytest`, which preserves the repository root on `sys.path`; all source files were present and directly discoverable |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

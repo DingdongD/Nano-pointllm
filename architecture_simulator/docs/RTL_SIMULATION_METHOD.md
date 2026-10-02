@@ -32,6 +32,10 @@ edge-state model and synthesizable SystemVerilog.
 - Geometry distance tile: signed INT16 coordinates, widened subtraction,
   three-coordinate squared distance, elastic output backpressure, and exact
   per-lane values/events/cycles.
+- Shared feature/geometry dot fabric: one signed INT8 SIMD4 PE definition used
+  by both W8 Split-K GEMV and cached-norm geometry distance. Yosys additionally
+  requires zero direct multipliers in the geometry top and exactly four
+  multipliers in every `gtsu_dot4_pe` instance.
 
 The behavioral SRAM is not a foundry macro. Icarus is an RTL event simulator,
 not a post-layout timing simulator. Yosys acceptance is not a PPA result.
@@ -43,6 +47,12 @@ its integer golden model. PointLLM supplies floating-point coordinates, so the
 coordinate scale, saturation, tie-break behavior, FPS center-index equality,
 and KNN top-32 recall still require ModelNet/Objaverse validation before this
 datapath can make a semantic-equivalence claim.
+
+The shared INT8 slice has the same semantic limitation. Its 64-PE PointLLM
+mapping needs 65,536 ideal distance-dot issue cycles plus 128 point-norm
+precompute cycles. Exact INT16 multiplication can be decomposed into four
+signed INT8 products, giving a 262,144-cycle arithmetic lower bound, but that
+fallback has not yet been scheduled or RTL-correlated.
 
 ## PointKAN geometry reference
 

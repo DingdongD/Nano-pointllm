@@ -143,6 +143,13 @@ python scripts/run_geometry_rtl_correlation.py \
   --config configs/gtsu_geometry_rtl_lock.json \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_geometry_distance_2026-10-01
+
+# Correlate alternating feature and cached-norm geometry operations on the
+# same signed INT8 SIMD4 PE hierarchy.
+python scripts/run_shared_dot_rtl_correlation.py \
+  --config configs/gtsu_shared_dot_rtl_lock.json \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_shared_dot_geometry_2026-10-01
 ```
 
 ## Output contract
@@ -174,6 +181,13 @@ scripts/            RTL correlation and coverage entry points
 docs/               fidelity roadmap and boundaries
 tests/              shape, conservation, mapping, and CLI contracts
 ```
+
+The shared geometry path uses
+`||p-c||^2 = ||p||^2 + ||c||^2 - 2 p^T c`. Point norms are precomputed on the
+same dot fabric and stored as 16-bit values; the steady-state distance path
+reads norms and uses only the shared dot, add, subtract, and shift. This is a
+claim of shared multiplication resources only. FPS min/argmax and KNN top-k
+remain specialized structures.
 
 The W8 Split-K GEMV, geometry distance, and locked SRAM port/arbiter slices have
 executable RTL and exact event correlation. Decoder tensors now have checkpoint-backed target

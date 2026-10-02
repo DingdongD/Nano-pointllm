@@ -282,6 +282,10 @@
 - Added and passed signed INT16 extreme-value RTL correlation (`-32768` versus `32767`) to validate widened subtraction and accumulation.
 - Published the implementation and formal artifacts to `origin/main` as commit `f8e1917` (`feat: correlate PointLLM geometry distance RTL`).
 
+## 2026-10-01: Shared SIMD4 And Sequential W8A8
+- Started Phase 34 to replace the geometry performance path with norm-plus-shared-dot while retaining the direct INT16 distance tile as a baseline.
+- Added Phase 35 for a true sequential W8A8 PTQ pipeline; no production W8A8 claim is enabled by planning alone.
+
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
@@ -427,3 +431,13 @@
 - Production Q projection (`4096x4096`) matches RTL exactly at `997,858` cycles with 266,240 DMA requests, 262,144 compute bursts, 65,536 partials, 4,096 outputs, zero bank conflicts, and ROB peak 32.
 - Production down projection (`4096x11008`) matches RTL exactly at `2,755,501` cycles with 715,520 DMA requests, 704,512 compute bursts, 65,536 partials, 4,096 outputs, 217,088 bank conflicts, and ROB peak 32.
 - The exact small-shape CI case exercises conflict cooldown and variable controller parameters; arithmetic output values remain independently locked by the W8 Split-K GEMV datapath RTL.
+
+## 2026-10-01: Shared Geometry-Feature Datapath Start
+- Audited the existing precision sensitivity implementation and confirmed that it is isolated weight-only QDQ, not sequential W8A8.
+- Audited the Split-K datapath and confirmed that its multiplication loop is embedded in the GEMV module. The next RTL change extracts one signed INT8 SIMD4 primitive and requires both Split-K and geometry-dot to instantiate it.
+- Preserved the correlated INT16 direct-distance tile as the dedicated baseline; the shared geometry path will use cached norms and multiplier-free distance reconstruction.
+- Added `gtsu_dot4_pe` and refactored W8 Split-K GEMV to instantiate it in four-lane groups without changing existing value/event/cycle correlation.
+- Added a shared feature/geometry RTL top, deterministic mixed-mode trace, Python edge model, Icarus correlation, and Yosys hierarchy proof.
+- The locked 64-PE run matches 576 lane outputs exactly in 16 cycles. The hierarchy contains 64 shared PE instances and no top-level multipliers.
+- Added exact INT16 multiplication decomposition through four signed INT8 products and retained the direct INT16 tile as the dedicated baseline.
+- Full repository regression passes `191 passed, 1 skipped` under the locked PointLLM Python environment. Strict coverage accepts the shared-dot and Split-K slices while full PointLLM remains fail-closed.

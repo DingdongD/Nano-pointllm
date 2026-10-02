@@ -47,6 +47,7 @@ def correlate_splitk_gemv(
     root = Path(rtl_root)
     sources = (
         root / "gtsu_rv_fifo.sv",
+        root / "gtsu_dot4_pe.sv",
         root / "gtsu_w8_splitk_gemv.sv",
         root / "tb_gtsu_w8_splitk_gemv.sv",
     )
@@ -244,7 +245,7 @@ def _run_yosys_check(sources: tuple[Path, ...]) -> dict[str, str]:
     if not yosys:
         return {"status": "unavailable", "version": "unavailable", "log": ""}
     command = (
-        f"read_verilog -sv {sources[0]} {sources[1]}; "
+        f"read_verilog -sv {sources[0]} {sources[1]} {sources[2]}; "
         "hierarchy -check -top gtsu_w8_splitk_gemv; "
         "proc; memory; opt; check -assert; stat"
     )

@@ -149,19 +149,38 @@ module gtsu_w8_splitk_gemv #(
     wire [P_W-1:0] decoded_partition = decoded_out_data[UNPACKED_W+ACT_W+C_W +: P_W];
     wire [N_W-1:0] decoded_n = decoded_out_data[UNPACKED_W+ACT_W+C_W+P_W +: N_W];
 
-    integer dot_lane;
-    reg signed [15:0] dot_weight;
-    reg signed [7:0] dot_activation;
+    localparam integer DOT4_COUNT = LANES / 4;
+    wire signed [31:0] dot4_result [0:DOT4_COUNT-1];
+    genvar dot_group;
+    generate
+        for (dot_group = 0; dot_group < DOT4_COUNT; dot_group = dot_group + 1) begin : shared_dot4
+            wire [31:0] dot4_weight = {
+                decoded_weights[(dot_group*4+3)*16 +: 8],
+                decoded_weights[(dot_group*4+2)*16 +: 8],
+                decoded_weights[(dot_group*4+1)*16 +: 8],
+                decoded_weights[(dot_group*4+0)*16 +: 8]
+            };
+            wire [31:0] dot4_activation =
+                decoded_activation[dot_group*32 +: 32];
+            gtsu_dot4_pe dot_pe (
+                .a_data(dot4_weight),
+                .b_data(dot4_activation),
+                .dot_data(dot4_result[dot_group])
+            );
+        end
+    endgenerate
+
+    integer dot_index;
     reg signed [31:0] dot_product;
     always @* begin
         dot_product = 0;
-        dot_weight = 0;
-        dot_activation = 0;
-        for (dot_lane = 0; dot_lane < LANES; dot_lane = dot_lane + 1) begin
-            dot_weight = $signed(decoded_weights[dot_lane*16 +: 16]);
-            dot_activation = $signed(decoded_activation[dot_lane*8 +: 8]);
-            dot_product = dot_product + dot_weight * dot_activation;
-        end
+        for (dot_index = 0; dot_index < DOT4_COUNT; dot_index = dot_index + 1)
+            dot_product = dot_product + dot4_result[dot_index];
+    end
+
+    initial begin
+        if (LANES <= 0 || LANES % 4 != 0)
+            $error("LANES must be a positive multiple of four");
     end
 
     reg signed [31:0] compute_accumulator;

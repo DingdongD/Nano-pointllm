@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "operator": "shared_int8_dot4_feature_geometry",
+  "pe_count": 64,
+  "norm_width": 16,
+  "distance_width": 18,
+  "tag_width": 16,
+  "beats": 9,
+  "source_stall_mod": 4,
+  "source_stall_phase": 1,
+  "output_stall_mod": 5,
+  "output_stall_phase": 2,
+  "max_cycles": 10000
+}
