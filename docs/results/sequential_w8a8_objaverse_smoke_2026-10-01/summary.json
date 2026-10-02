@@ -1,0 +1,5769 @@
+{
+  "schema_version": "0.1",
+  "status": "sequential_w8a8_qdq_fidelity_only",
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "dataset": "objaverse",
+    "calibration_sample_ids": [
+      "8257772b0e2f408ba269264855dfea00"
+    ],
+    "evaluation_sample_ids": [
+      "3a1f027057894d1a9ecfee18752b96a2"
+    ],
+    "prompts": [
+      "Describe this 3D object in detail."
+    ],
+    "max_new_tokens": 8,
+    "components": [
+      "pointbert",
+      "projector",
+      "decoder_qkv",
+      "decoder_o",
+      "decoder_mlp",
+      "lm_head"
+    ],
+    "module_count": 283,
+    "weight_granularity": "per_output",
+    "group_size": null,
+    "activation_mode": "static"
+  },
+  "numeric_contract": {
+    "weight_bits": 8,
+    "activation_bits": 8,
+    "symmetric_min": -127,
+    "symmetric_max": 127,
+    "rounding": "round_to_nearest_ties_to_even",
+    "scale_storage": "float16",
+    "accumulator": "signed_int32",
+    "bias": "floating_point_after_dequantization",
+    "nonlinear_norm_residual": "bf16_or_fp16"
+  },
+  "aggregate": {
+    "kl_mean": 0.011679116636514664,
+    "kl_max": 0.037336111068725586,
+    "top1_agreement": 1.0,
+    "logit_rmse": 0.7241944670677185,
+    "free_generation_token_match": 1.0,
+    "free_generation_exact_match": 1.0
+  },
+  "cases": [
+    {
+      "kl_mean": 0.011679116636514664,
+      "kl_max": 0.037336111068725586,
+      "top1_agreement": 1.0,
+      "reference_margin_mean": 3.484375,
+      "candidate_margin_mean": 3.390625,
+      "logit_rmse": 0.7241944670677185,
+      "sample_id": "3a1f027057894d1a9ecfee18752b96a2",
+      "prompt_id": "prompt-0",
+      "prompt": "Describe this 3D object in detail.",
+      "reference_generated": [
+        450,
+        29871,
+        29941,
+        29928,
+        1203,
+        1904,
+        338,
+        263
+      ],
+      "candidate_generated": [
+        450,
+        29871,
+        29941,
+        29928,
+        1203,
+        1904,
+        338,
+        263
+      ],
+      "free_generation_token_match": 1.0,
+      "free_generation_exact_match": true,
+      "candidate_text": "The 3D object model is a"
+    }
+  ],
+  "weight_summary": {
+    "per_output": {
+      "parameters": 6639776896,
+      "modules": 283,
+      "parameter_weighted_rmse": 0.00021772050812683772
+    }
+  },
+  "module_weight_reports": {
+    "point_backbone.encoder.first_conv.0": {
+      "shape": [
+        128,
+        6,
+        1
+      ],
+      "parameters": 768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        128
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004385377687867731
+    },
+    "point_backbone.encoder.first_conv.3": {
+      "shape": [
+        256,
+        128,
+        1
+      ],
+      "parameters": 32768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        256
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0005595193360932171
+    },
+    "point_backbone.encoder.second_conv.0": {
+      "shape": [
+        512,
+        512,
+        1
+      ],
+      "parameters": 262144,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        512
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0005026419530622661
+    },
+    "point_backbone.encoder.second_conv.3": {
+      "shape": [
+        256,
+        512,
+        1
+      ],
+      "parameters": 131072,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        256
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004551117599476129
+    },
+    "point_backbone.reduce_dim": {
+      "shape": [
+        384,
+        256
+      ],
+      "parameters": 98304,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00029775191796943545
+    },
+    "point_backbone.pos_embed.0": {
+      "shape": [
+        128,
+        3
+      ],
+      "parameters": 384,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        128
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000526011863257736
+    },
+    "point_backbone.pos_embed.2": {
+      "shape": [
+        384,
+        128
+      ],
+      "parameters": 49152,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00025350882788188756
+    },
+    "point_backbone.blocks.blocks.0.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003441054723225534
+    },
+    "point_backbone.blocks.blocks.0.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00035175838274881244
+    },
+    "point_backbone.blocks.blocks.0.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003234483883716166
+    },
+    "point_backbone.blocks.blocks.0.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027690912247635424
+    },
+    "point_backbone.blocks.blocks.1.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00034038073499687016
+    },
+    "point_backbone.blocks.blocks.1.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003596237802412361
+    },
+    "point_backbone.blocks.blocks.1.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003271150926593691
+    },
+    "point_backbone.blocks.blocks.1.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027983967447653413
+    },
+    "point_backbone.blocks.blocks.2.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003643643867690116
+    },
+    "point_backbone.blocks.blocks.2.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003887018538080156
+    },
+    "point_backbone.blocks.blocks.2.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003519386809784919
+    },
+    "point_backbone.blocks.blocks.2.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00029660097789019346
+    },
+    "point_backbone.blocks.blocks.3.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003719027736224234
+    },
+    "point_backbone.blocks.blocks.3.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004016527673229575
+    },
+    "point_backbone.blocks.blocks.3.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00034699655952863395
+    },
+    "point_backbone.blocks.blocks.3.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00029811609419994056
+    },
+    "point_backbone.blocks.blocks.4.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00037229523877613246
+    },
+    "point_backbone.blocks.blocks.4.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00039410038152709603
+    },
+    "point_backbone.blocks.blocks.4.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00035816282615996897
+    },
+    "point_backbone.blocks.blocks.4.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00029698782600462437
+    },
+    "point_backbone.blocks.blocks.5.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003736454527825117
+    },
+    "point_backbone.blocks.blocks.5.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004065671528223902
+    },
+    "point_backbone.blocks.blocks.5.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003560313780326396
+    },
+    "point_backbone.blocks.blocks.5.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000307135604089126
+    },
+    "point_backbone.blocks.blocks.6.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00037127689574845135
+    },
+    "point_backbone.blocks.blocks.6.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004164291312918067
+    },
+    "point_backbone.blocks.blocks.6.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003503362531773746
+    },
+    "point_backbone.blocks.blocks.6.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00031469244277104735
+    },
+    "point_backbone.blocks.blocks.7.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003719220112543553
+    },
+    "point_backbone.blocks.blocks.7.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004262582224328071
+    },
+    "point_backbone.blocks.blocks.7.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003485445340629667
+    },
+    "point_backbone.blocks.blocks.7.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00031890664831735194
+    },
+    "point_backbone.blocks.blocks.8.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00037003171746619046
+    },
+    "point_backbone.blocks.blocks.8.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00044542679097503424
+    },
+    "point_backbone.blocks.blocks.8.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00034659935045056045
+    },
+    "point_backbone.blocks.blocks.8.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000309302267851308
+    },
+    "point_backbone.blocks.blocks.9.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003688557480927557
+    },
+    "point_backbone.blocks.blocks.9.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004635223012883216
+    },
+    "point_backbone.blocks.blocks.9.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00034926075022667646
+    },
+    "point_backbone.blocks.blocks.9.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003163855872116983
+    },
+    "point_backbone.blocks.blocks.10.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00037594474270008504
+    },
+    "point_backbone.blocks.blocks.10.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004958955105394125
+    },
+    "point_backbone.blocks.blocks.10.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003533629060257226
+    },
+    "point_backbone.blocks.blocks.10.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003191462892573327
+    },
+    "point_backbone.blocks.blocks.11.mlp.fc1": {
+      "shape": [
+        1536,
+        384
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1536
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00038386843516491354
+    },
+    "point_backbone.blocks.blocks.11.mlp.fc2": {
+      "shape": [
+        384,
+        1536
+      ],
+      "parameters": 589824,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0005303175421431661
+    },
+    "point_backbone.blocks.blocks.11.attn.qkv": {
+      "shape": [
+        1152,
+        384
+      ],
+      "parameters": 442368,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1152
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000363579805707559
+    },
+    "point_backbone.blocks.blocks.11.attn.proj": {
+      "shape": [
+        384,
+        384
+      ],
+      "parameters": 147456,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        384
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003376778622623533
+    },
+    "point_proj.0": {
+      "shape": [
+        1024,
+        384
+      ],
+      "parameters": 393216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        1024
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0009484868496656418
+    },
+    "point_proj.2": {
+      "shape": [
+        2048,
+        1024
+      ],
+      "parameters": 2097152,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        2048
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0009291968308389187
+    },
+    "point_proj.4": {
+      "shape": [
+        4096,
+        2048
+      ],
+      "parameters": 8388608,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000987995765171945
+    },
+    "layers.0.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0005154769751243293
+    },
+    "layers.0.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0005099728587083519
+    },
+    "layers.0.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001235978415934369
+    },
+    "layers.1.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003613510634750128
+    },
+    "layers.1.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000383232778403908
+    },
+    "layers.1.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00010753962851595134
+    },
+    "layers.2.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003875458496622741
+    },
+    "layers.2.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00040537473978474736
+    },
+    "layers.2.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00012499911827035248
+    },
+    "layers.3.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004215108638163656
+    },
+    "layers.3.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000319786136969924
+    },
+    "layers.3.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00014902105613145977
+    },
+    "layers.4.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0004328360373619944
+    },
+    "layers.4.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003065339697059244
+    },
+    "layers.4.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00014886374992784113
+    },
+    "layers.5.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003406032919883728
+    },
+    "layers.5.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00028195121558383107
+    },
+    "layers.5.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015151698607951403
+    },
+    "layers.6.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003211513685528189
+    },
+    "layers.6.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00028150936122983694
+    },
+    "layers.6.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015263573732227087
+    },
+    "layers.7.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00030697989859618247
+    },
+    "layers.7.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027466934989206493
+    },
+    "layers.7.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015651083958800882
+    },
+    "layers.8.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002889283641707152
+    },
+    "layers.8.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00026810431154444814
+    },
+    "layers.8.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015593842545058578
+    },
+    "layers.9.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002769750717561692
+    },
+    "layers.9.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000257155392318964
+    },
+    "layers.9.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001555825729155913
+    },
+    "layers.10.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002732621505856514
+    },
+    "layers.10.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000260828499449417
+    },
+    "layers.10.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000160059382324107
+    },
+    "layers.11.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00028103578370064497
+    },
+    "layers.11.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027061812579631805
+    },
+    "layers.11.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001684830494923517
+    },
+    "layers.12.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002643491025082767
+    },
+    "layers.12.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00025693795760162175
+    },
+    "layers.12.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00016334126121364534
+    },
+    "layers.13.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002641252940520644
+    },
+    "layers.13.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00025120077771134675
+    },
+    "layers.13.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00017022507381625473
+    },
+    "layers.14.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002692321431823075
+    },
+    "layers.14.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002520377456676215
+    },
+    "layers.14.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00017224416660610586
+    },
+    "layers.15.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00026686990167945623
+    },
+    "layers.15.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002565110335126519
+    },
+    "layers.15.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001708079653326422
+    },
+    "layers.16.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002731761196628213
+    },
+    "layers.16.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002534747472964227
+    },
+    "layers.16.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018113115220330656
+    },
+    "layers.17.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00026677566347643733
+    },
+    "layers.17.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002504127041902393
+    },
+    "layers.17.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018250165157951415
+    },
+    "layers.18.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002700384065974504
+    },
+    "layers.18.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002466396545059979
+    },
+    "layers.18.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018126641225535423
+    },
+    "layers.19.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002737562172114849
+    },
+    "layers.19.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002441850956529379
+    },
+    "layers.19.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018975266721099615
+    },
+    "layers.20.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027995448908768594
+    },
+    "layers.20.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002467322919983417
+    },
+    "layers.20.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019540663924999535
+    },
+    "layers.21.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027679320191964507
+    },
+    "layers.21.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002446736325509846
+    },
+    "layers.21.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019621977116912603
+    },
+    "layers.22.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002833833859767765
+    },
+    "layers.22.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00024478769046254456
+    },
+    "layers.22.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001956460764631629
+    },
+    "layers.23.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002775329921860248
+    },
+    "layers.23.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00024377802037633955
+    },
+    "layers.23.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020302207849454135
+    },
+    "layers.24.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002848604926839471
+    },
+    "layers.24.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002444511919748038
+    },
+    "layers.24.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020473604672588408
+    },
+    "layers.25.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00028533764998428524
+    },
+    "layers.25.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00024301290977746248
+    },
+    "layers.25.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020546274026855826
+    },
+    "layers.26.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00028194894548505545
+    },
+    "layers.26.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00024006787862163037
+    },
+    "layers.26.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021158877643756568
+    },
+    "layers.27.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002979643759317696
+    },
+    "layers.27.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023907636932563037
+    },
+    "layers.27.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021595979342237115
+    },
+    "layers.28.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002912800991907716
+    },
+    "layers.28.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002410934685030952
+    },
+    "layers.28.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002171467785956338
+    },
+    "layers.29.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00029413949232548475
+    },
+    "layers.29.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023392947332467884
+    },
+    "layers.29.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000223532784730196
+    },
+    "layers.30.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0003147828101646155
+    },
+    "layers.30.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023958756355568767
+    },
+    "layers.30.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00022120476933196187
+    },
+    "layers.31.self_attn.q_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00027264285017736256
+    },
+    "layers.31.self_attn.k_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00025863113114610314
+    },
+    "layers.31.self_attn.v_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002093122311634943
+    },
+    "layers.0.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00013873889110982418
+    },
+    "layers.1.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00013467577809933573
+    },
+    "layers.2.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001433017896488309
+    },
+    "layers.3.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001565913698868826
+    },
+    "layers.4.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015637326578143984
+    },
+    "layers.5.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001578842638991773
+    },
+    "layers.6.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001596172951394692
+    },
+    "layers.7.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00016260717529803514
+    },
+    "layers.8.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001602316042408347
+    },
+    "layers.9.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015889790665823966
+    },
+    "layers.10.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00016613541811238974
+    },
+    "layers.11.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001752765674609691
+    },
+    "layers.12.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001729672949295491
+    },
+    "layers.13.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00017900839156936854
+    },
+    "layers.14.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001774035772541538
+    },
+    "layers.15.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001760363084031269
+    },
+    "layers.16.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018544387421570718
+    },
+    "layers.17.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001858911127783358
+    },
+    "layers.18.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001839058822952211
+    },
+    "layers.19.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019503301882650703
+    },
+    "layers.20.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019776188128162175
+    },
+    "layers.21.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020007639250252396
+    },
+    "layers.22.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002021959808189422
+    },
+    "layers.23.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020657772256527096
+    },
+    "layers.24.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002063934807665646
+    },
+    "layers.25.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021046437905170023
+    },
+    "layers.26.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021407916210591793
+    },
+    "layers.27.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00022374173568096012
+    },
+    "layers.28.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023233670799527317
+    },
+    "layers.29.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023977532691787928
+    },
+    "layers.30.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023647664056625217
+    },
+    "layers.31.self_attn.o_proj": {
+      "shape": [
+        4096,
+        4096
+      ],
+      "parameters": 16777216,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00022377904679160565
+    },
+    "layers.0.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00016380079614464194
+    },
+    "layers.0.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00015020179853308946
+    },
+    "layers.0.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020143047731835395
+    },
+    "layers.1.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019655274809338152
+    },
+    "layers.1.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018456576799508184
+    },
+    "layers.1.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020920313545502722
+    },
+    "layers.2.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002043517306447029
+    },
+    "layers.2.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018593641289044172
+    },
+    "layers.2.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021728391584474593
+    },
+    "layers.3.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002078283578157425
+    },
+    "layers.3.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00018951365200337023
+    },
+    "layers.3.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002059022372122854
+    },
+    "layers.4.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002106616011587903
+    },
+    "layers.4.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001907115220092237
+    },
+    "layers.4.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021097157150506973
+    },
+    "layers.5.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021380804537329823
+    },
+    "layers.5.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019038778555113822
+    },
+    "layers.5.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002011660108109936
+    },
+    "layers.6.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021286550327204168
+    },
+    "layers.6.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001921448128996417
+    },
+    "layers.6.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002043706481344998
+    },
+    "layers.7.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021012495562899858
+    },
+    "layers.7.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019244833674747497
+    },
+    "layers.7.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002051238261628896
+    },
+    "layers.8.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020930393657181412
+    },
+    "layers.8.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001931458682520315
+    },
+    "layers.8.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020364439114928246
+    },
+    "layers.9.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020653719548135996
+    },
+    "layers.9.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019500349299050868
+    },
+    "layers.9.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020684041373897344
+    },
+    "layers.10.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020404647511895746
+    },
+    "layers.10.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019599191728048027
+    },
+    "layers.10.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020852280431427062
+    },
+    "layers.11.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020388085977174342
+    },
+    "layers.11.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019828049698844552
+    },
+    "layers.11.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021160657342988998
+    },
+    "layers.12.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020541268168017268
+    },
+    "layers.12.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001980722590815276
+    },
+    "layers.12.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021021554130129516
+    },
+    "layers.13.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020332552958279848
+    },
+    "layers.13.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020017496717628092
+    },
+    "layers.13.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021050525538157672
+    },
+    "layers.14.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020316439622547477
+    },
+    "layers.14.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020088558085262775
+    },
+    "layers.14.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021439522970467806
+    },
+    "layers.15.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002024847490247339
+    },
+    "layers.15.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001994529302464798
+    },
+    "layers.15.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021420537086669356
+    },
+    "layers.16.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002042039850493893
+    },
+    "layers.16.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001994887279579416
+    },
+    "layers.16.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021546095376834273
+    },
+    "layers.17.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000203767282073386
+    },
+    "layers.17.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019980821525678039
+    },
+    "layers.17.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021504441974684596
+    },
+    "layers.18.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020561205747071654
+    },
+    "layers.18.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001986901042982936
+    },
+    "layers.18.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021240364003460854
+    },
+    "layers.19.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000206950688152574
+    },
+    "layers.19.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019828056974802166
+    },
+    "layers.19.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000211125603527762
+    },
+    "layers.20.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020793825387954712
+    },
+    "layers.20.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001982582762138918
+    },
+    "layers.20.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002139248390449211
+    },
+    "layers.21.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020759768085554242
+    },
+    "layers.21.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0001975468039745465
+    },
+    "layers.21.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020947723533026874
+    },
+    "layers.22.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020820660574827343
+    },
+    "layers.22.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019883715140167624
+    },
+    "layers.22.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021163448400329798
+    },
+    "layers.23.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002085286396322772
+    },
+    "layers.23.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019881931075360626
+    },
+    "layers.23.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021227980323601514
+    },
+    "layers.24.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020825632964260876
+    },
+    "layers.24.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00019984872778877616
+    },
+    "layers.24.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021484142052941024
+    },
+    "layers.25.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002086263702949509
+    },
+    "layers.25.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020015727204736322
+    },
+    "layers.25.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002138906711479649
+    },
+    "layers.26.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020952033810317516
+    },
+    "layers.26.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002028422459261492
+    },
+    "layers.26.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021516450215131044
+    },
+    "layers.27.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021003907022532076
+    },
+    "layers.27.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002042834967141971
+    },
+    "layers.27.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021881888096686453
+    },
+    "layers.28.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020880672673229128
+    },
+    "layers.28.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020446845155674964
+    },
+    "layers.28.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00022667345183435827
+    },
+    "layers.29.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021054563694633543
+    },
+    "layers.29.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00020645269250962883
+    },
+    "layers.29.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023715663701295853
+    },
+    "layers.30.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00021461010328494012
+    },
+    "layers.30.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002116138202836737
+    },
+    "layers.30.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002480683906469494
+    },
+    "layers.31.mlp.gate_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00023110861366149038
+    },
+    "layers.31.mlp.up_proj": {
+      "shape": [
+        11008,
+        4096
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        11008
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.00022684293799102306
+    },
+    "layers.31.mlp.down_proj": {
+      "shape": [
+        4096,
+        11008
+      ],
+      "parameters": 45088768,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        4096
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.000267402472672984
+    },
+    "lm_head": {
+      "shape": [
+        32003,
+        4096
+      ],
+      "parameters": 131084288,
+      "granularity": "per_output",
+      "group_size": null,
+      "scale_shape": [
+        32003
+      ],
+      "quantized_min": -127,
+      "quantized_max": 127,
+      "rmse": 0.0002191359526477754
+    }
+  },
+  "activation_calibration": {
+    "point_backbone.encoder.first_conv.0": {
+      "absmax": 1.0,
+      "static_scale_fp16": 0.00787353515625,
+      "samples": 12288
+    },
+    "point_backbone.encoder.first_conv.3": {
+      "absmax": 6.25,
+      "static_scale_fp16": 0.049224853515625,
+      "samples": 262144
+    },
+    "point_backbone.encoder.second_conv.0": {
+      "absmax": 5.5625,
+      "static_scale_fp16": 0.043792724609375,
+      "samples": 1048576
+    },
+    "point_backbone.encoder.second_conv.3": {
+      "absmax": 7.09375,
+      "static_scale_fp16": 0.05584716796875,
+      "samples": 1048576
+    },
+    "point_backbone.reduce_dim": {
+      "absmax": 3.84375,
+      "static_scale_fp16": 0.0302581787109375,
+      "samples": 2048
+    },
+    "point_backbone.pos_embed.0": {
+      "absmax": 0.9609375,
+      "static_scale_fp16": 0.007564544677734375,
+      "samples": 2048
+    },
+    "point_backbone.pos_embed.2": {
+      "absmax": 0.322265625,
+      "static_scale_fp16": 0.002536773681640625,
+      "samples": 2048
+    },
+    "point_backbone.blocks.blocks.0.attn.qkv": {
+      "absmax": 4.65625,
+      "static_scale_fp16": 0.036651611328125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.0.attn.proj": {
+      "absmax": 1.9453125,
+      "static_scale_fp16": 0.01531982421875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.0.mlp.fc1": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.0.mlp.fc2": {
+      "absmax": 5.71875,
+      "static_scale_fp16": 0.0450439453125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.1.attn.qkv": {
+      "absmax": 6.8125,
+      "static_scale_fp16": 0.05364990234375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.1.attn.proj": {
+      "absmax": 2.171875,
+      "static_scale_fp16": 0.0171051025390625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.1.mlp.fc1": {
+      "absmax": 7.53125,
+      "static_scale_fp16": 0.059295654296875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.1.mlp.fc2": {
+      "absmax": 3.046875,
+      "static_scale_fp16": 0.02398681640625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.2.attn.qkv": {
+      "absmax": 5.875,
+      "static_scale_fp16": 0.0462646484375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.2.attn.proj": {
+      "absmax": 2.671875,
+      "static_scale_fp16": 0.0210418701171875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.2.mlp.fc1": {
+      "absmax": 10.0,
+      "static_scale_fp16": 0.0787353515625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.2.mlp.fc2": {
+      "absmax": 2.875,
+      "static_scale_fp16": 0.02264404296875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.3.attn.qkv": {
+      "absmax": 7.125,
+      "static_scale_fp16": 0.05609130859375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.3.attn.proj": {
+      "absmax": 1.4765625,
+      "static_scale_fp16": 0.011627197265625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.3.mlp.fc1": {
+      "absmax": 10.375,
+      "static_scale_fp16": 0.0816650390625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.3.mlp.fc2": {
+      "absmax": 3.46875,
+      "static_scale_fp16": 0.027313232421875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.4.attn.qkv": {
+      "absmax": 5.59375,
+      "static_scale_fp16": 0.044036865234375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.4.attn.proj": {
+      "absmax": 3.546875,
+      "static_scale_fp16": 0.027923583984375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.4.mlp.fc1": {
+      "absmax": 9.125,
+      "static_scale_fp16": 0.07183837890625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.4.mlp.fc2": {
+      "absmax": 4.15625,
+      "static_scale_fp16": 0.03271484375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.5.attn.qkv": {
+      "absmax": 7.53125,
+      "static_scale_fp16": 0.059295654296875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.5.attn.proj": {
+      "absmax": 2.078125,
+      "static_scale_fp16": 0.016357421875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.5.mlp.fc1": {
+      "absmax": 9.125,
+      "static_scale_fp16": 0.07183837890625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.5.mlp.fc2": {
+      "absmax": 3.625,
+      "static_scale_fp16": 0.0285491943359375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.6.attn.qkv": {
+      "absmax": 7.4375,
+      "static_scale_fp16": 0.058563232421875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.6.attn.proj": {
+      "absmax": 1.9375,
+      "static_scale_fp16": 0.0152587890625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.6.mlp.fc1": {
+      "absmax": 10.1875,
+      "static_scale_fp16": 0.0802001953125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.6.mlp.fc2": {
+      "absmax": 4.4375,
+      "static_scale_fp16": 0.034942626953125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.7.attn.qkv": {
+      "absmax": 7.71875,
+      "static_scale_fp16": 0.060791015625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.7.attn.proj": {
+      "absmax": 2.28125,
+      "static_scale_fp16": 0.0179595947265625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.7.mlp.fc1": {
+      "absmax": 9.3125,
+      "static_scale_fp16": 0.07330322265625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.7.mlp.fc2": {
+      "absmax": 3.90625,
+      "static_scale_fp16": 0.03076171875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.8.attn.qkv": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.8.attn.proj": {
+      "absmax": 1.515625,
+      "static_scale_fp16": 0.011932373046875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.8.mlp.fc1": {
+      "absmax": 8.9375,
+      "static_scale_fp16": 0.07037353515625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.8.mlp.fc2": {
+      "absmax": 5.46875,
+      "static_scale_fp16": 0.043060302734375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.9.attn.qkv": {
+      "absmax": 8.125,
+      "static_scale_fp16": 0.06396484375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.9.attn.proj": {
+      "absmax": 1.8515625,
+      "static_scale_fp16": 0.01457977294921875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.9.mlp.fc1": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.9.mlp.fc2": {
+      "absmax": 7.71875,
+      "static_scale_fp16": 0.060791015625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.10.attn.qkv": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.10.attn.proj": {
+      "absmax": 2.125,
+      "static_scale_fp16": 0.0167388916015625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.10.mlp.fc1": {
+      "absmax": 11.0,
+      "static_scale_fp16": 0.08660888671875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.10.mlp.fc2": {
+      "absmax": 14.5,
+      "static_scale_fp16": 0.11419677734375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.11.attn.qkv": {
+      "absmax": 6.625,
+      "static_scale_fp16": 0.052154541015625,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.11.attn.proj": {
+      "absmax": 2.03125,
+      "static_scale_fp16": 0.0159912109375,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.11.mlp.fc1": {
+      "absmax": 10.5,
+      "static_scale_fp16": 0.08270263671875,
+      "samples": 2052
+    },
+    "point_backbone.blocks.blocks.11.mlp.fc2": {
+      "absmax": 13.0,
+      "static_scale_fp16": 0.10235595703125,
+      "samples": 2052
+    },
+    "point_proj.0": {
+      "absmax": 3.453125,
+      "static_scale_fp16": 0.027191162109375,
+      "samples": 4104
+    },
+    "point_proj.2": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 4104
+    },
+    "point_proj.4": {
+      "absmax": 15.3125,
+      "static_scale_fp16": 0.12054443359375,
+      "samples": 4104
+    },
+    "layers.0.self_attn.q_proj": {
+      "absmax": 5.1875,
+      "static_scale_fp16": 0.04083251953125,
+      "samples": 2288
+    },
+    "layers.0.self_attn.k_proj": {
+      "absmax": 5.1875,
+      "static_scale_fp16": 0.04083251953125,
+      "samples": 2288
+    },
+    "layers.0.self_attn.v_proj": {
+      "absmax": 5.1875,
+      "static_scale_fp16": 0.04083251953125,
+      "samples": 2288
+    },
+    "layers.0.self_attn.o_proj": {
+      "absmax": 1.2109375,
+      "static_scale_fp16": 0.0095367431640625,
+      "samples": 2288
+    },
+    "layers.0.mlp.gate_proj": {
+      "absmax": 1.546875,
+      "static_scale_fp16": 0.012176513671875,
+      "samples": 2288
+    },
+    "layers.0.mlp.up_proj": {
+      "absmax": 1.546875,
+      "static_scale_fp16": 0.012176513671875,
+      "samples": 2288
+    },
+    "layers.0.mlp.down_proj": {
+      "absmax": 5.625,
+      "static_scale_fp16": 0.044281005859375,
+      "samples": 2288
+    },
+    "layers.1.self_attn.q_proj": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2288
+    },
+    "layers.1.self_attn.k_proj": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2288
+    },
+    "layers.1.self_attn.v_proj": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2288
+    },
+    "layers.1.self_attn.o_proj": {
+      "absmax": 0.7578125,
+      "static_scale_fp16": 0.0059661865234375,
+      "samples": 2288
+    },
+    "layers.1.mlp.gate_proj": {
+      "absmax": 3.234375,
+      "static_scale_fp16": 0.0254669189453125,
+      "samples": 2288
+    },
+    "layers.1.mlp.up_proj": {
+      "absmax": 3.234375,
+      "static_scale_fp16": 0.0254669189453125,
+      "samples": 2288
+    },
+    "layers.1.mlp.down_proj": {
+      "absmax": 8.9375,
+      "static_scale_fp16": 0.07037353515625,
+      "samples": 2288
+    },
+    "layers.2.self_attn.q_proj": {
+      "absmax": 7.09375,
+      "static_scale_fp16": 0.05584716796875,
+      "samples": 2288
+    },
+    "layers.2.self_attn.k_proj": {
+      "absmax": 7.09375,
+      "static_scale_fp16": 0.05584716796875,
+      "samples": 2288
+    },
+    "layers.2.self_attn.v_proj": {
+      "absmax": 7.09375,
+      "static_scale_fp16": 0.05584716796875,
+      "samples": 2288
+    },
+    "layers.2.self_attn.o_proj": {
+      "absmax": 2.640625,
+      "static_scale_fp16": 0.0207977294921875,
+      "samples": 2288
+    },
+    "layers.2.mlp.gate_proj": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2288
+    },
+    "layers.2.mlp.up_proj": {
+      "absmax": 8.1875,
+      "static_scale_fp16": 0.064453125,
+      "samples": 2288
+    },
+    "layers.2.mlp.down_proj": {
+      "absmax": 548.0,
+      "static_scale_fp16": 4.31640625,
+      "samples": 2288
+    },
+    "layers.3.self_attn.q_proj": {
+      "absmax": 11.75,
+      "static_scale_fp16": 0.092529296875,
+      "samples": 2288
+    },
+    "layers.3.self_attn.k_proj": {
+      "absmax": 11.75,
+      "static_scale_fp16": 0.092529296875,
+      "samples": 2288
+    },
+    "layers.3.self_attn.v_proj": {
+      "absmax": 11.75,
+      "static_scale_fp16": 0.092529296875,
+      "samples": 2288
+    },
+    "layers.3.self_attn.o_proj": {
+      "absmax": 1.2578125,
+      "static_scale_fp16": 0.0099029541015625,
+      "samples": 2288
+    },
+    "layers.3.mlp.gate_proj": {
+      "absmax": 6.46875,
+      "static_scale_fp16": 0.050933837890625,
+      "samples": 2288
+    },
+    "layers.3.mlp.up_proj": {
+      "absmax": 6.46875,
+      "static_scale_fp16": 0.050933837890625,
+      "samples": 2288
+    },
+    "layers.3.mlp.down_proj": {
+      "absmax": 2.359375,
+      "static_scale_fp16": 0.018585205078125,
+      "samples": 2288
+    },
+    "layers.4.self_attn.q_proj": {
+      "absmax": 14.5,
+      "static_scale_fp16": 0.11419677734375,
+      "samples": 2288
+    },
+    "layers.4.self_attn.k_proj": {
+      "absmax": 14.5,
+      "static_scale_fp16": 0.11419677734375,
+      "samples": 2288
+    },
+    "layers.4.self_attn.v_proj": {
+      "absmax": 14.5,
+      "static_scale_fp16": 0.11419677734375,
+      "samples": 2288
+    },
+    "layers.4.self_attn.o_proj": {
+      "absmax": 1.234375,
+      "static_scale_fp16": 0.0097198486328125,
+      "samples": 2288
+    },
+    "layers.4.mlp.gate_proj": {
+      "absmax": 14.3125,
+      "static_scale_fp16": 0.1126708984375,
+      "samples": 2288
+    },
+    "layers.4.mlp.up_proj": {
+      "absmax": 14.3125,
+      "static_scale_fp16": 0.1126708984375,
+      "samples": 2288
+    },
+    "layers.4.mlp.down_proj": {
+      "absmax": 18.875,
+      "static_scale_fp16": 0.148681640625,
+      "samples": 2288
+    },
+    "layers.5.self_attn.q_proj": {
+      "absmax": 13.375,
+      "static_scale_fp16": 0.10528564453125,
+      "samples": 2288
+    },
+    "layers.5.self_attn.k_proj": {
+      "absmax": 13.375,
+      "static_scale_fp16": 0.10528564453125,
+      "samples": 2288
+    },
+    "layers.5.self_attn.v_proj": {
+      "absmax": 13.375,
+      "static_scale_fp16": 0.10528564453125,
+      "samples": 2288
+    },
+    "layers.5.self_attn.o_proj": {
+      "absmax": 1.5,
+      "static_scale_fp16": 0.011810302734375,
+      "samples": 2288
+    },
+    "layers.5.mlp.gate_proj": {
+      "absmax": 4.21875,
+      "static_scale_fp16": 0.033233642578125,
+      "samples": 2288
+    },
+    "layers.5.mlp.up_proj": {
+      "absmax": 4.21875,
+      "static_scale_fp16": 0.033233642578125,
+      "samples": 2288
+    },
+    "layers.5.mlp.down_proj": {
+      "absmax": 4.1875,
+      "static_scale_fp16": 0.032958984375,
+      "samples": 2288
+    },
+    "layers.6.self_attn.q_proj": {
+      "absmax": 10.875,
+      "static_scale_fp16": 0.08563232421875,
+      "samples": 2288
+    },
+    "layers.6.self_attn.k_proj": {
+      "absmax": 10.875,
+      "static_scale_fp16": 0.08563232421875,
+      "samples": 2288
+    },
+    "layers.6.self_attn.v_proj": {
+      "absmax": 10.875,
+      "static_scale_fp16": 0.08563232421875,
+      "samples": 2288
+    },
+    "layers.6.self_attn.o_proj": {
+      "absmax": 2.125,
+      "static_scale_fp16": 0.0167388916015625,
+      "samples": 2288
+    },
+    "layers.6.mlp.gate_proj": {
+      "absmax": 4.0625,
+      "static_scale_fp16": 0.031982421875,
+      "samples": 2288
+    },
+    "layers.6.mlp.up_proj": {
+      "absmax": 4.0625,
+      "static_scale_fp16": 0.031982421875,
+      "samples": 2288
+    },
+    "layers.6.mlp.down_proj": {
+      "absmax": 6.28125,
+      "static_scale_fp16": 0.049468994140625,
+      "samples": 2288
+    },
+    "layers.7.self_attn.q_proj": {
+      "absmax": 11.9375,
+      "static_scale_fp16": 0.093994140625,
+      "samples": 2288
+    },
+    "layers.7.self_attn.k_proj": {
+      "absmax": 11.9375,
+      "static_scale_fp16": 0.093994140625,
+      "samples": 2288
+    },
+    "layers.7.self_attn.v_proj": {
+      "absmax": 11.9375,
+      "static_scale_fp16": 0.093994140625,
+      "samples": 2288
+    },
+    "layers.7.self_attn.o_proj": {
+      "absmax": 1.5625,
+      "static_scale_fp16": 0.01230621337890625,
+      "samples": 2288
+    },
+    "layers.7.mlp.gate_proj": {
+      "absmax": 5.25,
+      "static_scale_fp16": 0.041351318359375,
+      "samples": 2288
+    },
+    "layers.7.mlp.up_proj": {
+      "absmax": 5.25,
+      "static_scale_fp16": 0.041351318359375,
+      "samples": 2288
+    },
+    "layers.7.mlp.down_proj": {
+      "absmax": 13.3125,
+      "static_scale_fp16": 0.10479736328125,
+      "samples": 2288
+    },
+    "layers.8.self_attn.q_proj": {
+      "absmax": 14.25,
+      "static_scale_fp16": 0.1121826171875,
+      "samples": 2288
+    },
+    "layers.8.self_attn.k_proj": {
+      "absmax": 14.25,
+      "static_scale_fp16": 0.1121826171875,
+      "samples": 2288
+    },
+    "layers.8.self_attn.v_proj": {
+      "absmax": 14.25,
+      "static_scale_fp16": 0.1121826171875,
+      "samples": 2288
+    },
+    "layers.8.self_attn.o_proj": {
+      "absmax": 1.6953125,
+      "static_scale_fp16": 0.0133514404296875,
+      "samples": 2288
+    },
+    "layers.8.mlp.gate_proj": {
+      "absmax": 6.15625,
+      "static_scale_fp16": 0.0484619140625,
+      "samples": 2288
+    },
+    "layers.8.mlp.up_proj": {
+      "absmax": 6.15625,
+      "static_scale_fp16": 0.0484619140625,
+      "samples": 2288
+    },
+    "layers.8.mlp.down_proj": {
+      "absmax": 3.828125,
+      "static_scale_fp16": 0.0301361083984375,
+      "samples": 2288
+    },
+    "layers.9.self_attn.q_proj": {
+      "absmax": 15.4375,
+      "static_scale_fp16": 0.12158203125,
+      "samples": 2288
+    },
+    "layers.9.self_attn.k_proj": {
+      "absmax": 15.4375,
+      "static_scale_fp16": 0.12158203125,
+      "samples": 2288
+    },
+    "layers.9.self_attn.v_proj": {
+      "absmax": 15.4375,
+      "static_scale_fp16": 0.12158203125,
+      "samples": 2288
+    },
+    "layers.9.self_attn.o_proj": {
+      "absmax": 1.75,
+      "static_scale_fp16": 0.0137786865234375,
+      "samples": 2288
+    },
+    "layers.9.mlp.gate_proj": {
+      "absmax": 7.6875,
+      "static_scale_fp16": 0.060516357421875,
+      "samples": 2288
+    },
+    "layers.9.mlp.up_proj": {
+      "absmax": 7.6875,
+      "static_scale_fp16": 0.060516357421875,
+      "samples": 2288
+    },
+    "layers.9.mlp.down_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.10.self_attn.q_proj": {
+      "absmax": 19.0,
+      "static_scale_fp16": 0.149658203125,
+      "samples": 2288
+    },
+    "layers.10.self_attn.k_proj": {
+      "absmax": 19.0,
+      "static_scale_fp16": 0.149658203125,
+      "samples": 2288
+    },
+    "layers.10.self_attn.v_proj": {
+      "absmax": 19.0,
+      "static_scale_fp16": 0.149658203125,
+      "samples": 2288
+    },
+    "layers.10.self_attn.o_proj": {
+      "absmax": 2.125,
+      "static_scale_fp16": 0.0167388916015625,
+      "samples": 2288
+    },
+    "layers.10.mlp.gate_proj": {
+      "absmax": 6.125,
+      "static_scale_fp16": 0.0482177734375,
+      "samples": 2288
+    },
+    "layers.10.mlp.up_proj": {
+      "absmax": 6.125,
+      "static_scale_fp16": 0.0482177734375,
+      "samples": 2288
+    },
+    "layers.10.mlp.down_proj": {
+      "absmax": 3.8125,
+      "static_scale_fp16": 0.0300140380859375,
+      "samples": 2288
+    },
+    "layers.11.self_attn.q_proj": {
+      "absmax": 18.0,
+      "static_scale_fp16": 0.1417236328125,
+      "samples": 2288
+    },
+    "layers.11.self_attn.k_proj": {
+      "absmax": 18.0,
+      "static_scale_fp16": 0.1417236328125,
+      "samples": 2288
+    },
+    "layers.11.self_attn.v_proj": {
+      "absmax": 18.0,
+      "static_scale_fp16": 0.1417236328125,
+      "samples": 2288
+    },
+    "layers.11.self_attn.o_proj": {
+      "absmax": 2.3125,
+      "static_scale_fp16": 0.0182037353515625,
+      "samples": 2288
+    },
+    "layers.11.mlp.gate_proj": {
+      "absmax": 7.75,
+      "static_scale_fp16": 0.06103515625,
+      "samples": 2288
+    },
+    "layers.11.mlp.up_proj": {
+      "absmax": 7.75,
+      "static_scale_fp16": 0.06103515625,
+      "samples": 2288
+    },
+    "layers.11.mlp.down_proj": {
+      "absmax": 4.59375,
+      "static_scale_fp16": 0.036163330078125,
+      "samples": 2288
+    },
+    "layers.12.self_attn.q_proj": {
+      "absmax": 17.375,
+      "static_scale_fp16": 0.1368408203125,
+      "samples": 2288
+    },
+    "layers.12.self_attn.k_proj": {
+      "absmax": 17.375,
+      "static_scale_fp16": 0.1368408203125,
+      "samples": 2288
+    },
+    "layers.12.self_attn.v_proj": {
+      "absmax": 17.375,
+      "static_scale_fp16": 0.1368408203125,
+      "samples": 2288
+    },
+    "layers.12.self_attn.o_proj": {
+      "absmax": 1.6875,
+      "static_scale_fp16": 0.0132904052734375,
+      "samples": 2288
+    },
+    "layers.12.mlp.gate_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.12.mlp.up_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.12.mlp.down_proj": {
+      "absmax": 5.90625,
+      "static_scale_fp16": 0.0465087890625,
+      "samples": 2288
+    },
+    "layers.13.self_attn.q_proj": {
+      "absmax": 15.125,
+      "static_scale_fp16": 0.11907958984375,
+      "samples": 2288
+    },
+    "layers.13.self_attn.k_proj": {
+      "absmax": 15.125,
+      "static_scale_fp16": 0.11907958984375,
+      "samples": 2288
+    },
+    "layers.13.self_attn.v_proj": {
+      "absmax": 15.125,
+      "static_scale_fp16": 0.11907958984375,
+      "samples": 2288
+    },
+    "layers.13.self_attn.o_proj": {
+      "absmax": 1.890625,
+      "static_scale_fp16": 0.01488494873046875,
+      "samples": 2288
+    },
+    "layers.13.mlp.gate_proj": {
+      "absmax": 7.25,
+      "static_scale_fp16": 0.057098388671875,
+      "samples": 2288
+    },
+    "layers.13.mlp.up_proj": {
+      "absmax": 7.25,
+      "static_scale_fp16": 0.057098388671875,
+      "samples": 2288
+    },
+    "layers.13.mlp.down_proj": {
+      "absmax": 4.75,
+      "static_scale_fp16": 0.03741455078125,
+      "samples": 2288
+    },
+    "layers.14.self_attn.q_proj": {
+      "absmax": 15.6875,
+      "static_scale_fp16": 0.12353515625,
+      "samples": 2288
+    },
+    "layers.14.self_attn.k_proj": {
+      "absmax": 15.6875,
+      "static_scale_fp16": 0.12353515625,
+      "samples": 2288
+    },
+    "layers.14.self_attn.v_proj": {
+      "absmax": 15.6875,
+      "static_scale_fp16": 0.12353515625,
+      "samples": 2288
+    },
+    "layers.14.self_attn.o_proj": {
+      "absmax": 2.046875,
+      "static_scale_fp16": 0.01611328125,
+      "samples": 2288
+    },
+    "layers.14.mlp.gate_proj": {
+      "absmax": 6.5625,
+      "static_scale_fp16": 0.051666259765625,
+      "samples": 2288
+    },
+    "layers.14.mlp.up_proj": {
+      "absmax": 6.5625,
+      "static_scale_fp16": 0.051666259765625,
+      "samples": 2288
+    },
+    "layers.14.mlp.down_proj": {
+      "absmax": 8.0,
+      "static_scale_fp16": 0.06298828125,
+      "samples": 2288
+    },
+    "layers.15.self_attn.q_proj": {
+      "absmax": 12.625,
+      "static_scale_fp16": 0.09942626953125,
+      "samples": 2288
+    },
+    "layers.15.self_attn.k_proj": {
+      "absmax": 12.625,
+      "static_scale_fp16": 0.09942626953125,
+      "samples": 2288
+    },
+    "layers.15.self_attn.v_proj": {
+      "absmax": 12.625,
+      "static_scale_fp16": 0.09942626953125,
+      "samples": 2288
+    },
+    "layers.15.self_attn.o_proj": {
+      "absmax": 1.75,
+      "static_scale_fp16": 0.0137786865234375,
+      "samples": 2288
+    },
+    "layers.15.mlp.gate_proj": {
+      "absmax": 6.4375,
+      "static_scale_fp16": 0.050689697265625,
+      "samples": 2288
+    },
+    "layers.15.mlp.up_proj": {
+      "absmax": 6.4375,
+      "static_scale_fp16": 0.050689697265625,
+      "samples": 2288
+    },
+    "layers.15.mlp.down_proj": {
+      "absmax": 6.59375,
+      "static_scale_fp16": 0.051910400390625,
+      "samples": 2288
+    },
+    "layers.16.self_attn.q_proj": {
+      "absmax": 13.0,
+      "static_scale_fp16": 0.10235595703125,
+      "samples": 2288
+    },
+    "layers.16.self_attn.k_proj": {
+      "absmax": 13.0,
+      "static_scale_fp16": 0.10235595703125,
+      "samples": 2288
+    },
+    "layers.16.self_attn.v_proj": {
+      "absmax": 13.0,
+      "static_scale_fp16": 0.10235595703125,
+      "samples": 2288
+    },
+    "layers.16.self_attn.o_proj": {
+      "absmax": 2.875,
+      "static_scale_fp16": 0.02264404296875,
+      "samples": 2288
+    },
+    "layers.16.mlp.gate_proj": {
+      "absmax": 8.5625,
+      "static_scale_fp16": 0.06744384765625,
+      "samples": 2288
+    },
+    "layers.16.mlp.up_proj": {
+      "absmax": 8.5625,
+      "static_scale_fp16": 0.06744384765625,
+      "samples": 2288
+    },
+    "layers.16.mlp.down_proj": {
+      "absmax": 7.09375,
+      "static_scale_fp16": 0.05584716796875,
+      "samples": 2288
+    },
+    "layers.17.self_attn.q_proj": {
+      "absmax": 11.4375,
+      "static_scale_fp16": 0.090087890625,
+      "samples": 2288
+    },
+    "layers.17.self_attn.k_proj": {
+      "absmax": 11.4375,
+      "static_scale_fp16": 0.090087890625,
+      "samples": 2288
+    },
+    "layers.17.self_attn.v_proj": {
+      "absmax": 11.4375,
+      "static_scale_fp16": 0.090087890625,
+      "samples": 2288
+    },
+    "layers.17.self_attn.o_proj": {
+      "absmax": 2.40625,
+      "static_scale_fp16": 0.018951416015625,
+      "samples": 2288
+    },
+    "layers.17.mlp.gate_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.17.mlp.up_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.17.mlp.down_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.18.self_attn.q_proj": {
+      "absmax": 11.8125,
+      "static_scale_fp16": 0.093017578125,
+      "samples": 2288
+    },
+    "layers.18.self_attn.k_proj": {
+      "absmax": 11.8125,
+      "static_scale_fp16": 0.093017578125,
+      "samples": 2288
+    },
+    "layers.18.self_attn.v_proj": {
+      "absmax": 11.8125,
+      "static_scale_fp16": 0.093017578125,
+      "samples": 2288
+    },
+    "layers.18.self_attn.o_proj": {
+      "absmax": 2.015625,
+      "static_scale_fp16": 0.015869140625,
+      "samples": 2288
+    },
+    "layers.18.mlp.gate_proj": {
+      "absmax": 8.0,
+      "static_scale_fp16": 0.06298828125,
+      "samples": 2288
+    },
+    "layers.18.mlp.up_proj": {
+      "absmax": 8.0,
+      "static_scale_fp16": 0.06298828125,
+      "samples": 2288
+    },
+    "layers.18.mlp.down_proj": {
+      "absmax": 10.5625,
+      "static_scale_fp16": 0.08319091796875,
+      "samples": 2288
+    },
+    "layers.19.self_attn.q_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.19.self_attn.k_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.19.self_attn.v_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.19.self_attn.o_proj": {
+      "absmax": 2.3125,
+      "static_scale_fp16": 0.0182037353515625,
+      "samples": 2288
+    },
+    "layers.19.mlp.gate_proj": {
+      "absmax": 7.90625,
+      "static_scale_fp16": 0.062255859375,
+      "samples": 2288
+    },
+    "layers.19.mlp.up_proj": {
+      "absmax": 7.90625,
+      "static_scale_fp16": 0.062255859375,
+      "samples": 2288
+    },
+    "layers.19.mlp.down_proj": {
+      "absmax": 10.125,
+      "static_scale_fp16": 0.0797119140625,
+      "samples": 2288
+    },
+    "layers.20.self_attn.q_proj": {
+      "absmax": 8.875,
+      "static_scale_fp16": 0.06988525390625,
+      "samples": 2288
+    },
+    "layers.20.self_attn.k_proj": {
+      "absmax": 8.875,
+      "static_scale_fp16": 0.06988525390625,
+      "samples": 2288
+    },
+    "layers.20.self_attn.v_proj": {
+      "absmax": 8.875,
+      "static_scale_fp16": 0.06988525390625,
+      "samples": 2288
+    },
+    "layers.20.self_attn.o_proj": {
+      "absmax": 2.546875,
+      "static_scale_fp16": 0.020050048828125,
+      "samples": 2288
+    },
+    "layers.20.mlp.gate_proj": {
+      "absmax": 9.3125,
+      "static_scale_fp16": 0.07330322265625,
+      "samples": 2288
+    },
+    "layers.20.mlp.up_proj": {
+      "absmax": 9.3125,
+      "static_scale_fp16": 0.07330322265625,
+      "samples": 2288
+    },
+    "layers.20.mlp.down_proj": {
+      "absmax": 9.3125,
+      "static_scale_fp16": 0.07330322265625,
+      "samples": 2288
+    },
+    "layers.21.self_attn.q_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.21.self_attn.k_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.21.self_attn.v_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.21.self_attn.o_proj": {
+      "absmax": 3.0625,
+      "static_scale_fp16": 0.02410888671875,
+      "samples": 2288
+    },
+    "layers.21.mlp.gate_proj": {
+      "absmax": 6.78125,
+      "static_scale_fp16": 0.05340576171875,
+      "samples": 2288
+    },
+    "layers.21.mlp.up_proj": {
+      "absmax": 6.78125,
+      "static_scale_fp16": 0.05340576171875,
+      "samples": 2288
+    },
+    "layers.21.mlp.down_proj": {
+      "absmax": 7.625,
+      "static_scale_fp16": 0.060028076171875,
+      "samples": 2288
+    },
+    "layers.22.self_attn.q_proj": {
+      "absmax": 8.625,
+      "static_scale_fp16": 0.06793212890625,
+      "samples": 2288
+    },
+    "layers.22.self_attn.k_proj": {
+      "absmax": 8.625,
+      "static_scale_fp16": 0.06793212890625,
+      "samples": 2288
+    },
+    "layers.22.self_attn.v_proj": {
+      "absmax": 8.625,
+      "static_scale_fp16": 0.06793212890625,
+      "samples": 2288
+    },
+    "layers.22.self_attn.o_proj": {
+      "absmax": 2.328125,
+      "static_scale_fp16": 0.0183258056640625,
+      "samples": 2288
+    },
+    "layers.22.mlp.gate_proj": {
+      "absmax": 7.46875,
+      "static_scale_fp16": 0.058807373046875,
+      "samples": 2288
+    },
+    "layers.22.mlp.up_proj": {
+      "absmax": 7.46875,
+      "static_scale_fp16": 0.058807373046875,
+      "samples": 2288
+    },
+    "layers.22.mlp.down_proj": {
+      "absmax": 20.625,
+      "static_scale_fp16": 0.162353515625,
+      "samples": 2288
+    },
+    "layers.23.self_attn.q_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.23.self_attn.k_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.23.self_attn.v_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.23.self_attn.o_proj": {
+      "absmax": 2.609375,
+      "static_scale_fp16": 0.0205535888671875,
+      "samples": 2288
+    },
+    "layers.23.mlp.gate_proj": {
+      "absmax": 6.25,
+      "static_scale_fp16": 0.049224853515625,
+      "samples": 2288
+    },
+    "layers.23.mlp.up_proj": {
+      "absmax": 6.25,
+      "static_scale_fp16": 0.049224853515625,
+      "samples": 2288
+    },
+    "layers.23.mlp.down_proj": {
+      "absmax": 10.3125,
+      "static_scale_fp16": 0.0811767578125,
+      "samples": 2288
+    },
+    "layers.24.self_attn.q_proj": {
+      "absmax": 8.0625,
+      "static_scale_fp16": 0.0634765625,
+      "samples": 2288
+    },
+    "layers.24.self_attn.k_proj": {
+      "absmax": 8.0625,
+      "static_scale_fp16": 0.0634765625,
+      "samples": 2288
+    },
+    "layers.24.self_attn.v_proj": {
+      "absmax": 8.0625,
+      "static_scale_fp16": 0.0634765625,
+      "samples": 2288
+    },
+    "layers.24.self_attn.o_proj": {
+      "absmax": 3.28125,
+      "static_scale_fp16": 0.0258331298828125,
+      "samples": 2288
+    },
+    "layers.24.mlp.gate_proj": {
+      "absmax": 6.625,
+      "static_scale_fp16": 0.052154541015625,
+      "samples": 2288
+    },
+    "layers.24.mlp.up_proj": {
+      "absmax": 6.625,
+      "static_scale_fp16": 0.052154541015625,
+      "samples": 2288
+    },
+    "layers.24.mlp.down_proj": {
+      "absmax": 19.25,
+      "static_scale_fp16": 0.151611328125,
+      "samples": 2288
+    },
+    "layers.25.self_attn.q_proj": {
+      "absmax": 7.8125,
+      "static_scale_fp16": 0.0615234375,
+      "samples": 2288
+    },
+    "layers.25.self_attn.k_proj": {
+      "absmax": 7.8125,
+      "static_scale_fp16": 0.0615234375,
+      "samples": 2288
+    },
+    "layers.25.self_attn.v_proj": {
+      "absmax": 7.8125,
+      "static_scale_fp16": 0.0615234375,
+      "samples": 2288
+    },
+    "layers.25.self_attn.o_proj": {
+      "absmax": 2.578125,
+      "static_scale_fp16": 0.020294189453125,
+      "samples": 2288
+    },
+    "layers.25.mlp.gate_proj": {
+      "absmax": 6.875,
+      "static_scale_fp16": 0.05413818359375,
+      "samples": 2288
+    },
+    "layers.25.mlp.up_proj": {
+      "absmax": 6.875,
+      "static_scale_fp16": 0.05413818359375,
+      "samples": 2288
+    },
+    "layers.25.mlp.down_proj": {
+      "absmax": 14.125,
+      "static_scale_fp16": 0.1112060546875,
+      "samples": 2288
+    },
+    "layers.26.self_attn.q_proj": {
+      "absmax": 8.3125,
+      "static_scale_fp16": 0.0654296875,
+      "samples": 2288
+    },
+    "layers.26.self_attn.k_proj": {
+      "absmax": 8.3125,
+      "static_scale_fp16": 0.0654296875,
+      "samples": 2288
+    },
+    "layers.26.self_attn.v_proj": {
+      "absmax": 8.3125,
+      "static_scale_fp16": 0.0654296875,
+      "samples": 2288
+    },
+    "layers.26.self_attn.o_proj": {
+      "absmax": 4.0,
+      "static_scale_fp16": 0.031494140625,
+      "samples": 2288
+    },
+    "layers.26.mlp.gate_proj": {
+      "absmax": 7.1875,
+      "static_scale_fp16": 0.05657958984375,
+      "samples": 2288
+    },
+    "layers.26.mlp.up_proj": {
+      "absmax": 7.1875,
+      "static_scale_fp16": 0.05657958984375,
+      "samples": 2288
+    },
+    "layers.26.mlp.down_proj": {
+      "absmax": 12.6875,
+      "static_scale_fp16": 0.09991455078125,
+      "samples": 2288
+    },
+    "layers.27.self_attn.q_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.27.self_attn.k_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.27.self_attn.v_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.27.self_attn.o_proj": {
+      "absmax": 4.3125,
+      "static_scale_fp16": 0.033966064453125,
+      "samples": 2288
+    },
+    "layers.27.mlp.gate_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.27.mlp.up_proj": {
+      "absmax": 8.25,
+      "static_scale_fp16": 0.06494140625,
+      "samples": 2288
+    },
+    "layers.27.mlp.down_proj": {
+      "absmax": 20.875,
+      "static_scale_fp16": 0.1644287109375,
+      "samples": 2288
+    },
+    "layers.28.self_attn.q_proj": {
+      "absmax": 7.625,
+      "static_scale_fp16": 0.060028076171875,
+      "samples": 2288
+    },
+    "layers.28.self_attn.k_proj": {
+      "absmax": 7.625,
+      "static_scale_fp16": 0.060028076171875,
+      "samples": 2288
+    },
+    "layers.28.self_attn.v_proj": {
+      "absmax": 7.625,
+      "static_scale_fp16": 0.060028076171875,
+      "samples": 2288
+    },
+    "layers.28.self_attn.o_proj": {
+      "absmax": 3.0625,
+      "static_scale_fp16": 0.02410888671875,
+      "samples": 2288
+    },
+    "layers.28.mlp.gate_proj": {
+      "absmax": 13.0625,
+      "static_scale_fp16": 0.10284423828125,
+      "samples": 2288
+    },
+    "layers.28.mlp.up_proj": {
+      "absmax": 13.0625,
+      "static_scale_fp16": 0.10284423828125,
+      "samples": 2288
+    },
+    "layers.28.mlp.down_proj": {
+      "absmax": 17.375,
+      "static_scale_fp16": 0.1368408203125,
+      "samples": 2288
+    },
+    "layers.29.self_attn.q_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.29.self_attn.k_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.29.self_attn.v_proj": {
+      "absmax": 8.5,
+      "static_scale_fp16": 0.06695556640625,
+      "samples": 2288
+    },
+    "layers.29.self_attn.o_proj": {
+      "absmax": 3.953125,
+      "static_scale_fp16": 0.0311279296875,
+      "samples": 2288
+    },
+    "layers.29.mlp.gate_proj": {
+      "absmax": 14.875,
+      "static_scale_fp16": 0.11712646484375,
+      "samples": 2288
+    },
+    "layers.29.mlp.up_proj": {
+      "absmax": 14.875,
+      "static_scale_fp16": 0.11712646484375,
+      "samples": 2288
+    },
+    "layers.29.mlp.down_proj": {
+      "absmax": 15.5625,
+      "static_scale_fp16": 0.12255859375,
+      "samples": 2288
+    },
+    "layers.30.self_attn.q_proj": {
+      "absmax": 7.25,
+      "static_scale_fp16": 0.057098388671875,
+      "samples": 2288
+    },
+    "layers.30.self_attn.k_proj": {
+      "absmax": 7.25,
+      "static_scale_fp16": 0.057098388671875,
+      "samples": 2288
+    },
+    "layers.30.self_attn.v_proj": {
+      "absmax": 7.25,
+      "static_scale_fp16": 0.057098388671875,
+      "samples": 2288
+    },
+    "layers.30.self_attn.o_proj": {
+      "absmax": 3.46875,
+      "static_scale_fp16": 0.027313232421875,
+      "samples": 2288
+    },
+    "layers.30.mlp.gate_proj": {
+      "absmax": 18.125,
+      "static_scale_fp16": 0.1427001953125,
+      "samples": 2288
+    },
+    "layers.30.mlp.up_proj": {
+      "absmax": 18.125,
+      "static_scale_fp16": 0.1427001953125,
+      "samples": 2288
+    },
+    "layers.30.mlp.down_proj": {
+      "absmax": 154.0,
+      "static_scale_fp16": 1.212890625,
+      "samples": 2288
+    },
+    "layers.31.self_attn.q_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.31.self_attn.k_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.31.self_attn.v_proj": {
+      "absmax": 9.4375,
+      "static_scale_fp16": 0.0743408203125,
+      "samples": 2288
+    },
+    "layers.31.self_attn.o_proj": {
+      "absmax": 3.5625,
+      "static_scale_fp16": 0.028045654296875,
+      "samples": 2288
+    },
+    "layers.31.mlp.gate_proj": {
+      "absmax": 11.25,
+      "static_scale_fp16": 0.08856201171875,
+      "samples": 2288
+    },
+    "layers.31.mlp.up_proj": {
+      "absmax": 11.25,
+      "static_scale_fp16": 0.08856201171875,
+      "samples": 2288
+    },
+    "layers.31.mlp.down_proj": {
+      "absmax": 54.25,
+      "static_scale_fp16": 0.42724609375,
+      "samples": 2288
+    },
+    "lm_head": {
+      "absmax": 51.75,
+      "static_scale_fp16": 0.407470703125,
+      "samples": 2288
+    }
+  },
+  "guardrails": [
+    "All selected weights are quantized simultaneously and activation QDQ propagates sequentially.",
+    "Calibration and evaluation point-cloud IDs are disjoint.",
+    "QDQ executes dense BF16/FP16 operators and establishes no runtime speedup.",
+    "Norm, softmax, nonlinear activation, residual, and bias remain BF16/FP16.",
+    "Production W8A8 RTL remains disabled until integer-kernel and larger semantic gates pass."
+  ]
+}

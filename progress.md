@@ -441,3 +441,14 @@
 - The locked 64-PE run matches 576 lane outputs exactly in 16 cycles. The hierarchy contains 64 shared PE instances and no top-level multipliers.
 - Added exact INT16 multiplication decomposition through four signed INT8 products and retained the direct INT16 tile as the dedicated baseline.
 - Full repository regression passes `191 passed, 1 skipped` under the locked PointLLM Python environment. Strict coverage accepts the shared-dot and Split-K slices while full PointLLM remains fail-closed.
+
+## 2026-10-01: Sequential W8A8 Contract Start
+- Added an explicit W8A8 numerical contract with symmetric clipping, ties-to-even rounding, FP16 scale storage, INT32 linear golden accumulation, per-output W8, group-128 W8, static A8, and dynamic per-token A8.
+- Added sequential activation pre-hooks and calibration observers; unit tests prove that a later layer receives the earlier layer's QDQ output rather than a restored baseline tensor.
+- Added a real PointLLM evaluator with disjoint calibration/evaluation IDs for ModelNet and Objaverse, simultaneous selected-component W8, sequential A8, KL/top-1/token/exact metrics, and explicit no-speedup guardrails.
+- Completed the first one-calibration/one-held-out ModelNet static-A8/per-output-W8 smoke across all 283 selected modules: KL mean `0.01443`, top-1 `1.0`, and eight-token exact match `1.0`.
+- Completed the same-split group-128 comparison: lower weight RMSE but worse KL (`0.01586` mean, `0.08396` max), with exact eight-token output retained.
+- Completed the matching Objaverse per-output/static-A8 smoke: KL mean `0.01168`, KL max `0.03734`, and exact eight-token output retained.
+- Implemented exact SmoothQuant `x/s`, `W*s` transforms for Linear and Conv paths, with unit tests proving pre-QDQ equivalence. The alpha-0.5 ModelNet smoke improves KL mean to `0.00481`.
+- Completed dynamic per-token A8 smoke: lowest KL (`0.00250`) and RMSE (`0.26934`), but one of eight teacher-forced top-1 positions differs despite identical free generation.
+- Regenerated the five-way comparison figure and passed the full repository regression: `199 passed, 1 skipped`. No production W8A8 coverage or speedup claim is enabled.

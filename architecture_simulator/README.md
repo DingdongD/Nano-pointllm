@@ -189,6 +189,20 @@ reads norms and uses only the shared dot, add, subtract, and shift. This is a
 claim of shared multiplication resources only. FPS min/argmax and KNN top-k
 remain specialized structures.
 
+The matching fidelity-side W8A8 contract is implemented in
+`nanopointllm/compression/w8a8.py`. A small sequential-QDQ run can be launched
+from the repository root with:
+
+```bash
+python scripts/evaluate_sequential_w8a8_pointllm.py \
+  --dataset modelnet --num_calibration_samples 2 --num_eval_samples 2 \
+  --max_new_tokens 8 --weight_granularity per_output \
+  --activation_mode static --output_dir results/w8a8_modelnet
+```
+
+This executes dense BF16/FP16 operators after QDQ and measures fidelity only;
+it does not benchmark an integer kernel.
+
 The W8 Split-K GEMV, geometry distance, and locked SRAM port/arbiter slices have
 executable RTL and exact event correlation. Decoder tensors now have checkpoint-backed target
 layout and memory addresses, and sampled bursts use real DRAMsim3 timing. These

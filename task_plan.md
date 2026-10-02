@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 34 in progress
+Phase 35 in progress
 
 ## Phases
 
@@ -263,14 +263,14 @@ Phase 34 in progress
 - **Status:** complete; shared arithmetic RTL is correlated and full-model coverage remains fail-closed
 
 ### Phase 35: Sequential W8A8 Contract And Fidelity Pipeline
-- [ ] Audit existing precision-sensitivity/calibration code and real dataset split support
-- [ ] Lock symmetric rounding, clipping, accumulator, scale precision, and bias/requant rules
-- [ ] Compare per-output-channel W8 against group-128 W8 under the same calibration/evaluation split
-- [ ] Implement static A8, SmoothQuant/static A8, and dynamic per-token A8 calibration paths
-- [ ] Propagate QDQ outputs sequentially through PointTransformer and all 32 LLaMA layers
-- [ ] Evaluate ModelNet and Objaverse with KL/top-1/token/exact/semantic metrics
-- [ ] Keep production W8A8 RTL disabled until both integer-golden and model-fidelity gates pass
-- **Status:** pending; contract audit starts in parallel with Phase 34
+- [x] Audit existing precision-sensitivity/calibration code and real dataset split support
+- [x] Lock symmetric rounding, clipping, accumulator, scale precision, and bias/requant rules
+- [x] Compare per-output-channel W8 against group-128 W8 under the same calibration/evaluation split (smoke gate; larger evaluation remains below)
+- [x] Implement static A8, SmoothQuant/static A8, and dynamic per-token A8 calibration paths
+- [x] Propagate QDQ outputs sequentially through PointTransformer and all 32 LLaMA layers
+- [ ] Evaluate ModelNet and Objaverse with KL/top-1/token/exact/semantic metrics (dual-dataset smoke complete; larger held-out semantic run pending)
+- [x] Keep production W8A8 RTL disabled until both integer-golden and model-fidelity gates pass
+- **Status:** in progress; executable contract and smoke gates complete, larger fidelity and integer-kernel correlation pending
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
