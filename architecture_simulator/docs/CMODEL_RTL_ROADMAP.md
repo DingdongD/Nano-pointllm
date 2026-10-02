@@ -8,10 +8,16 @@ Implemented now:
 - finite compressed/decoded/partial FIFOs and ready/valid backpressure;
 - W8 sign extension, dot accumulation, Split-K reduction, and output stalls;
 - Python edge-state model versus Icarus RTL exact event/cycle/output checking;
-- Yosys structural synthesis check.
+- Yosys structural synthesis check;
+- a second locked slice for 16-bank, 128-bit, 1R1W SRAM arbitration and
+  3-cycle reads, with exact Python/RTL event and cycle correlation;
+- checkpoint-backed PointLLM decoder-linear lowering into W8 tiles, exact
+  DRAM payloads/bursts, and SRAM bank/row addresses;
+- sampled request timing through the local pinned official DRAMsim3 backend.
 
-This slice uses deterministic source latency and beat delivery. It is not yet a
-DRAM-timed, banked-SRAM-integrated production PointLLM GEMV implementation.
+The compute slice still uses deterministic source latency and beat delivery.
+The new memory pieces are validated separately; they are not yet a DRAM-timed,
+banked-SRAM-integrated production PointLLM GEMV implementation.
 
 The legacy Python estimator does not model ready/valid handshakes, queues,
 resource stalls, exact bank mapping, burst timing, or producer/consumer events.
@@ -23,9 +29,10 @@ The next fidelity level should follow the separation used by the audited
 2. Add ready/valid resource scoreboards for geometry, tensor, unpack, vector,
    attention, SRAM ports, and HBM channels.
 3. Expand operations into tiles and preserve true PointLLM layer/token order.
-4. Integrate the correlated Split-K slice with explicit activation/weight
-   memory plans, then correlate persistent FPS before using end-to-end cycles.
-5. Add DRAMsim3 and exact SRAM bank/address mapping.
+   Decoder-linear shape/address/byte lowering is complete; whole-graph order is not.
+4. Integrate the correlated Split-K slice with the implemented activation/weight
+   memory plans, SRAM arbitration, and DRAMsim3 completion stream.
+5. Correlate persistent FPS before using any end-to-end cycles.
 6. Import synthesis, SRAM compiler/CACTI, and PTPX results with process/tool/
    corner/activity provenance.
 

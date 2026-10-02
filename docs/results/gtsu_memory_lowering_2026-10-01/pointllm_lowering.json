@@ -1,0 +1,3581 @@
+{
+  "schema_version": "0.1",
+  "checkpoint": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+  "layer": 0,
+  "token": 0,
+  "batch_size": 1,
+  "operators": [
+    {
+      "schema_version": "0.1",
+      "projection": "q_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.self_attn.q_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          4096,
+          4096
+        ],
+        "data_offsets": [
+          1199652864,
+          1266761728
+        ],
+        "payload_bytes": 67108864,
+        "expected_payload_bytes": 67108864
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 16777216,
+        "scale_payload_bytes": 262144,
+        "weight_burst_count": 262144,
+        "scale_burst_count": 4096,
+        "dram_request_count": 266240,
+        "tile_count": 4096,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4294967296,
+          "payload_bytes": 16777216,
+          "allocated_bytes": 16777216,
+          "precision": "W8",
+          "end": 4311744512
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4311744512,
+          "payload_bytes": 262144,
+          "allocated_bytes": 262144,
+          "precision": "FP16",
+          "end": 4312006656
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4294967296,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4294967360,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4294967424,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4294967488,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4294971392,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4294971456,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4294971520,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4294971584,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4294975488,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4294975552,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4294975616,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4294975680,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4294979584,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4294979648,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4294979712,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4294979776,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=67108864, expected=67108864"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=16777216, tensor=16777216"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=262144, bytes=16777216"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=4096, bytes=262144"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x100000000:0x101000000, weight_scale=0x101000000:0x101040000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "k_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.self_attn.k_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          4096,
+          4096
+        ],
+        "data_offsets": [
+          1065435136,
+          1132544000
+        ],
+        "payload_bytes": 67108864,
+        "expected_payload_bytes": 67108864
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 16777216,
+        "scale_payload_bytes": 262144,
+        "weight_burst_count": 262144,
+        "scale_burst_count": 4096,
+        "dram_request_count": 266240,
+        "tile_count": 4096,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4312006656,
+          "payload_bytes": 16777216,
+          "allocated_bytes": 16777216,
+          "precision": "W8",
+          "end": 4328783872
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4328783872,
+          "payload_bytes": 262144,
+          "allocated_bytes": 262144,
+          "precision": "FP16",
+          "end": 4329046016
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4312006656,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4312006720,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4312006784,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4312006848,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4312010752,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4312010816,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4312010880,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4312010944,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4312014848,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4312014912,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4312014976,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4312015040,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4312018944,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4312019008,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4312019072,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4312019136,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=67108864, expected=67108864"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=16777216, tensor=16777216"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=262144, bytes=16777216"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=4096, bytes=262144"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x101040000:0x102040000, weight_scale=0x102040000:0x102080000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "v_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.self_attn.v_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          4096,
+          4096
+        ],
+        "data_offsets": [
+          1266761984,
+          1333870848
+        ],
+        "payload_bytes": 67108864,
+        "expected_payload_bytes": 67108864
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 16777216,
+        "scale_payload_bytes": 262144,
+        "weight_burst_count": 262144,
+        "scale_burst_count": 4096,
+        "dram_request_count": 266240,
+        "tile_count": 4096,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4329046016,
+          "payload_bytes": 16777216,
+          "allocated_bytes": 16777216,
+          "precision": "W8",
+          "end": 4345823232
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4345823232,
+          "payload_bytes": 262144,
+          "allocated_bytes": 262144,
+          "precision": "FP16",
+          "end": 4346085376
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4329046016,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4329046080,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4329046144,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4329046208,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4329050112,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4329050176,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4329050240,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4329050304,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4329054208,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4329054272,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4329054336,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4329054400,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4329058304,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4329058368,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4329058432,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4329058496,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=67108864, expected=67108864"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=16777216, tensor=16777216"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=262144, bytes=16777216"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=4096, bytes=262144"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x102080000:0x103080000, weight_scale=0x103080000:0x1030c0000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "o_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.self_attn.o_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          4096,
+          4096
+        ],
+        "data_offsets": [
+          1132544000,
+          1199652864
+        ],
+        "payload_bytes": 67108864,
+        "expected_payload_bytes": 67108864
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 16777216,
+        "scale_payload_bytes": 262144,
+        "weight_burst_count": 262144,
+        "scale_burst_count": 4096,
+        "dram_request_count": 266240,
+        "tile_count": 4096,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4346085376,
+          "payload_bytes": 16777216,
+          "allocated_bytes": 16777216,
+          "precision": "W8",
+          "end": 4362862592
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4362862592,
+          "payload_bytes": 262144,
+          "allocated_bytes": 262144,
+          "precision": "FP16",
+          "end": 4363124736
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4346085376,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4346085440,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4346085504,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4346085568,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4346089472,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4346089536,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4346089600,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4346089664,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4346093568,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4346093632,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4346093696,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4346093760,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4346097664,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4346097728,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4346097792,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4346097856,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=67108864, expected=67108864"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=16777216, tensor=16777216"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=262144, bytes=16777216"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=4096, bytes=262144"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x1030c0000:0x1040c0000, weight_scale=0x1040c0000:0x104100000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "gate_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 11008,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.mlp.gate_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          11008,
+          4096
+        ],
+        "data_offsets": [
+          704708608,
+          885063680
+        ],
+        "payload_bytes": 180355072,
+        "expected_payload_bytes": 180355072
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 45088768,
+        "scale_payload_bytes": 704512,
+        "weight_burst_count": 704512,
+        "scale_burst_count": 11008,
+        "dram_request_count": 715520,
+        "tile_count": 11008,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4363124736,
+          "payload_bytes": 45088768,
+          "allocated_bytes": 45088768,
+          "precision": "W8",
+          "end": 4408213504
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4408213504,
+          "payload_bytes": 704512,
+          "allocated_bytes": 704512,
+          "precision": "FP16",
+          "end": 4408918016
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4363124736,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4363124800,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4363124864,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4363124928,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4363128832,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4363128896,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4363128960,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4363129024,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4363132928,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4363132992,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4363133056,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4363133120,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4363137024,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4363137088,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4363137152,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4363137216,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=180355072, expected=180355072"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=45088768, tensor=45088768"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=704512, bytes=45088768"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=11008, bytes=704512"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x104100000:0x106c00000, weight_scale=0x106c00000:0x106cac000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "up_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 11008,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "model.layers.0.mlp.up_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          11008,
+          4096
+        ],
+        "data_offsets": [
+          885063680,
+          1065418752
+        ],
+        "payload_bytes": 180355072,
+        "expected_payload_bytes": 180355072
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 45088768,
+        "scale_payload_bytes": 704512,
+        "weight_burst_count": 704512,
+        "scale_burst_count": 11008,
+        "dram_request_count": 715520,
+        "tile_count": 11008,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4408918016,
+          "payload_bytes": 45088768,
+          "allocated_bytes": 45088768,
+          "precision": "W8",
+          "end": 4454006784
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4454006784,
+          "payload_bytes": 704512,
+          "allocated_bytes": 704512,
+          "precision": "FP16",
+          "end": 4454711296
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4408918016,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4408918080,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4408918144,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4408918208,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4408922112,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4408922176,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4408922240,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4408922304,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4408926208,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4408926272,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4408926336,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4408926400,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4408930304,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4408930368,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4408930432,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4408930496,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=180355072, expected=180355072"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=45088768, tensor=45088768"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=704512, bytes=45088768"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=11008, bytes=704512"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x106cac000:0x1097ac000, weight_scale=0x1097ac000:0x109858000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "down_proj",
+      "layer": 0,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 11008
+      },
+      "source_tensor": {
+        "name": "model.layers.0.mlp.down_proj.weight",
+        "shard": "model-00001-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          4096,
+          11008
+        ],
+        "data_offsets": [
+          524353536,
+          704708608
+        ],
+        "payload_bytes": 180355072,
+        "expected_payload_bytes": 180355072
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 45088768,
+        "scale_payload_bytes": 704512,
+        "weight_burst_count": 704512,
+        "scale_burst_count": 11008,
+        "dram_request_count": 715520,
+        "tile_count": 4096,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43,
+            43
+          ],
+          "weight_tile_w8": [
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44,
+            44
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 4454711296,
+          "payload_bytes": 45088768,
+          "allocated_bytes": 45088768,
+          "precision": "W8",
+          "end": 4499800064
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 4499800064,
+          "payload_bytes": 704512,
+          "allocated_bytes": 704512,
+          "precision": "FP16",
+          "end": 4500504576
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 11008,
+          "allocated_bytes": 11008,
+          "precision": "A8",
+          "end": 11008
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 11264,
+          "allocated_bytes": 11264,
+          "precision": "W8",
+          "end": 1059840
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 704,
+          "weight_payload_bytes": 11264,
+          "weight_bursts": 176,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 704,
+          "k_count": 704,
+          "weight_payload_bytes": 11264,
+          "weight_bursts": 176,
+          "activation_sram_address": 704,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 1408,
+          "k_count": 704,
+          "weight_payload_bytes": 11264,
+          "weight_bursts": 176,
+          "activation_sram_address": 1408,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 2112,
+          "k_count": 704,
+          "weight_payload_bytes": 11264,
+          "weight_bursts": 176,
+          "activation_sram_address": 2112,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 4454711296,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 4454711360,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 4454711424,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 4454711488,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 4454711552,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 4454711616,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 4454711680,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 4454711744,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 4454711808,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 4454711872,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 4454711936,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 4454722304,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 4454722368,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 4454722432,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 4454722496,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 4454722560,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=180355072, expected=180355072"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=45088768, tensor=45088768"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=704512, bytes=45088768"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=11008, bytes=704512"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x109858000:0x10c358000, weight_scale=0x10c358000:0x10c404000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x2b00, weight_tile_w8=0x100000:0x102c00, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    },
+    {
+      "schema_version": "0.1",
+      "projection": "lm_head",
+      "layer": null,
+      "token": 0,
+      "shape": {
+        "m": 1,
+        "n": 32003,
+        "k": 4096
+      },
+      "source_tensor": {
+        "name": "lm_head.weight",
+        "shard": "model-00006-of-00006.safetensors",
+        "dtype": "F32",
+        "shape": [
+          32003,
+          4096
+        ],
+        "data_offsets": [
+          16,
+          524337168
+        ],
+        "payload_bytes": 524337152,
+        "expected_payload_bytes": 524337152
+      },
+      "target_layout": {
+        "precision": "W8A8_ACC32",
+        "quantization_required": true,
+        "source_is_target_layout": false,
+        "weight_payload_bytes": 131084288,
+        "scale_payload_bytes": 2048192,
+        "weight_burst_count": 2048192,
+        "scale_burst_count": 32003,
+        "dram_request_count": 2080195,
+        "tile_count": 32016,
+        "config": {
+          "target_weight_bits": 8,
+          "target_activation_bits": 8,
+          "scale_group": 128,
+          "scale_bytes": 2,
+          "split_k": 16,
+          "output_tile": 16,
+          "dram_burst_bytes": 64,
+          "dram_base": 4294967296,
+          "dram_alignment": 4096,
+          "activation_sram_base": 0,
+          "weight_sram_base": 1048576,
+          "partial_sram_base": 3145728,
+          "output_sram_base": 3211264
+        }
+      },
+      "sram": {
+        "config": {
+          "banks": 16,
+          "rows_per_bank": 16384,
+          "word_bytes": 16,
+          "read_latency": 3,
+          "clients": 2
+        },
+        "address_mapping": "bank=(address/16)%16,row=(address/16)/16",
+        "region_bank_word_histograms": {
+          "activation_a8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_tile_w8": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "partial_acc32": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "output_acc32": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "regions": [
+        {
+          "name": "weight_w8",
+          "space": "dram",
+          "base": 10872160256,
+          "payload_bytes": 131084288,
+          "allocated_bytes": 131084288,
+          "precision": "W8",
+          "end": 11003244544
+        },
+        {
+          "name": "weight_scale",
+          "space": "dram",
+          "base": 11003244544,
+          "payload_bytes": 2048192,
+          "allocated_bytes": 2052096,
+          "precision": "FP16",
+          "end": 11005296640
+        },
+        {
+          "name": "activation_a8",
+          "space": "sram",
+          "base": 0,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "A8",
+          "end": 4096
+        },
+        {
+          "name": "weight_tile_w8",
+          "space": "sram",
+          "base": 1048576,
+          "payload_bytes": 4096,
+          "allocated_bytes": 4096,
+          "precision": "W8",
+          "end": 1052672
+        },
+        {
+          "name": "partial_acc32",
+          "space": "sram",
+          "base": 3145728,
+          "payload_bytes": 1024,
+          "allocated_bytes": 1024,
+          "precision": "ACC32",
+          "end": 3146752
+        },
+        {
+          "name": "output_acc32",
+          "space": "sram",
+          "base": 3211264,
+          "payload_bytes": 64,
+          "allocated_bytes": 64,
+          "precision": "ACC32",
+          "end": 3211328
+        }
+      ],
+      "sample_tiles": [
+        {
+          "tile_id": 0,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 0,
+          "k_start": 0,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 0,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145728
+        },
+        {
+          "tile_id": 1,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 1,
+          "k_start": 256,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 256,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145792
+        },
+        {
+          "tile_id": 2,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 2,
+          "k_start": 512,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 512,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145856
+        },
+        {
+          "tile_id": 3,
+          "n_start": 0,
+          "n_count": 16,
+          "split_index": 3,
+          "k_start": 768,
+          "k_count": 256,
+          "weight_payload_bytes": 4096,
+          "weight_bursts": 64,
+          "activation_sram_address": 768,
+          "weight_sram_address": 1048576,
+          "partial_sram_address": 3145920
+        }
+      ],
+      "sample_weight_bursts": [
+        {
+          "sequence": 0,
+          "address": 10872160256,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 1,
+          "address": 10872160320,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 2,
+          "address": 10872160384,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 3,
+          "address": 10872160448,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 0,
+          "split_index": 0
+        },
+        {
+          "sequence": 4,
+          "address": 10872164352,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 5,
+          "address": 10872164416,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 6,
+          "address": 10872164480,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 7,
+          "address": 10872164544,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 1,
+          "split_index": 0
+        },
+        {
+          "sequence": 8,
+          "address": 10872168448,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 9,
+          "address": 10872168512,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 10,
+          "address": 10872168576,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 11,
+          "address": 10872168640,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 2,
+          "split_index": 0
+        },
+        {
+          "sequence": 12,
+          "address": 10872172544,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 13,
+          "address": 10872172608,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 14,
+          "address": 10872172672,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        },
+        {
+          "sequence": 15,
+          "address": 10872172736,
+          "size": 64,
+          "stream": "weight",
+          "tile_id": 0,
+          "output_row": 3,
+          "split_index": 0
+        }
+      ],
+      "validation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "source_tensor_byte_conservation",
+            "passed": true,
+            "detail": "header=524337152, expected=524337152"
+          },
+          {
+            "name": "tile_weight_byte_conservation",
+            "passed": true,
+            "detail": "tiles=131084288, tensor=131084288"
+          },
+          {
+            "name": "burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=2048192, bytes=131084288"
+          },
+          {
+            "name": "scale_burst_byte_conservation",
+            "passed": true,
+            "detail": "bursts=32003, bytes=2048192"
+          },
+          {
+            "name": "dram_regions_nonoverlap",
+            "passed": true,
+            "detail": "weight_w8=0x288080000:0x28fd83000, weight_scale=0x28fd83000:0x28ff78000"
+          },
+          {
+            "name": "sram_regions_nonoverlap",
+            "passed": true,
+            "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+          },
+          {
+            "name": "sram_capacity",
+            "passed": true,
+            "detail": "max_end=3211328, capacity=4194304"
+          },
+          {
+            "name": "sram_addresses_decodable",
+            "passed": true,
+            "detail": "samples=192"
+          }
+        ]
+      },
+      "fidelity": {
+        "checkpoint_shape_exact": true,
+        "address_and_byte_exact": true,
+        "dram_timing_included": false,
+        "compute_memory_cycle_correlated": false,
+        "full_model_cycle_accurate": false
+      }
+    }
+  ],
+  "totals": {
+    "target_weight_payload_bytes": 333459456,
+    "target_scale_payload_bytes": 5210304,
+    "weight_burst_count": 5210304,
+    "scale_burst_count": 81411,
+    "dram_request_count": 5291715,
+    "tile_count": 74512,
+    "global_dram_span": {
+      "base": 4294967296,
+      "end": 11005296640,
+      "allocated_bytes_between": 6710329344,
+      "regions_nonoverlap": true
+    }
+  },
+  "fidelity": {
+    "checkpoint_shape_exact": true,
+    "address_and_byte_exact": true,
+    "target_quantization_executed": false,
+    "cycle_accurate": false
+  }
+}

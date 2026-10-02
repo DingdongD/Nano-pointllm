@@ -190,6 +190,15 @@ reduction 和输出 stall。Python edge-state model 与 Icarus RTL 在锁定配�
 fail closed。证据见
 [`docs/results/gtsu_cycle_splitk_rtl_2026-10-01/`](docs/results/gtsu_cycle_splitk_rtl_2026-10-01/README.md)。
 
+Phase 31 进一步加入了独立的 memory vertical slice：按 `Compiler_Codes`
+LBUF 接口锁定 16-bank、每 bank 128-bit、1R1W、3-cycle read，Python 与
+Icarus RTL 在冲突/仲裁/返回事件上精确一致；真实 PointLLM safetensors
+shape 被 lowering 为 W8 tile、64B DRAM burst 与 SRAM bank/row 地址，抽样
+burst 直接使用本机固定 commit 的 DRAMsim3 计时。三部分尚未合并成同一个
+compute-memory RTL pipeline，因此不报告完整 linear 或端到端 cycle/speedup。
+证据见
+[`docs/results/gtsu_memory_lowering_2026-10-01/`](docs/results/gtsu_memory_lowering_2026-10-01/README.md)。
+
 ```bash
 cd /home/nano-pointllm/architecture_simulator
 /opt/conda/envs/pointllm/bin/python -m pointllm_archsim simulate \

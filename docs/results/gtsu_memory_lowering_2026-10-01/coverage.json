@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1",
+  "full_pointllm_cycle_accurate": false,
+  "policy": "fail_closed",
+  "operators": [
+    {
+      "operator": "attention",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No QK/online-softmax/AV RTL slice or paged-KV memory correlation."
+    },
+    {
+      "operator": "banked_sram_2client",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Locked 16-bank/128-bit/1R1W/3-cycle slice; behavioral SRAM array, two clients, and no foundry SRAM macro characterization."
+    },
+    {
+      "operator": "dense_gemm",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No dense-mode tensor-fabric RTL slice or cycle correlation."
+    },
+    {
+      "operator": "fps",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "QuickFPS is an external reference; no GTSU-integrated RTL correlation yet."
+    },
+    {
+      "operator": "knn_topk",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No GTSU distance/top-k RTL slice or cycle correlation."
+    },
+    {
+      "operator": "lm_head_sampling",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No integrated LM-head/argmax RTL slice or cycle correlation."
+    },
+    {
+      "operator": "pointllm_splitk_linear",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "Checkpoint-backed tile/address lowering and DRAMsim3 burst timing exist, but SRAM/DRAM completion is not yet integrated with the compute RTL slice."
+    },
+    {
+      "operator": "vector_norm_activation",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No GTSU vector RTL slice or bit/cycle correlation."
+    },
+    {
+      "operator": "w8_splitk_gemv_vertical_slice",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Locked transaction-level slice only; deterministic source timing. PointLLM lowering and DRAM timing exist separately but are not integrated."
+    }
+  ]
+}

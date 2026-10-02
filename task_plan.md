@@ -218,6 +218,9 @@ Phase 31 in progress
 - [x] Define a shared micro-op, event-trace, configuration, and unsupported-operator contract for the first vertical slice
 - [ ] Implement pipelined ready/valid resources, finite FIFOs, tile issue order, arbitration, and backpressure
 - [ ] Model SRAM banks/ports/conflicts and DMA latency/bandwidth/outstanding requests
+  - [x] Correlate a 16-bank, 128-bit, 1R1W, 3-cycle-read SRAM/arbiter against synthesizable RTL
+  - [x] Connect sampled PointLLM W8 tile bursts to the pinned local DRAMsim3 backend
+  - [ ] Integrate SRAM and DRAM completion into the Split-K compute slice before enabling production-linear cycles
 - [x] Complete the W8 Split-K GEMV vertical slice from functional model through cycle model and RTL
 - [x] Generate functional, traffic, event, and cycle golden traces for RTL testbenches
 - [x] Correlate W8 Split-K GEMV traffic exactly and cycles exactly for the locked RTL configuration
@@ -225,6 +228,7 @@ Phase 31 in progress
 - [ ] Add dense GEMM, attention, vector/norm/activation, KNN/top-k, LM-head, and sampling RTL slices
 - [ ] Enable full PointLLM cycle-accurate reports only after every lowered operator has correlated RTL
 - [ ] Import characterized area and active/idle energy before equal-area DSE claims
+- [x] Lower real checkpoint-backed PointLLM decoder linears into exact tensor regions, tiles, bursts, and SRAM bank/row addresses
 - **Status:** in progress; no full-model cycle-accuracy claim is allowed yet
 
 ## Key Questions

@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "sram": {
+    "banks": 16,
+    "rows_per_bank": 16384,
+    "word_bytes": 16,
+    "read_latency": 3,
+    "clients": 2,
+    "ports_per_bank": "1R1W",
+    "same_bank_priority": "client0"
+  },
+  "pointllm_lowering": {
+    "target_precision": "W8A8_ACC32",
+    "scale_group": 128,
+    "scale_bytes": 2,
+    "split_k": 16,
+    "output_tile": 16,
+    "dram_burst_bytes": 64
+  },
+  "dramsim3": {
+    "bridge": "/home/PointAcc/QuickFPS/build/dramsim3-latest/libquickfps_dramsim3_bridge.so",
+    "config": "/home/DRAMsim3/configs/DDR4_8Gb_x8_2400.ini",
+    "source_commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+    "accelerator_clock_hz": 1000000000,
+    "max_outstanding": 32
+  }
+}

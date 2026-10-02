@@ -1,0 +1,1052 @@
+{
+  "accelerator_cycles": 246,
+  "dram_clock_ticks": 296,
+  "requests": 64,
+  "bytes_read": 4096,
+  "latency_min": 34,
+  "latency_median": 97.0,
+  "latency_max": 158,
+  "events": [
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 0,
+      "address": 4294967296,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 1,
+      "address": 4294967360,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 2,
+      "address": 4294967424,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 3,
+      "address": 4294967488,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 4,
+      "address": 4294971392,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 5,
+      "address": 4294971456,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 6,
+      "address": 4294971520,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 7,
+      "address": 4294971584,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 8,
+      "address": 4294975488,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 9,
+      "address": 4294975552,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 10,
+      "address": 4294975616,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 11,
+      "address": 4294975680,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 12,
+      "address": 4294979584,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 13,
+      "address": 4294979648,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 14,
+      "address": 4294979712,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 15,
+      "address": 4294979776,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 16,
+      "address": 4294983680,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 17,
+      "address": 4294983744,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 18,
+      "address": 4294983808,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 19,
+      "address": 4294983872,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 20,
+      "address": 4294987776,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 21,
+      "address": 4294987840,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 22,
+      "address": 4294987904,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 23,
+      "address": 4294987968,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 24,
+      "address": 4294991872,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 25,
+      "address": 4294991936,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 26,
+      "address": 4294992000,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 27,
+      "address": 4294992064,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 28,
+      "address": 4294995968,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 29,
+      "address": 4294996032,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 30,
+      "address": 4294996096,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 0,
+      "event": "SUBMIT",
+      "tag": 31,
+      "address": 4294996160,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 34,
+      "event": "COMPLETE",
+      "tag": 0,
+      "address": 4294967296,
+      "stream": "weight",
+      "latency": 34
+    },
+    {
+      "cycle": 34,
+      "event": "SUBMIT",
+      "tag": 32,
+      "address": 4295000064,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 39,
+      "event": "COMPLETE",
+      "tag": 1,
+      "address": 4294967360,
+      "stream": "weight",
+      "latency": 39
+    },
+    {
+      "cycle": 39,
+      "event": "SUBMIT",
+      "tag": 33,
+      "address": 4295000128,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 42,
+      "event": "COMPLETE",
+      "tag": 8,
+      "address": 4294975488,
+      "stream": "weight",
+      "latency": 42
+    },
+    {
+      "cycle": 42,
+      "event": "SUBMIT",
+      "tag": 34,
+      "address": 4295000192,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 45,
+      "event": "COMPLETE",
+      "tag": 2,
+      "address": 4294967424,
+      "stream": "weight",
+      "latency": 45
+    },
+    {
+      "cycle": 45,
+      "event": "SUBMIT",
+      "tag": 35,
+      "address": 4295000256,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 49,
+      "event": "COMPLETE",
+      "tag": 9,
+      "address": 4294975552,
+      "stream": "weight",
+      "latency": 49
+    },
+    {
+      "cycle": 49,
+      "event": "SUBMIT",
+      "tag": 36,
+      "address": 4295004160,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 52,
+      "event": "COMPLETE",
+      "tag": 16,
+      "address": 4294983680,
+      "stream": "weight",
+      "latency": 52
+    },
+    {
+      "cycle": 52,
+      "event": "SUBMIT",
+      "tag": 37,
+      "address": 4295004224,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 55,
+      "event": "COMPLETE",
+      "tag": 10,
+      "address": 4294975616,
+      "stream": "weight",
+      "latency": 55
+    },
+    {
+      "cycle": 55,
+      "event": "SUBMIT",
+      "tag": 38,
+      "address": 4295004288,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 59,
+      "event": "COMPLETE",
+      "tag": 17,
+      "address": 4294983744,
+      "stream": "weight",
+      "latency": 59
+    },
+    {
+      "cycle": 59,
+      "event": "SUBMIT",
+      "tag": 39,
+      "address": 4295004352,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 62,
+      "event": "COMPLETE",
+      "tag": 24,
+      "address": 4294991872,
+      "stream": "weight",
+      "latency": 62
+    },
+    {
+      "cycle": 62,
+      "event": "SUBMIT",
+      "tag": 40,
+      "address": 4295008256,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 65,
+      "event": "COMPLETE",
+      "tag": 3,
+      "address": 4294967488,
+      "stream": "weight",
+      "latency": 65
+    },
+    {
+      "cycle": 65,
+      "event": "SUBMIT",
+      "tag": 41,
+      "address": 4295008320,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 69,
+      "event": "COMPLETE",
+      "tag": 11,
+      "address": 4294975680,
+      "stream": "weight",
+      "latency": 69
+    },
+    {
+      "cycle": 69,
+      "event": "SUBMIT",
+      "tag": 42,
+      "address": 4295008384,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 72,
+      "event": "COMPLETE",
+      "tag": 18,
+      "address": 4294983808,
+      "stream": "weight",
+      "latency": 72
+    },
+    {
+      "cycle": 72,
+      "event": "SUBMIT",
+      "tag": 43,
+      "address": 4295008448,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 75,
+      "event": "COMPLETE",
+      "tag": 25,
+      "address": 4294991936,
+      "stream": "weight",
+      "latency": 75
+    },
+    {
+      "cycle": 75,
+      "event": "SUBMIT",
+      "tag": 44,
+      "address": 4295012352,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 79,
+      "event": "COMPLETE",
+      "tag": 4,
+      "address": 4294971392,
+      "stream": "weight",
+      "latency": 79
+    },
+    {
+      "cycle": 79,
+      "event": "SUBMIT",
+      "tag": 45,
+      "address": 4295012416,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 82,
+      "event": "COMPLETE",
+      "tag": 19,
+      "address": 4294983872,
+      "stream": "weight",
+      "latency": 82
+    },
+    {
+      "cycle": 82,
+      "event": "SUBMIT",
+      "tag": 46,
+      "address": 4295012480,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 85,
+      "event": "COMPLETE",
+      "tag": 26,
+      "address": 4294992000,
+      "stream": "weight",
+      "latency": 85
+    },
+    {
+      "cycle": 85,
+      "event": "SUBMIT",
+      "tag": 47,
+      "address": 4295012544,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 88,
+      "event": "COMPLETE",
+      "tag": 5,
+      "address": 4294971456,
+      "stream": "weight",
+      "latency": 88
+    },
+    {
+      "cycle": 88,
+      "event": "SUBMIT",
+      "tag": 48,
+      "address": 4295016448,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 92,
+      "event": "COMPLETE",
+      "tag": 12,
+      "address": 4294979584,
+      "stream": "weight",
+      "latency": 92
+    },
+    {
+      "cycle": 92,
+      "event": "SUBMIT",
+      "tag": 49,
+      "address": 4295016512,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 95,
+      "event": "COMPLETE",
+      "tag": 20,
+      "address": 4294987776,
+      "stream": "weight",
+      "latency": 95
+    },
+    {
+      "cycle": 95,
+      "event": "SUBMIT",
+      "tag": 50,
+      "address": 4295016576,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 98,
+      "event": "COMPLETE",
+      "tag": 27,
+      "address": 4294992064,
+      "stream": "weight",
+      "latency": 98
+    },
+    {
+      "cycle": 98,
+      "event": "SUBMIT",
+      "tag": 51,
+      "address": 4295016640,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 102,
+      "event": "COMPLETE",
+      "tag": 6,
+      "address": 4294971520,
+      "stream": "weight",
+      "latency": 102
+    },
+    {
+      "cycle": 102,
+      "event": "SUBMIT",
+      "tag": 52,
+      "address": 4295020544,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 105,
+      "event": "COMPLETE",
+      "tag": 13,
+      "address": 4294979648,
+      "stream": "weight",
+      "latency": 105
+    },
+    {
+      "cycle": 105,
+      "event": "SUBMIT",
+      "tag": 53,
+      "address": 4295020608,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 108,
+      "event": "COMPLETE",
+      "tag": 28,
+      "address": 4294995968,
+      "stream": "weight",
+      "latency": 108
+    },
+    {
+      "cycle": 108,
+      "event": "SUBMIT",
+      "tag": 54,
+      "address": 4295020672,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 112,
+      "event": "COMPLETE",
+      "tag": 7,
+      "address": 4294971584,
+      "stream": "weight",
+      "latency": 112
+    },
+    {
+      "cycle": 112,
+      "event": "SUBMIT",
+      "tag": 55,
+      "address": 4295020736,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 115,
+      "event": "COMPLETE",
+      "tag": 14,
+      "address": 4294979712,
+      "stream": "weight",
+      "latency": 115
+    },
+    {
+      "cycle": 115,
+      "event": "SUBMIT",
+      "tag": 56,
+      "address": 4295024640,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 118,
+      "event": "COMPLETE",
+      "tag": 21,
+      "address": 4294987840,
+      "stream": "weight",
+      "latency": 118
+    },
+    {
+      "cycle": 118,
+      "event": "SUBMIT",
+      "tag": 57,
+      "address": 4295024704,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 122,
+      "event": "COMPLETE",
+      "tag": 29,
+      "address": 4294996032,
+      "stream": "weight",
+      "latency": 122
+    },
+    {
+      "cycle": 122,
+      "event": "SUBMIT",
+      "tag": 58,
+      "address": 4295024768,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 125,
+      "event": "COMPLETE",
+      "tag": 32,
+      "address": 4295000064,
+      "stream": "weight",
+      "latency": 91
+    },
+    {
+      "cycle": 125,
+      "event": "SUBMIT",
+      "tag": 59,
+      "address": 4295024832,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 128,
+      "event": "COMPLETE",
+      "tag": 15,
+      "address": 4294979776,
+      "stream": "weight",
+      "latency": 128
+    },
+    {
+      "cycle": 128,
+      "event": "SUBMIT",
+      "tag": 60,
+      "address": 4295028736,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 132,
+      "event": "COMPLETE",
+      "tag": 22,
+      "address": 4294987904,
+      "stream": "weight",
+      "latency": 132
+    },
+    {
+      "cycle": 132,
+      "event": "SUBMIT",
+      "tag": 61,
+      "address": 4295028800,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 135,
+      "event": "COMPLETE",
+      "tag": 33,
+      "address": 4295000128,
+      "stream": "weight",
+      "latency": 96
+    },
+    {
+      "cycle": 135,
+      "event": "SUBMIT",
+      "tag": 62,
+      "address": 4295028864,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 138,
+      "event": "COMPLETE",
+      "tag": 40,
+      "address": 4295008256,
+      "stream": "weight",
+      "latency": 76
+    },
+    {
+      "cycle": 138,
+      "event": "SUBMIT",
+      "tag": 63,
+      "address": 4295028928,
+      "stream": "weight",
+      "latency": 0
+    },
+    {
+      "cycle": 142,
+      "event": "COMPLETE",
+      "tag": 23,
+      "address": 4294987968,
+      "stream": "weight",
+      "latency": 142
+    },
+    {
+      "cycle": 145,
+      "event": "COMPLETE",
+      "tag": 30,
+      "address": 4294996096,
+      "stream": "weight",
+      "latency": 145
+    },
+    {
+      "cycle": 148,
+      "event": "COMPLETE",
+      "tag": 34,
+      "address": 4295000192,
+      "stream": "weight",
+      "latency": 106
+    },
+    {
+      "cycle": 152,
+      "event": "COMPLETE",
+      "tag": 41,
+      "address": 4295008320,
+      "stream": "weight",
+      "latency": 87
+    },
+    {
+      "cycle": 155,
+      "event": "COMPLETE",
+      "tag": 48,
+      "address": 4295016448,
+      "stream": "weight",
+      "latency": 67
+    },
+    {
+      "cycle": 158,
+      "event": "COMPLETE",
+      "tag": 31,
+      "address": 4294996160,
+      "stream": "weight",
+      "latency": 158
+    },
+    {
+      "cycle": 162,
+      "event": "COMPLETE",
+      "tag": 35,
+      "address": 4295000256,
+      "stream": "weight",
+      "latency": 117
+    },
+    {
+      "cycle": 165,
+      "event": "COMPLETE",
+      "tag": 42,
+      "address": 4295008384,
+      "stream": "weight",
+      "latency": 96
+    },
+    {
+      "cycle": 168,
+      "event": "COMPLETE",
+      "tag": 49,
+      "address": 4295016512,
+      "stream": "weight",
+      "latency": 76
+    },
+    {
+      "cycle": 171,
+      "event": "COMPLETE",
+      "tag": 56,
+      "address": 4295024640,
+      "stream": "weight",
+      "latency": 56
+    },
+    {
+      "cycle": 175,
+      "event": "COMPLETE",
+      "tag": 36,
+      "address": 4295004160,
+      "stream": "weight",
+      "latency": 126
+    },
+    {
+      "cycle": 178,
+      "event": "COMPLETE",
+      "tag": 43,
+      "address": 4295008448,
+      "stream": "weight",
+      "latency": 106
+    },
+    {
+      "cycle": 181,
+      "event": "COMPLETE",
+      "tag": 50,
+      "address": 4295016576,
+      "stream": "weight",
+      "latency": 86
+    },
+    {
+      "cycle": 185,
+      "event": "COMPLETE",
+      "tag": 57,
+      "address": 4295024704,
+      "stream": "weight",
+      "latency": 67
+    },
+    {
+      "cycle": 188,
+      "event": "COMPLETE",
+      "tag": 37,
+      "address": 4295004224,
+      "stream": "weight",
+      "latency": 136
+    },
+    {
+      "cycle": 191,
+      "event": "COMPLETE",
+      "tag": 44,
+      "address": 4295012352,
+      "stream": "weight",
+      "latency": 116
+    },
+    {
+      "cycle": 195,
+      "event": "COMPLETE",
+      "tag": 51,
+      "address": 4295016640,
+      "stream": "weight",
+      "latency": 97
+    },
+    {
+      "cycle": 198,
+      "event": "COMPLETE",
+      "tag": 58,
+      "address": 4295024768,
+      "stream": "weight",
+      "latency": 76
+    },
+    {
+      "cycle": 201,
+      "event": "COMPLETE",
+      "tag": 38,
+      "address": 4295004288,
+      "stream": "weight",
+      "latency": 146
+    },
+    {
+      "cycle": 205,
+      "event": "COMPLETE",
+      "tag": 45,
+      "address": 4295012416,
+      "stream": "weight",
+      "latency": 126
+    },
+    {
+      "cycle": 208,
+      "event": "COMPLETE",
+      "tag": 52,
+      "address": 4295020544,
+      "stream": "weight",
+      "latency": 106
+    },
+    {
+      "cycle": 211,
+      "event": "COMPLETE",
+      "tag": 59,
+      "address": 4295024832,
+      "stream": "weight",
+      "latency": 86
+    },
+    {
+      "cycle": 215,
+      "event": "COMPLETE",
+      "tag": 39,
+      "address": 4295004352,
+      "stream": "weight",
+      "latency": 156
+    },
+    {
+      "cycle": 218,
+      "event": "COMPLETE",
+      "tag": 46,
+      "address": 4295012480,
+      "stream": "weight",
+      "latency": 136
+    },
+    {
+      "cycle": 221,
+      "event": "COMPLETE",
+      "tag": 53,
+      "address": 4295020608,
+      "stream": "weight",
+      "latency": 116
+    },
+    {
+      "cycle": 225,
+      "event": "COMPLETE",
+      "tag": 60,
+      "address": 4295028736,
+      "stream": "weight",
+      "latency": 97
+    },
+    {
+      "cycle": 228,
+      "event": "COMPLETE",
+      "tag": 47,
+      "address": 4295012544,
+      "stream": "weight",
+      "latency": 143
+    },
+    {
+      "cycle": 231,
+      "event": "COMPLETE",
+      "tag": 54,
+      "address": 4295020672,
+      "stream": "weight",
+      "latency": 123
+    },
+    {
+      "cycle": 235,
+      "event": "COMPLETE",
+      "tag": 61,
+      "address": 4295028800,
+      "stream": "weight",
+      "latency": 103
+    },
+    {
+      "cycle": 238,
+      "event": "COMPLETE",
+      "tag": 55,
+      "address": 4295020736,
+      "stream": "weight",
+      "latency": 126
+    },
+    {
+      "cycle": 241,
+      "event": "COMPLETE",
+      "tag": 62,
+      "address": 4295028864,
+      "stream": "weight",
+      "latency": 106
+    },
+    {
+      "cycle": 246,
+      "event": "COMPLETE",
+      "tag": 63,
+      "address": 4295028928,
+      "stream": "weight",
+      "latency": 108
+    }
+  ],
+  "provenance": {
+    "bridge": "/home/PointAcc/QuickFPS/build/dramsim3-latest/libquickfps_dramsim3_bridge.so",
+    "bridge_sha256": "783bcadb9de16ec1dd98b0a9401181c1ec0ad34ee5972c828a13ab16690ff195",
+    "config": "/home/DRAMsim3/configs/DDR4_8Gb_x8_2400.ini",
+    "config_sha256": "6892161a10debdf1fdcded2d601c5cc3dcc80ed492a71ef81895ae30e51a5c26",
+    "dramsim3_source_commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+    "dram_tck_ns": 0.83,
+    "accelerator_clock_hz": 1000000000,
+    "transaction_bytes": 64,
+    "max_outstanding": 32
+  },
+  "fidelity": {
+    "backend": "official_dramsim3_via_local_c_abi",
+    "fixed_latency_model": false,
+    "controller_rtl_correlated": false,
+    "full_model_cycle_accurate": false
+  }
+}

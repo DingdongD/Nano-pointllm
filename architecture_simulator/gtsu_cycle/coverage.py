@@ -23,8 +23,19 @@ COVERAGE = {
         synthesizable_rtl=True,
         exact_rtl_cycle_correlation=True,
         limitation=(
-            "Locked transaction-level slice only; deterministic source timing, "
-            "no DRAM timing backend or production PointLLM lowering yet."
+            "Locked transaction-level slice only; deterministic source timing. "
+            "PointLLM lowering and DRAM timing exist separately but are not integrated."
+        ),
+    ),
+    "banked_sram_2client": OperatorCoverage(
+        operator="banked_sram_2client",
+        functional_model=True,
+        event_cycle_model=True,
+        synthesizable_rtl=True,
+        exact_rtl_cycle_correlation=True,
+        limitation=(
+            "Locked 16-bank/128-bit/1R1W/3-cycle slice; behavioral SRAM array, "
+            "two clients, and no foundry SRAM macro characterization."
         ),
     ),
     "fps": OperatorCoverage(
@@ -41,7 +52,8 @@ COVERAGE = {
     ),
     "pointllm_splitk_linear": OperatorCoverage(
         "pointllm_splitk_linear", False, False, False, False,
-        "The small GEMV slice is not yet integrated with activation/weight memory plans.",
+        "Checkpoint-backed tile/address lowering and DRAMsim3 burst timing exist, but "
+        "SRAM/DRAM completion is not yet integrated with the compute RTL slice.",
     ),
     "attention": OperatorCoverage(
         "attention", False, False, False, False,

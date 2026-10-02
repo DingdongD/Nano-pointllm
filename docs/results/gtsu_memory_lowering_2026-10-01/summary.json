@@ -1,0 +1,224 @@
+{
+  "schema_version": "0.1",
+  "status": "memory_vertical_slices_validated",
+  "sram": {
+    "schema_version": "0.1",
+    "status": "rtl_correlated",
+    "contract": "gtsu_banked_sram_2client",
+    "event_trace_exact": true,
+    "cycle_model_cycles": 15,
+    "rtl_cycles": 15,
+    "cycle_error": 0,
+    "events": 21,
+    "counters": {
+      "read_accepts": 7,
+      "write_accepts": 7,
+      "read_completions": 7,
+      "read_bank_conflicts": 1,
+      "write_bank_conflicts": 1,
+      "client_stall_cycles": 2
+    },
+    "config": {
+      "banks": 16,
+      "rows_per_bank": 16384,
+      "word_bytes": 16,
+      "read_latency": 3,
+      "clients": 2
+    },
+    "source_contract": {
+      "repository": "/home/Compiler_Codes",
+      "commit": "ad2c31a55227b6d1e3119d33e44a122f705e2099",
+      "reference": "rtl/ACTransformer_DS/rtl/hdl/buf_mgr/lbuf_wrap*.sv"
+    },
+    "limitations": [
+      "behavioral synthesizable SRAM arrays, not a foundry SRAM macro",
+      "two-client locked arbitration slice, not the complete Compiler_Codes client set",
+      "not yet connected to the Split-K compute RTL"
+    ]
+  },
+  "pointllm_lowering": {
+    "projection": "q_proj",
+    "layer": 0,
+    "shape": {
+      "m": 1,
+      "n": 4096,
+      "k": 4096
+    },
+    "source_dtype": "F32",
+    "target_weight_payload_bytes": 16777216,
+    "weight_burst_count": 262144,
+    "tile_count": 4096,
+    "validation": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "source_tensor_byte_conservation",
+          "passed": true,
+          "detail": "header=67108864, expected=67108864"
+        },
+        {
+          "name": "tile_weight_byte_conservation",
+          "passed": true,
+          "detail": "tiles=16777216, tensor=16777216"
+        },
+        {
+          "name": "burst_byte_conservation",
+          "passed": true,
+          "detail": "bursts=262144, bytes=16777216"
+        },
+        {
+          "name": "scale_burst_byte_conservation",
+          "passed": true,
+          "detail": "bursts=4096, bytes=262144"
+        },
+        {
+          "name": "dram_regions_nonoverlap",
+          "passed": true,
+          "detail": "weight_w8=0x100000000:0x101000000, weight_scale=0x101000000:0x101040000"
+        },
+        {
+          "name": "sram_regions_nonoverlap",
+          "passed": true,
+          "detail": "activation_a8=0x0:0x1000, weight_tile_w8=0x100000:0x101000, partial_acc32=0x300000:0x300400, output_acc32=0x310000:0x310040"
+        },
+        {
+          "name": "sram_capacity",
+          "passed": true,
+          "detail": "max_end=3211328, capacity=4194304"
+        },
+        {
+          "name": "sram_addresses_decodable",
+          "passed": true,
+          "detail": "samples=192"
+        }
+      ]
+    }
+  },
+  "dramsim3_sample": {
+    "accelerator_cycles": 246,
+    "dram_clock_ticks": 296,
+    "requests": 64,
+    "bytes_read": 4096,
+    "latency_min": 34,
+    "latency_median": 97.0,
+    "latency_max": 158,
+    "provenance": {
+      "bridge": "/home/PointAcc/QuickFPS/build/dramsim3-latest/libquickfps_dramsim3_bridge.so",
+      "bridge_sha256": "783bcadb9de16ec1dd98b0a9401181c1ec0ad34ee5972c828a13ab16690ff195",
+      "config": "/home/DRAMsim3/configs/DDR4_8Gb_x8_2400.ini",
+      "config_sha256": "6892161a10debdf1fdcded2d601c5cc3dcc80ed492a71ef81895ae30e51a5c26",
+      "dramsim3_source_commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+      "dram_tck_ns": 0.83,
+      "accelerator_clock_hz": 1000000000,
+      "transaction_bytes": 64,
+      "max_outstanding": 32
+    },
+    "fidelity": {
+      "backend": "official_dramsim3_via_local_c_abi",
+      "fixed_latency_model": false,
+      "controller_rtl_correlated": false,
+      "full_model_cycle_accurate": false
+    }
+  },
+  "yosys": {
+    "status": "passed",
+    "configuration": "compact default logic smoke; production geometry is RTL-simulated",
+    "warnings": [
+      "Warning: Replacing memory \\memory with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:120",
+      "Warning: Replacing memory \\c1_data_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:87",
+      "Warning: Replacing memory \\c0_data_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:86",
+      "Warning: Replacing memory \\c1_row_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:85",
+      "Warning: Replacing memory \\c0_row_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:84",
+      "Warning: Replacing memory \\c1_bank_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:83",
+      "Warning: Replacing memory \\c0_bank_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:82",
+      "Warning: Replacing memory \\c1_tag_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:81",
+      "Warning: Replacing memory \\c0_tag_pipe with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_banked_sram_2client.sv:80"
+    ]
+  },
+  "coverage": {
+    "schema_version": "0.1",
+    "full_pointllm_cycle_accurate": false,
+    "policy": "fail_closed",
+    "operators": [
+      {
+        "operator": "attention",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "No QK/online-softmax/AV RTL slice or paged-KV memory correlation."
+      },
+      {
+        "operator": "banked_sram_2client",
+        "functional_model": true,
+        "event_cycle_model": true,
+        "synthesizable_rtl": true,
+        "exact_rtl_cycle_correlation": true,
+        "limitation": "Locked 16-bank/128-bit/1R1W/3-cycle slice; behavioral SRAM array, two clients, and no foundry SRAM macro characterization."
+      },
+      {
+        "operator": "dense_gemm",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "No dense-mode tensor-fabric RTL slice or cycle correlation."
+      },
+      {
+        "operator": "fps",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "QuickFPS is an external reference; no GTSU-integrated RTL correlation yet."
+      },
+      {
+        "operator": "knn_topk",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "No GTSU distance/top-k RTL slice or cycle correlation."
+      },
+      {
+        "operator": "lm_head_sampling",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "No integrated LM-head/argmax RTL slice or cycle correlation."
+      },
+      {
+        "operator": "pointllm_splitk_linear",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "Checkpoint-backed tile/address lowering and DRAMsim3 burst timing exist, but SRAM/DRAM completion is not yet integrated with the compute RTL slice."
+      },
+      {
+        "operator": "vector_norm_activation",
+        "functional_model": false,
+        "event_cycle_model": false,
+        "synthesizable_rtl": false,
+        "exact_rtl_cycle_correlation": false,
+        "limitation": "No GTSU vector RTL slice or bit/cycle correlation."
+      },
+      {
+        "operator": "w8_splitk_gemv_vertical_slice",
+        "functional_model": true,
+        "event_cycle_model": true,
+        "synthesizable_rtl": true,
+        "exact_rtl_cycle_correlation": true,
+        "limitation": "Locked transaction-level slice only; deterministic source timing. PointLLM lowering and DRAM timing exist separately but are not integrated."
+      }
+    ]
+  },
+  "claim_boundary": {
+    "sram_port_cycle_rtl_correlated": true,
+    "pointllm_shape_address_byte_exact": true,
+    "sampled_dram_timing_real_dramsim3": true,
+    "compute_memory_integrated_cycle_rtl_correlated": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

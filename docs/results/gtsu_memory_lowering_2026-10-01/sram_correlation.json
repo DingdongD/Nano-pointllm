@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "contract": "gtsu_banked_sram_2client",
+  "event_trace_exact": true,
+  "cycle_model_cycles": 15,
+  "rtl_cycles": 15,
+  "cycle_error": 0,
+  "events": 21,
+  "counters": {
+    "read_accepts": 7,
+    "write_accepts": 7,
+    "read_completions": 7,
+    "read_bank_conflicts": 1,
+    "write_bank_conflicts": 1,
+    "client_stall_cycles": 2
+  },
+  "config": {
+    "banks": 16,
+    "rows_per_bank": 16384,
+    "word_bytes": 16,
+    "read_latency": 3,
+    "clients": 2
+  },
+  "source_contract": {
+    "repository": "/home/Compiler_Codes",
+    "commit": "ad2c31a55227b6d1e3119d33e44a122f705e2099",
+    "reference": "rtl/ACTransformer_DS/rtl/hdl/buf_mgr/lbuf_wrap*.sv"
+  },
+  "limitations": [
+    "behavioral synthesizable SRAM arrays, not a foundry SRAM macro",
+    "two-client locked arbitration slice, not the complete Compiler_Codes client set",
+    "not yet connected to the Split-K compute RTL"
+  ]
+}

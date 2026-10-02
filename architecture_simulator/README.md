@@ -18,7 +18,10 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | W8 Split-K GEMV slice: finite FIFO/backpressure event model | Implemented |
 | W8 Split-K GEMV slice: synthesizable RTL | Implemented; Yosys checked |
 | W8 Split-K GEMV slice: exact event/cycle/output correlation | Implemented for locked test configurations |
-| Deterministic source latency and beat stream | Implemented for the slice; not a DRAM timing model |
+| 16-bank x 128-bit 1R1W SRAM: conflicts, arbitration, 3-cycle reads | Python/RTL exact correlation for locked two-client schedule |
+| PointLLM decoder linear lowering | Real safetensors shapes to W8 tiles, DRAM bursts, and SRAM bank/row addresses |
+| DRAM timing | Local pinned DRAMsim3 backend for explicit sampled requests |
+| Compute + SRAM + DRAM integrated production linear | Not implemented; fail-closed |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | FPS/KNN/dense GEMM/attention/vector/LM-head/sampling RTL | Not implemented |
@@ -124,6 +127,12 @@ python scripts/run_splitk_rtl_correlation.py \
 
 # Inspect strict coverage. Requiring attention currently fails by design.
 python scripts/check_cycle_coverage.py
+
+# Correlate SRAM RTL, lower real PointLLM tensors, and time sampled requests
+# with the pinned local DRAMsim3 bridge.
+python scripts/run_pointllm_memory_correlation.py \
+  --output-dir ../docs/results/gtsu_memory_lowering_2026-10-01 \
+  --projection q_proj --layer 0 --sample-bursts 64
 ```
 
 ## Output contract
@@ -156,15 +165,19 @@ docs/               fidelity roadmap and boundaries
 tests/              shape, conservation, mapping, and CLI contracts
 ```
 
-Only the W8 Split-K GEMV slice currently has executable RTL and exact event
-correlation. This does not validate generic PointLLM linear operations or any
-end-to-end latency; those paths remain fail-closed.
+The W8 Split-K GEMV and locked SRAM port/arbiter slices have executable RTL and
+exact event correlation. Decoder tensors now have checkpoint-backed target
+layout and memory addresses, and sampled bursts use real DRAMsim3 timing. These
+pieces are not yet one integrated compute/memory RTL pipeline, so generic
+PointLLM linear cycles and all end-to-end latency remain fail-closed.
 
 ## Fidelity roadmap
 
 1. Correlate persistent FPS against the QuickFPS RTL/C-model event contract.
-2. Add tile-level producer/consumer overlap and bank-conflict traces.
-3. Replace analytical HBM with an optional DRAMsim3 backend.
+2. Connect the implemented tile/address lowering, correlated SRAM ports, and
+   DRAMsim3 completions to the Split-K RTL producer/consumer pipeline.
+3. Add production-size multi-client SRAM scheduling and DMA outstanding-credit
+   correlation; replace behavioral arrays with characterized SRAM macros.
 4. Generate tensor/Split-K/attention golden vectors for RTL testbenches.
 5. Import synthesized area and PTPX active/idle energy by stable block name.
 6. Compare shared GTSU against a disaggregated PointISA-like frontend plus conventional LLM accelerator under equal area/HBM constraints.

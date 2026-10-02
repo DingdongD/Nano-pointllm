@@ -8,6 +8,14 @@ from .splitk_gemv import (
     build_beats,
     run_cycle_model,
 )
+from .sram import (
+    SramConfig,
+    SramEvent,
+    SramRequest,
+    SramResult,
+    decode_sram_address,
+    run_sram_model,
+)
 
 __all__ = [
     "GemvBeat",
@@ -16,4 +24,10 @@ __all__ = [
     "SplitKGemvConfig",
     "build_beats",
     "run_cycle_model",
+    "SramConfig",
+    "SramEvent",
+    "SramRequest",
+    "SramResult",
+    "decode_sram_address",
+    "run_sram_model",
 ]
