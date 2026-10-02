@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "full_pointllm_cycle_accurate": false,
+  "policy": "fail_closed",
+  "operators": [
+    {
+      "operator": "attention",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No QK/online-softmax/AV RTL slice or paged-KV memory correlation."
+    },
+    {
+      "operator": "dense_gemm",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No dense-mode tensor-fabric RTL slice or cycle correlation."
+    },
+    {
+      "operator": "fps",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "QuickFPS is an external reference; no GTSU-integrated RTL correlation yet."
+    },
+    {
+      "operator": "knn_topk",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No GTSU distance/top-k RTL slice or cycle correlation."
+    },
+    {
+      "operator": "lm_head_sampling",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No integrated LM-head/argmax RTL slice or cycle correlation."
+    },
+    {
+      "operator": "pointllm_splitk_linear",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "The small GEMV slice is not yet integrated with activation/weight memory plans."
+    },
+    {
+      "operator": "vector_norm_activation",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No GTSU vector RTL slice or bit/cycle correlation."
+    },
+    {
+      "operator": "w8_splitk_gemv_vertical_slice",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Locked transaction-level slice only; deterministic source timing, no DRAM timing backend or production PointLLM lowering yet."
+    }
+  ]
+}

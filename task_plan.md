@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 31 pending
+Phase 31 in progress
 
 ## Phases
 
@@ -215,14 +215,17 @@ Phase 31 pending
 - **Status:** complete as an analytical estimator only; the earlier complete-simulator claim is withdrawn
 
 ### Phase 31: Event-Level C-Model And RTL Correlation
-- [ ] Define ready/valid events, finite queues, tile issue order, resource arbitration, and backpressure
-- [ ] Model SRAM banking/conflicts, DMA outstanding limits, and a DRAM timing backend
-- [ ] Build an executable C++/SystemC reference for at least FPS and Split-K GEMV
-- [ ] Generate functional and cycle golden traces for block-level RTL testbenches
-- [ ] Implement and synthesize parameterized RTL blocks
-- [ ] Correlate operation traffic exactly and block cycles within the declared error threshold
+- [x] Define a shared micro-op, event-trace, configuration, and unsupported-operator contract for the first vertical slice
+- [ ] Implement pipelined ready/valid resources, finite FIFOs, tile issue order, arbitration, and backpressure
+- [ ] Model SRAM banks/ports/conflicts and DMA latency/bandwidth/outstanding requests
+- [x] Complete the W8 Split-K GEMV vertical slice from functional model through cycle model and RTL
+- [x] Generate functional, traffic, event, and cycle golden traces for RTL testbenches
+- [x] Correlate W8 Split-K GEMV traffic exactly and cycles exactly for the locked RTL configuration
+- [ ] Complete and correlate the persistent FPS vertical slice
+- [ ] Add dense GEMM, attention, vector/norm/activation, KNN/top-k, LM-head, and sampling RTL slices
+- [ ] Enable full PointLLM cycle-accurate reports only after every lowered operator has correlated RTL
 - [ ] Import characterized area and active/idle energy before equal-area DSE claims
-- **Status:** not implemented
+- **Status:** in progress; no full-model cycle-accuracy claim is allowed yet
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
@@ -256,6 +259,10 @@ Phase 31 pending
 | Nested image forwarding still rejected an otherwise valid detail field | Second smoke artifact inspection | Called `view_image` one image at a time and forwarded its `image_url` explicitly |
 | Official pruning-source clone command included a defensive `rm -rf` | First Phase 27 source-inspection attempt; command was rejected before execution | Use fresh `mktemp` directories and never delete existing paths |
 | PointBERT strict idle check saw NCU's own 940 MiB/41% startup activity | First Phase 29 NCU launch | Move the unchanged idle gate before NCU attaches and pass the pre-NCU GPU snapshot into the capture manifest |
+| Split-K RTL correlation initially reported all configurations as mismatches | First Phase 31 trace comparison | The parser expected eight TRACE fields while the RTL contract emits seven; corrected the parser and retained the exact-correlation gate |
+| First RTL input beat carried unknown metadata/data | Second Phase 31 correlation attempt after parser repair | Removed procedural combinational stimulus with time-zero sensitivity ambiguity; generate every beat through pure functions and continuous assignments |
+| Direct cycle-correlation scripts could not import `gtsu_cycle` | First standalone CLI execution | Add the architecture-simulator root to each script's import path so source-tree execution matches the documented command |
+| Generated trace CSVs failed `git diff --check` because Python CSV defaulted to CRLF | First Phase 31 commit attempt | Lock the trace writer to LF, regenerate both traces, and rerun exact comparison before commit |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

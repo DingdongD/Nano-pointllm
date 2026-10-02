@@ -179,8 +179,16 @@ PYTHONPATH=/home/PointLLM:. /opt/conda/envs/pointllm/bin/python \
 PointLLM operation-level 解析估算器，覆盖 persistent FPS/KNN、dense tensor、
 Split-K decode、W4/W8/BF16 weight streaming、fused/paged attention、分阶段
 SRAM 和资源约束 DSE。它不是完整 cycle simulator、C-model 或 RTL；当前
-没有 ready/valid、stall、bank conflict、DRAM timing 或 RTL correlation，
-因此输出只用于探索，不能作为可发表的性能/面积/能耗结论。
+端到端结果仍没有完整 ready/valid、bank conflict、DRAM timing 或 RTL
+correlation，因此只能用于探索，不能作为可发表的性能/面积/能耗结论。
+
+Phase 31 已增加第一个独立的 RTL-locked vertical slice：W8 Split-K GEMV
+包含有限 FIFO、ready/valid backpressure、unpack、dot/accumulate、partial
+reduction 和输出 stall。Python edge-state model 与 Icarus RTL 在锁定配置上
+做到事件、周期、traffic 与输出完全一致；Yosys structural check 通过。
+这只覆盖该 slice，完整 PointLLM cycle accuracy 仍为 `false`，未覆盖算子会
+fail closed。证据见
+[`docs/results/gtsu_cycle_splitk_rtl_2026-10-01/`](docs/results/gtsu_cycle_splitk_rtl_2026-10-01/README.md)。
 
 ```bash
 cd /home/nano-pointllm/architecture_simulator
@@ -192,7 +200,7 @@ cd /home/nano-pointllm/architecture_simulator
 
 快速 DSE 会联合扫描 tensor shape、Split-K、geometry lanes、HBM、SRAM 与
 weight-unpack 吞吐；`validate` 命令负责核对真实 config/YAML/safetensors
-shape 和解析守恒。C-model/RTL 仍是明确标注的 future work。修正后的
+shape 和解析守恒。完整 C-model/RTL 覆盖仍是明确标注的 future work。修正后的
 `B1/S768/O128` 结果与限制见
 [`docs/results/architecture_simulator_2026-10-01/`](docs/results/architecture_simulator_2026-10-01/README.md)。
 

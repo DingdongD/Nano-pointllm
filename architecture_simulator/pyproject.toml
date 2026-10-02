@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pointllm-archsim"
 version = "0.1.0"
-description = "Uncalibrated analytical architecture estimator for PointLLM inference"
+description = "PointLLM analytical estimator with RTL-locked cycle-model vertical slices"
 requires-python = ">=3.10"
 dependencies = []
 
@@ -18,4 +18,4 @@ pointllm-archsim = "pointllm_archsim.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pointllm_archsim*"]
+include = ["pointllm_archsim*", "gtsu_cycle*"]

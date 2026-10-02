@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "w8_splitk_gemv_vertical_slice",
+  "config": {
+    "n_outputs": 4,
+    "split_k": 2,
+    "k_chunks": 3,
+    "lanes": 4,
+    "source_latency": 3,
+    "compressed_fifo_depth": 2,
+    "decoded_fifo_depth": 2,
+    "partial_fifo_depth": 2,
+    "output_stall_mod": 5,
+    "output_stall_phase": 0,
+    "max_cycles": 10000
+  },
+  "cycle_model_cycles": 32,
+  "rtl_cycles": 32,
+  "cycle_error": 0,
+  "cycle_error_ratio": 0.0,
+  "event_count": 84,
+  "micro_op_count": 84,
+  "event_trace_exact": true,
+  "counter_trace_exact": true,
+  "functional_output_exact": true,
+  "traffic_exact": true,
+  "event_mismatches": [],
+  "counter_mismatches": {},
+  "cycle_model_counters": {
+    "input_beats": 24,
+    "unpack_beats": 24,
+    "compute_beats": 24,
+    "partial_sums": 8,
+    "outputs": 4,
+    "source_backpressure_cycles": 0,
+    "unpack_backpressure_cycles": 0,
+    "compute_backpressure_cycles": 0,
+    "reduction_backpressure_cycles": 0
+  },
+  "rtl_counters": {
+    "input_beats": 24,
+    "unpack_beats": 24,
+    "compute_beats": 24,
+    "partial_sums": 8,
+    "outputs": 4,
+    "source_backpressure_cycles": 0,
+    "unpack_backpressure_cycles": 0,
+    "compute_backpressure_cycles": 0,
+    "reduction_backpressure_cycles": 0
+  },
+  "outputs": [
+    {
+      "n": 0,
+      "value": 1
+    },
+    {
+      "n": 1,
+      "value": -5
+    },
+    {
+      "n": 2,
+      "value": -4
+    },
+    {
+      "n": 3,
+      "value": 11
+    }
+  ],
+  "fidelity": {
+    "rtl_locked": true,
+    "full_model_cycle_accurate": false,
+    "covered_operators": [
+      "w8_splitk_gemv_vertical_slice"
+    ],
+    "unsupported_operators_fail_closed": true
+  },
+  "rtl_sources": [
+    "rtl/vertical_slice/gtsu_rv_fifo.sv",
+    "rtl/vertical_slice/gtsu_w8_splitk_gemv.sv",
+    "rtl/vertical_slice/tb_gtsu_w8_splitk_gemv.sv"
+  ],
+  "tools": {
+    "iverilog": "Icarus Verilog version 12.0 (stable) (v12_0)",
+    "vvp": "Icarus Verilog runtime version 12.0 (stable) (v12_0)",
+    "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+  },
+  "synthesis_check": {
+    "status": "passed",
+    "flow": "read_verilog; hierarchy; proc; memory; opt; check -assert"
+  }
+}

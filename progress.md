@@ -373,3 +373,24 @@
 - Removed the empty C-model/RTL/verification/characterization source directories and consolidated future work under `architecture_simulator/docs/CMODEL_RTL_ROADMAP.md`.
 - Marked CLI warnings, plots, JSON status, READMEs, and result artifacts as `exploratory_only`, `event_level_model=false`, and `rtl_correlated=false`.
 - Regenerated the baseline and 320-point DSE. The old `7082.26 ms` and `1.406x` values are superseded and must not be cited.
+
+## 2026-10-01: Cycle-Accurate Architecture Modeling Start
+- Confirmed that the current repository has no PointLLM-wide RTL implementation and therefore cannot provide full-model cycle-accurate results.
+- Accepted the strict requirement that unsupported operators must fail closed rather than fall back to analytical latency inside a cycle-accurate report.
+- Audited the supplied implementation guidance and selected the Compiler_Codes event/resource organization as a structural reference only, not as a source of PointLLM timing constants.
+- Started Phase 31 with the W8 Split-K GEMV vertical slice as the first functional/event/RTL correlation target, followed by persistent FPS.
+- Confirmed that Icarus Verilog, Verilator, and Yosys are installed locally, enabling an actual RTL simulation gate.
+- Inspected Compiler_Codes ready/valid, DMA, SRAM, datapath, and trace implementations. They will be used as interface/organization references only because their current request-level timing does not model the required pipelined backpressure and bank-striped traffic.
+- Added the first RTL-locked W8 Split-K GEMV transaction contract and Python edge-state model.
+- Added a synthesizable ready/valid FIFO and parameterized GEMV vertical-slice RTL with finite compressed, decoded, and partial-sum queues; W8 sign extension; dot accumulation; Split-K reduction; output backpressure; and event/stall counters.
+- Added a deterministic SystemVerilog testbench that exposes cycle-stamped input, unpack, compute, partial, and output events. Correlation is not yet claimed until automated trace comparison passes.
+- Fixed the trace parser and a time-zero testbench stimulus race exposed by the first two strict correlation attempts; both failures remain recorded in `task_plan.md`.
+- Exact Python-versus-Icarus correlation now passes for three parameter configurations. The locked result has 84 identical events and zero cycle, traffic, counter, or functional mismatch.
+- Added a fail-closed operator coverage registry and CLI. Requiring attention or any other uncorrelated PointLLM operator raises an error rather than using analytical timing.
+- Yosys structural synthesis checks pass for the parameterized ready/valid FIFO and W8 Split-K GEMV RTL.
+- Archived the compact correlation, traces, and coverage matrix under `docs/results/gtsu_cycle_splitk_rtl_2026-10-01/`.
+- Audited QuickFPS as the candidate second vertical slice. It already contains stronger RTL, DMA, DRAMsim3, trace validation, and PPA infrastructure, but remains external to GTSU; integration and schema correlation are still pending.
+- Reran the complete local QuickFPS functional RTL suite successfully, including point engine, bucket pipeline, ping-pong controller, SRAM, AXI reader/writer, concurrent DMA, and integrated stream subsystem.
+- Added the first shared GTSU micro-op IR and deterministic lowering for `LD_W`, `UNPACK_W8`, `GEMV_SPLITK`, `PSUM_REDUCE`, and `STORE`; correlation artifacts now preserve the lowered stream.
+- Final Phase 31 slice regression passed: `22` architecture tests, including three exact Icarus correlation configurations and Yosys synthesis checks; full repository regression passed `167 passed, 1 skipped`.
+- Verified fail-closed CLI behavior: requesting uncorrelated `attention` coverage exits with an explicit error and does not emit a mixed-fidelity cycle report.

@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "operator": "w8_splitk_gemv_vertical_slice",
+  "n_outputs": 4,
+  "split_k": 2,
+  "k_chunks": 3,
+  "lanes": 4,
+  "source_latency": 3,
+  "compressed_fifo_depth": 2,
+  "decoded_fifo_depth": 2,
+  "partial_fifo_depth": 2,
+  "output_stall_mod": 5,
+  "output_stall_phase": 0,
+  "max_cycles": 10000
+}

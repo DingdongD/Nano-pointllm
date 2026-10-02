@@ -2,7 +2,11 @@
 
 This subproject is an executable analytical estimator for the proposed **Geometry-Tensor-Streaming Unified (GTSU)** accelerator. It consumes explicit PointLLM operation traces and reports estimated phase cycles, HBM/SRAM traffic, tensor utilization, dataflow selection, and bottlenecks.
 
-It is **not a complete cycle simulator, C-model, or RTL implementation**. Cross-operation scheduling is conservative and serial; there is no ready/valid event scheduler, bank-conflict model, DRAM timing backend, or RTL correlation yet. Within an operation, compute, HBM, unpack, and SRAM overlap only according to analytical equations. Energy and area remain disabled until characterized RTL/PTPX/CACTI values are supplied.
+It is **not a complete PointLLM cycle simulator or RTL implementation**. The
+legacy `pointllm_archsim` path remains an uncalibrated operation-level
+estimator. A separate `gtsu_cycle` path now contains the first RTL-locked
+vertical slice, but full-model cycle accuracy remains disabled. Energy and area
+remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 
 ## Implementation status
 
@@ -11,16 +15,23 @@ It is **not a complete cycle simulator, C-model, or RTL implementation**. Cross-
 | PointLLM operation trace and shape contract | Implemented and checked against config/YAML/safetensors headers |
 | Analytical MAC, traffic, tensor mapping, and phase estimates | Implemented with conservation tests |
 | DSE and JSON/CSV/plot output | Implemented |
-| Event-level resource occupancy and stalls | Not implemented |
+| W8 Split-K GEMV slice: finite FIFO/backpressure event model | Implemented |
+| W8 Split-K GEMV slice: synthesizable RTL | Implemented; Yosys checked |
+| W8 Split-K GEMV slice: exact event/cycle/output correlation | Implemented for locked test configurations |
+| Deterministic source latency and beat stream | Implemented for the slice; not a DRAM timing model |
+| Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
-| Synthesizable RTL | Not implemented |
-| RTL cycle correlation | Not implemented |
+| FPS/KNN/dense GEMM/attention/vector/LM-head/sampling RTL | Not implemented |
+| Full PointLLM RTL cycle correlation | Not implemented; fail-closed |
 | Characterized area/energy | Not implemented |
 
-Every result is tagged `result_status=exploratory_only`,
+Every legacy estimator result is tagged `result_status=exploratory_only`,
 `event_level_model=false`, and `rtl_correlated=false`. Passing the validator
 means shapes and analytical conservation are internally consistent; it does
 not make the latency prediction cycle-accurate or publishable.
+
+The cycle path has an explicit coverage registry. Requesting an unsupported
+operator raises an error instead of falling back to analytical latency.
 
 ## Why a separate subproject
 
@@ -104,6 +115,15 @@ python -m pointllm_archsim validate \
   --checkpoint_config /mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors/config.json \
   --pointbert_config /home/PointLLM/pointllm/model/pointbert/PointTransformer_8192point_2layer.yaml \
   --output ../results/architecture_simulator/validation.json
+
+# Run exact Python-event-model versus Icarus RTL correlation for the first slice.
+python scripts/run_splitk_rtl_correlation.py \
+  --config configs/gtsu_splitk_rtl_lock.json \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../results/gtsu_cycle/splitk_rtl_lock
+
+# Inspect strict coverage. Requiring attention currently fails by design.
+python scripts/check_cycle_coverage.py
 ```
 
 ## Output contract
@@ -128,14 +148,17 @@ more tensor PEs helps.
 
 ```text
 pointllm_archsim/   executable Python estimator, validation, and schemas
+gtsu_cycle/         RTL-locked event models and fail-closed coverage registry
 configs/            architecture and DSE parameters
-docs/               explicit unimplemented C-model/RTL roadmap
+rtl/vertical_slice/ synthesizable RTL and testbench for correlated slices
+scripts/            RTL correlation and coverage entry points
+docs/               fidelity roadmap and boundaries
 tests/              shape, conservation, mapping, and CLI contracts
 ```
 
-Only executable code is listed as implemented. The future C-model and RTL work
-is intentionally kept under `docs/` rather than represented by empty source
-directories.
+Only the W8 Split-K GEMV slice currently has executable RTL and exact event
+correlation. This does not validate generic PointLLM linear operations or any
+end-to-end latency; those paths remain fail-closed.
 
 ## Fidelity roadmap
 

@@ -1,0 +1,587 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv rtl/vertical_slice/gtsu_rv_fifo.sv rtl/vertical_slice/gtsu_w8_splitk_gemv.sv; hierarchy -check -top gtsu_w8_splitk_gemv; proc; memory; opt; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/vertical_slice/gtsu_rv_fifo.sv
+Parsing SystemVerilog input from `rtl/vertical_slice/gtsu_rv_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_rv_fifo'.
+Warning: Replacing memory \storage with list of registers. See rtl/vertical_slice/gtsu_rv_fifo.sv:37
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/vertical_slice/gtsu_w8_splitk_gemv.sv
+Parsing SystemVerilog input from `rtl/vertical_slice/gtsu_w8_splitk_gemv.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_w8_splitk_gemv'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gtsu_w8_splitk_gemv
+Used module:     \gtsu_rv_fifo
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_rv_fifo'.
+Parameter \WIDTH = 35
+Parameter \DEPTH = 2
+Generating RTLIL representation for module `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2'.
+Warning: Replacing memory \storage with list of registers. See rtl/vertical_slice/gtsu_rv_fifo.sv:37
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_rv_fifo'.
+Parameter \WIDTH = 101
+Parameter \DEPTH = 2
+Generating RTLIL representation for module `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2'.
+Warning: Replacing memory \storage with list of registers. See rtl/vertical_slice/gtsu_rv_fifo.sv:37
+
+3.4. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_rv_fifo'.
+Parameter \WIDTH = 69
+Parameter \DEPTH = 2
+Generating RTLIL representation for module `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2'.
+Warning: Replacing memory \storage with list of registers. See rtl/vertical_slice/gtsu_rv_fifo.sv:37
+
+3.5. Analyzing design hierarchy..
+Top module:  \gtsu_w8_splitk_gemv
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2
+
+3.6. Analyzing design hierarchy..
+Top module:  \gtsu_w8_splitk_gemv
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2
+Removing unused module `\gtsu_rv_fifo'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140 in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140 in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+Marked 4 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124 in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+Removed 1 dead cases from process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115 in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115 in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+Marked 4 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99 in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74 in module gtsu_w8_splitk_gemv.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64 in module gtsu_w8_splitk_gemv.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56 in module gtsu_w8_splitk_gemv.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37 in module gtsu_w8_splitk_gemv.
+Removed 1 dead cases from process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165 in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+Marked 1 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165 in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+Marked 4 switch rules as full_case in process $proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149 in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+Removed a total of 3 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+Found async reset \rst_n in `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+Found async reset \rst_n in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+Found async reset \rst_n in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+Found async reset \rst_n in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56'.
+Found async reset \rst_n in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+Found async reset \rst_n in `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140'.
+     1/2: $1$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$118_DATA[100:0]$142
+     2/2: $0$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$118_DATA[100:0]$141
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+     1/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_ADDR[0:0]$131
+     2/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_DATA[100:0]$130
+     3/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_ADDR[0:0]$129
+     4/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_DATA[100:0]$128
+     5/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_ADDR[0:0]$126
+     6/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_DATA[100:0]$125
+     7/11: $0\storage[1][100:0]
+     8/11: $0\storage[0][100:0]
+     9/11: $0\count[1:0]
+    10/11: $0\write_ptr[0:0]
+    11/11: $0\read_ptr[0:0]
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115'.
+     1/2: $1$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$93_DATA[34:0]$117
+     2/2: $0$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$93_DATA[34:0]$116
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+     1/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_ADDR[0:0]$106
+     2/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_DATA[34:0]$105
+     3/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_ADDR[0:0]$104
+     4/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_DATA[34:0]$103
+     5/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_ADDR[0:0]$101
+     6/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_DATA[34:0]$100
+     7/11: $0\storage[1][34:0]
+     8/11: $0\storage[0][34:0]
+     9/11: $0\count[1:0]
+    10/11: $0\write_ptr[0:0]
+    11/11: $0\read_ptr[0:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+     1/9: $0\stall_reduction[31:0]
+     2/9: $0\stall_compute[31:0]
+     3/9: $0\stall_unpack[31:0]
+     4/9: $0\stall_source[31:0]
+     5/9: $0\count_outputs[31:0]
+     6/9: $0\count_partial_sums[31:0]
+     7/9: $0\count_compute_beats[31:0]
+     8/9: $0\count_unpack_beats[31:0]
+     9/9: $0\count_input_beats[31:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+     1/4: $0\output_data_reg[31:0]
+     2/4: $0\output_n_reg[1:0]
+     3/4: $0\output_valid_reg[0:0]
+     4/4: $0\reduction_accumulator[31:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56'.
+     1/1: $0\compute_accumulator[31:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+     1/4: $0\dot_lane[31:0]
+     2/4: $0\dot_product[31:0]
+     3/4: $0\dot_activation[7:0]
+     4/4: $0\dot_weight[15:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+     1/6: $0\unpack_weights[63:0]
+     2/6: $0\unpack_activation[31:0]
+     3/6: $0\unpack_chunk[1:0]
+     4/6: $0\unpack_partition[0:0]
+     5/6: $0\unpack_n[1:0]
+     6/6: $0\unpack_valid[0:0]
+Creating decoders for process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:98$36'.
+     1/5: $0\unpack_lane[31:0]
+     2/5: $0\sign_extended_weights[63:0] [63:48]
+     3/5: $0\sign_extended_weights[63:0] [47:32]
+     4/5: $0\sign_extended_weights[63:0] [31:16]
+     5/5: $0\sign_extended_weights[63:0] [15:0]
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165'.
+     1/2: $1$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$143_DATA[68:0]$167
+     2/2: $0$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$143_DATA[68:0]$166
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+     1/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_ADDR[0:0]$156
+     2/11: $2$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_DATA[68:0]$155
+     3/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_ADDR[0:0]$154
+     4/11: $1$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_DATA[68:0]$153
+     5/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_ADDR[0:0]$151
+     6/11: $0$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_DATA[68:0]$150
+     7/11: $0\storage[1][68:0]
+     8/11: $0\storage[0][68:0]
+     9/11: $0\count[1:0]
+    10/11: $0\write_ptr[0:0]
+    11/11: $0\read_ptr[0:0]
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$118_DATA' from process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140'.
+No latch inferred for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$93_DATA' from process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\dot_lane' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\dot_weight' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\dot_activation' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\dot_product' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\unpack_lane' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:98$36'.
+No latch inferred for signal `\gtsu_w8_splitk_gemv.\sign_extended_weights' from process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:98$36'.
+No latch inferred for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$mem2reg_rd$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:27$143_DATA' from process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165'.
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.\read_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $adff cell `$procdff$313' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.\write_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $adff cell `$procdff$314' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.\count' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $adff cell `$procdff$315' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.\storage[0]' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $dff cell `$procdff$316' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.\storage[1]' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $dff cell `$procdff$317' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_DATA' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $adff cell `$procdff$318' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$119_ADDR' using process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+  created $adff cell `$procdff$319' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.\read_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $adff cell `$procdff$320' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.\write_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $adff cell `$procdff$321' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.\count' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $adff cell `$procdff$322' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.\storage[0]' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $dff cell `$procdff$323' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.\storage[1]' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $dff cell `$procdff$324' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_DATA' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $adff cell `$procdff$325' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$94_ADDR' using process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+  created $adff cell `$procdff$326' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\count_input_beats' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$327' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\count_unpack_beats' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$328' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\count_compute_beats' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$329' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\count_partial_sums' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$330' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\count_outputs' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$331' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\stall_source' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$332' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\stall_unpack' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$333' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\stall_compute' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$334' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\stall_reduction' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+  created $adff cell `$procdff$335' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\reduction_accumulator' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+  created $adff cell `$procdff$336' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\output_valid_reg' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+  created $adff cell `$procdff$337' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\output_n_reg' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+  created $adff cell `$procdff$338' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\output_data_reg' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+  created $adff cell `$procdff$339' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\compute_accumulator' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56'.
+  created $adff cell `$procdff$340' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_valid' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$341' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_n' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$342' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_partition' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$343' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_chunk' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$344' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_activation' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$345' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_w8_splitk_gemv.\unpack_weights' using process `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+  created $adff cell `$procdff$346' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.\read_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $adff cell `$procdff$347' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.\write_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $adff cell `$procdff$348' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.\count' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $adff cell `$procdff$349' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.\storage[0]' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $dff cell `$procdff$350' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.\storage[1]' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $dff cell `$procdff$351' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_DATA' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $adff cell `$procdff$352' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$mem2reg_wr$\storage$rtl/vertical_slice/gtsu_rv_fifo.sv:37$144_ADDR' using process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+  created $adff cell `$procdff$353' with positive edge clock and negative level reset.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$140'.
+Found and cleaned up 4 empty switches in `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$124'.
+Found and cleaned up 1 empty switch in `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$115'.
+Found and cleaned up 4 empty switches in `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$99'.
+Found and cleaned up 9 empty switches in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:253$74'.
+Found and cleaned up 3 empty switches in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:213$64'.
+Found and cleaned up 1 empty switch in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:178$56'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:156$39'.
+Found and cleaned up 2 empty switches in `\gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:108$37'.
+Removing empty process `gtsu_w8_splitk_gemv.$proc$rtl/vertical_slice/gtsu_w8_splitk_gemv.sv:98$36'.
+Found and cleaned up 1 empty switch in `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:1$165'.
+Found and cleaned up 4 empty switches in `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.$proc$rtl/vertical_slice/gtsu_rv_fifo.sv:30$149'.
+Cleaned up 30 empty switches.
+
+5. Executing MEMORY pass.
+
+5.1. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+5.2. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+Finding unused cells or wires in module \gtsu_w8_splitk_gemv..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+Removed 19 unused cells and 171 unused wires.
+<suppressed ~23 debug messages>
+
+5.3. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+Finding unused cells or wires in module \gtsu_w8_splitk_gemv..
+
+5.5. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.6. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+<suppressed ~6 debug messages>
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+<suppressed ~6 debug messages>
+Optimizing module gtsu_w8_splitk_gemv.
+<suppressed ~5 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2'.
+Finding identical cells in module `\gtsu_w8_splitk_gemv'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_w8_splitk_gemv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~41 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+  Optimizing cells in module \gtsu_w8_splitk_gemv.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2'.
+Finding identical cells in module `\gtsu_w8_splitk_gemv'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+Finding unused cells or wires in module \gtsu_w8_splitk_gemv..
+Removed 4 unused cells and 15 unused wires.
+<suppressed ~9 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+Optimizing module gtsu_w8_splitk_gemv.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_w8_splitk_gemv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~41 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+  Optimizing cells in module \gtsu_w8_splitk_gemv.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2'.
+Finding identical cells in module `\gtsu_w8_splitk_gemv'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+Finding unused cells or wires in module \gtsu_w8_splitk_gemv..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2.
+Optimizing module gtsu_w8_splitk_gemv.
+
+6.16. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing CHECK pass (checking for obvious problems).
+checking module $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2..
+checking module $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2..
+checking module $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2..
+checking module gtsu_w8_splitk_gemv..
+found and reported 0 problems.
+
+8. Printing statistics.
+
+=== $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2 ===
+
+   Number of wires:                 32
+   Number of wire bits:            961
+   Number of public wires:          16
+   Number of public wire bits:     418
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $add                            3
+     $adff                           3
+     $dff                            2
+     $eq                             2
+     $logic_and                      2
+     $lt                             1
+     $mux                            8
+     $not                            1
+     $pmux                           2
+     $reduce_bool                    1
+     $sub                            1
+
+=== $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2 ===
+
+   Number of wires:                 32
+   Number of wire bits:            433
+   Number of public wires:          16
+   Number of public wire bits:     154
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $add                            3
+     $adff                           3
+     $dff                            2
+     $eq                             2
+     $logic_and                      2
+     $lt                             1
+     $mux                            8
+     $not                            1
+     $pmux                           2
+     $reduce_bool                    1
+     $sub                            1
+
+=== $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2 ===
+
+   Number of wires:                 32
+   Number of wire bits:            705
+   Number of public wires:          16
+   Number of public wire bits:     290
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $add                            3
+     $adff                           3
+     $dff                            2
+     $eq                             2
+     $logic_and                      2
+     $lt                             1
+     $mux                            8
+     $not                            1
+     $pmux                           2
+     $reduce_bool                    1
+     $sub                            1
+
+=== gtsu_w8_splitk_gemv ===
+
+   Number of wires:                149
+   Number of wire bits:           2744
+   Number of public wires:          90
+   Number of public wire bits:    1561
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 95
+     $add                           14
+     $adff                          20
+     $eq                             1
+     $logic_and                     11
+     $logic_not                      8
+     $logic_or                       3
+     $mul                            4
+     $mux                           31
+     $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2      1
+     $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2      1
+     $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2      1
+
+=== design hierarchy ===
+
+   gtsu_w8_splitk_gemv               1
+     $paramod\gtsu_rv_fifo\WIDTH=101\DEPTH=2      1
+     $paramod\gtsu_rv_fifo\WIDTH=35\DEPTH=2      1
+     $paramod\gtsu_rv_fifo\WIDTH=69\DEPTH=2      1
+
+   Number of wires:                245
+   Number of wire bits:           4843
+   Number of public wires:         138
+   Number of public wire bits:    2423
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                170
+     $add                           23
+     $adff                          29
+     $dff                            6
+     $eq                             7
+     $logic_and                     17
+     $logic_not                      8
+     $logic_or                       3
+     $lt                             3
+     $mul                            4
+     $mux                           55
+     $not                            3
+     $pmux                           6
+     $reduce_bool                    3
+     $sub                            3
+
+Warnings: 1 unique messages, 4 total
+End of script. Logfile hash: d8228e1dc9
+CPU: user 0.30s system 0.01s, MEM: 19.38 MB total, 13.16 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 32% 4x opt_clean (0 sec), 13% 3x opt_expr (0 sec), ...
