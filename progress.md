@@ -489,3 +489,13 @@
 - Completed exact fused INT32/FP16/FP16-to-BF16 RNE RTL and golden correlation at 20 cycles; 1,000 additional random vectors match an independent Torch BF16 oracle.
 - Archived both evidence packages under `docs/results/gtsu_dramsim_dma_pipeline_2026-10-02/` and `docs/results/gtsu_bf16_dequant_2026-10-02/`.
 - Final architecture regression passed `63 passed`; full repository regression passed `217 passed, 1 skipped`.
+
+## 2026-10-02: Production-Width Dense Fabric Start
+- Accepted the external audit correction: shared Dense arithmetic is established, but production physical Dense, complete FPS/KNN, and production W8A8 composition remain incomplete.
+- Rejected a serial 17-word gather as the production structure. Started a separate ABUF broadcast plus 16-bank WBUF design targeting one 64-column Dot4 operand dispatch per read issue.
+- Preserved real SmoothQuant metadata, BF16/A8 dual-output composition, and request-side DRAMsim3 co-simulation as explicit later gates rather than folding them into a narrower fabric claim.
+- Implemented the 16-bank WBUF, independent ABUF, four-beat 512-bit fill, parallel 2048-bit read, fixed-latency response FIFO, and 64-lane shared-Dot4 composition.
+- The `M=2,N=70,K=16` edge case matches Icarus exactly at 86 cycles and Yosys proves exactly 64 Dot4 instances with no fabric-top multiplier.
+- Added a Verilator C++ cycle driver because the installed Verilator 4.038 lacks `--binary/--timing`; the driver is also the intended host boundary for later request-side DRAMsim3 integration.
+- Completed the full deterministic `1x4096x4096` q-projection shape at 262,150 cycles with exact counters and all 4,096 ACC32 outputs.
+- Archived the edge and full-shape evidence under `docs/results/gtsu_dense64_production_fabric_2026-10-02/`; final repository regression passes `220 passed, 1 skipped`.

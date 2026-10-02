@@ -1,0 +1,1354 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv; chparam -set M 2 -set N 70 -set K 16 -set READ_LATENCY 3 -set FIFO_DEPTH 8 gtsu_dense64_abuf_wbuf_fabric; hierarchy -check -top gtsu_dense64_abuf_wbuf_fabric; proc; opt; check -assert; stat; write_json /tmp/gtsu_dense64_gvy3f7a8/dense64.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dot4_pe'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dense_dot4_tile'.
+Warning: Replacing memory \accumulator with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_rv_fifo'.
+Warning: Replacing memory \storage with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dense64_abuf_wbuf_fabric'.
+Warning: Replacing memory \wbuf with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:154
+Warning: Replacing memory \read_data_pipe with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:152
+Warning: Replacing memory \abuf with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:147
+Warning: Replacing memory \slot_next_quarter with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:145
+Warning: Replacing memory \slot_sequence with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:143
+Successfully finished Verilog frontend.
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_dense64_abuf_wbuf_fabric'.
+Parameter \M = 2
+Parameter \N = 70
+Parameter \K = 16
+Parameter \READ_LATENCY = 3
+Parameter \FIFO_DEPTH = 8
+Generating RTLIL representation for module `$paramod\gtsu_dense64_abuf_wbuf_fabric\M=2\N=70\K=16\READ_LATENCY=3\FIFO_DEPTH=8'.
+Warning: Replacing memory \wbuf with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:154
+Warning: Replacing memory \read_data_pipe with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:152
+Warning: Replacing memory \abuf with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:147
+Warning: Replacing memory \slot_next_quarter with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:145
+Warning: Replacing memory \slot_sequence with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:143
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense64_abuf_wbuf_fabric
+Used module:     \gtsu_rv_fifo
+Used module:     \gtsu_dense_dot4_tile
+Used module:         \gtsu_dot4_pe
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_rv_fifo'.
+Parameter \WIDTH = 2178
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8'.
+Warning: Replacing memory \storage with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_dense_dot4_tile'.
+Parameter \N_TILE = 64
+Parameter \TAG_WIDTH = 32
+Generating RTLIL representation for module `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32'.
+Warning: Replacing memory \accumulator with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+
+6.4. Analyzing design hierarchy..
+Top module:  \gtsu_dense64_abuf_wbuf_fabric
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8
+Used module:     $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32
+Used module:         \gtsu_dot4_pe
+
+6.5. Analyzing design hierarchy..
+Top module:  \gtsu_dense64_abuf_wbuf_fabric
+Used module:     $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8
+Used module:     $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32
+Used module:         \gtsu_dot4_pe
+Removing unused module `\gtsu_rv_fifo'.
+Removing unused module `\gtsu_dense_dot4_tile'.
+Removed 2 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:217$683'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:217$683'.
+Found and cleaned up 1 empty switch in `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$971'.
+Removing empty process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$971'.
+Cleaned up 3 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 20 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673 in module gtsu_dense64_abuf_wbuf_fabric.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678 in module gtsu_dense64_abuf_wbuf_fabric.
+Marked 2 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839 in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+Removed 1 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706 in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Marked 1 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706 in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Marked 4 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690 in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Removed a total of 21 dead cases.
+
+7.3. Executing PROC_INIT pass (extract init attributes).
+
+7.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+Found async reset \rst_n in `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+Found async reset \rst_n in `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+
+7.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+     1/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_ADDR[0:0]$579
+     2/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_DATA[2:0]$580
+     3/133: $0\slot_ready[1:0] [1]
+     4/133: $0\slot_ready[1:0] [0]
+     5/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_DATA[2:0]$571
+     6/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_DATA[2:0]$573
+     7/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_ADDR[0:0]$572
+     8/133: $3$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_ADDR[0:0]$567
+     9/133: $3$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_DATA[31:0]$568
+    10/133: $0\slot_active[1:0] [1]
+    11/133: $0\slot_active[1:0] [0]
+    12/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_DATA[2:0]$549
+    13/133: $3$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_ADDR[0:0]$546
+    14/133: $3$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_DATA[31:0]$547
+    15/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_DATA[2:0]$543
+    16/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_ADDR[0:0]$542
+    17/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_DATA[2:0]$541
+    18/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_ADDR[0:0]$540
+    19/133: $2$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_DATA[31:0]$539
+    20/133: $2$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_ADDR[0:0]$538
+    21/133: $2\write_bank[31:0]
+    22/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_ADDR[4:0]$536
+    23/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_DATA[127:0]$537
+    24/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_ADDR[4:0]$534
+    25/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_DATA[127:0]$535
+    26/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_ADDR[4:0]$532
+    27/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_DATA[127:0]$533
+    28/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_ADDR[4:0]$530
+    29/133: $2$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_DATA[127:0]$531
+    30/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_DATA[2:0]$529
+    31/133: $2$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_ADDR[0:0]$528
+    32/133: $2$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_DATA[31:0]$527
+    33/133: $2$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_ADDR[0:0]$526
+    34/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_DATA[2:0]$525
+    35/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_ADDR[0:0]$524
+    36/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_DATA[2:0]$523
+    37/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_ADDR[0:0]$522
+    38/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_DATA[2:0]$521
+    39/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_ADDR[0:0]$520
+    40/133: $1$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_DATA[31:0]$519
+    41/133: $1$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_ADDR[0:0]$518
+    42/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_DATA[127:0]$517
+    43/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_ADDR[4:0]$516
+    44/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_DATA[127:0]$515
+    45/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_ADDR[4:0]$514
+    46/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_DATA[127:0]$513
+    47/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_ADDR[4:0]$512
+    48/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_DATA[127:0]$511
+    49/133: $1$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_ADDR[4:0]$510
+    50/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_DATA[2:0]$509
+    51/133: $1$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_ADDR[0:0]$508
+    52/133: $1$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_DATA[31:0]$507
+    53/133: $1$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_ADDR[0:0]$506
+    54/133: $1\write_bank[31:0]
+    55/133: $1\index[31:0]
+    56/133: $0\read_valid_pipe[2:0] [2]
+    57/133: $0\read_valid_pipe[2:0] [1]
+    58/133: $0\read_valid_pipe[2:0] [0]
+    59/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_ADDR[0:0]$503
+    60/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_DATA[2:0]$502
+    61/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_ADDR[0:0]$501
+    62/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_DATA[2:0]$500
+    63/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_ADDR[0:0]$499
+    64/133: $0$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_DATA[31:0]$498
+    65/133: $0$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_ADDR[0:0]$497
+    66/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_DATA[127:0]$496
+    67/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_ADDR[4:0]$495
+    68/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_DATA[127:0]$494
+    69/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_ADDR[4:0]$493
+    70/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_DATA[127:0]$492
+    71/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_ADDR[4:0]$491
+    72/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_DATA[127:0]$490
+    73/133: $0$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_ADDR[4:0]$489
+    74/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_DATA[2:0]$488
+    75/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_ADDR[0:0]$487
+    76/133: $0$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_DATA[31:0]$486
+    77/133: $0$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_ADDR[0:0]$485
+    78/133: $0\write_bank[31:0]
+    79/133: $0\index[31:0]
+    80/133: $0\wbuf[31][127:0]
+    81/133: $0\wbuf[30][127:0]
+    82/133: $0\wbuf[29][127:0]
+    83/133: $0\wbuf[28][127:0]
+    84/133: $0\wbuf[27][127:0]
+    85/133: $0\wbuf[26][127:0]
+    86/133: $0\wbuf[25][127:0]
+    87/133: $0\wbuf[24][127:0]
+    88/133: $0\wbuf[23][127:0]
+    89/133: $0\wbuf[22][127:0]
+    90/133: $0\wbuf[21][127:0]
+    91/133: $0\wbuf[20][127:0]
+    92/133: $0\wbuf[19][127:0]
+    93/133: $0\wbuf[18][127:0]
+    94/133: $0\wbuf[17][127:0]
+    95/133: $0\wbuf[16][127:0]
+    96/133: $0\wbuf[15][127:0]
+    97/133: $0\wbuf[14][127:0]
+    98/133: $0\wbuf[13][127:0]
+    99/133: $0\wbuf[12][127:0]
+   100/133: $0\wbuf[11][127:0]
+   101/133: $0\wbuf[10][127:0]
+   102/133: $0\wbuf[9][127:0]
+   103/133: $0\wbuf[8][127:0]
+   104/133: $0\wbuf[7][127:0]
+   105/133: $0\wbuf[6][127:0]
+   106/133: $0\wbuf[5][127:0]
+   107/133: $0\wbuf[4][127:0]
+   108/133: $0\wbuf[3][127:0]
+   109/133: $0\wbuf[2][127:0]
+   110/133: $0\wbuf[1][127:0]
+   111/133: $0\wbuf[0][127:0]
+   112/133: $0\read_data_pipe[2][2177:0]
+   113/133: $0\read_data_pipe[1][2177:0]
+   114/133: $0\read_data_pipe[0][2177:0]
+   115/133: $0\abuf[1][31:0]
+   116/133: $0\abuf[0][31:0]
+   117/133: $0\slot_next_quarter[1][2:0]
+   118/133: $0\slot_next_quarter[0][2:0]
+   119/133: $0\slot_sequence[1][31:0]
+   120/133: $0\slot_sequence[0][31:0]
+   121/133: $0$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_DATA[2:0]$504
+   122/133: $0\expected_sequence[31:0]
+   123/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_ADDR[0:0]$570
+   124/133: $3$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_ADDR[0:0]$548
+   125/133: $0\count_fifo_peak[31:0]
+   126/133: $0\count_fill_compute_overlap[31:0]
+   127/133: $0\count_output_tiles[31:0]
+   128/133: $0\count_dot4_chunks[31:0]
+   129/133: $0\count_wbuf_responses[31:0]
+   130/133: $0\count_wbuf_read_issues[31:0]
+   131/133: $0\count_abuf_writes[31:0]
+   132/133: $0\count_wbuf_bank_writes[31:0]
+   133/133: $0\count_ingress_lines[31:0]
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591'.
+     1/2: $1$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:53$406_DATA[31:0]$593
+     2/2: $0$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:53$406_DATA[31:0]$592
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594'.
+     1/2: $1$mem2reg_rd$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:54$407_DATA[2:0]$596
+     2/2: $0$mem2reg_rd$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:54$407_DATA[2:0]$595
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597'.
+     1/2: $1$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:61$408_DATA[31:0]$599
+     2/2: $0$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:61$408_DATA[31:0]$598
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600'.
+     1/2: $1$mem2reg_rd$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:94$409_DATA[31:0]$602
+     2/2: $0$mem2reg_rd$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:94$409_DATA[31:0]$601
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$420_DATA[127:0]$605
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$420_DATA[127:0]$604
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$421_DATA[127:0]$610
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$421_DATA[127:0]$609
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$422_DATA[127:0]$615
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$422_DATA[127:0]$614
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$423_DATA[127:0]$620
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$423_DATA[127:0]$619
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$424_DATA[127:0]$625
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$424_DATA[127:0]$624
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$425_DATA[127:0]$630
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$425_DATA[127:0]$629
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$426_DATA[127:0]$635
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$426_DATA[127:0]$634
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$427_DATA[127:0]$640
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$427_DATA[127:0]$639
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$428_DATA[127:0]$645
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$428_DATA[127:0]$644
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$429_DATA[127:0]$650
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$429_DATA[127:0]$649
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$430_DATA[127:0]$655
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$430_DATA[127:0]$654
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$431_DATA[127:0]$660
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$431_DATA[127:0]$659
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$432_DATA[127:0]$665
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$432_DATA[127:0]$664
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$433_DATA[127:0]$670
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$433_DATA[127:0]$669
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$434_DATA[127:0]$675
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$434_DATA[127:0]$674
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678'.
+     1/2: $1$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$435_DATA[127:0]$680
+     2/2: $0$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$435_DATA[127:0]$679
+Creating decoders for process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:75$453'.
+     1/2: $0\pipe_index[31:0]
+     2/2: $0\pipe_occupancy[31:0]
+Creating decoders for process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+     1/137: $0\out_accumulator_reg[2047:0] [2047:2016]
+     2/137: $0\out_accumulator_reg[2047:0] [2015:1984]
+     3/137: $0\out_accumulator_reg[2047:0] [1983:1952]
+     4/137: $0\out_accumulator_reg[2047:0] [1951:1920]
+     5/137: $0\out_accumulator_reg[2047:0] [1919:1888]
+     6/137: $0\out_accumulator_reg[2047:0] [1887:1856]
+     7/137: $0\out_accumulator_reg[2047:0] [1855:1824]
+     8/137: $0\out_accumulator_reg[2047:0] [1823:1792]
+     9/137: $0\out_accumulator_reg[2047:0] [1791:1760]
+    10/137: $0\out_accumulator_reg[2047:0] [1759:1728]
+    11/137: $0\out_accumulator_reg[2047:0] [1727:1696]
+    12/137: $0\out_accumulator_reg[2047:0] [1695:1664]
+    13/137: $0\out_accumulator_reg[2047:0] [1663:1632]
+    14/137: $0\out_accumulator_reg[2047:0] [1631:1600]
+    15/137: $0\out_accumulator_reg[2047:0] [1599:1568]
+    16/137: $0\out_accumulator_reg[2047:0] [1567:1536]
+    17/137: $0\out_accumulator_reg[2047:0] [1535:1504]
+    18/137: $0\out_accumulator_reg[2047:0] [1503:1472]
+    19/137: $0\out_accumulator_reg[2047:0] [1471:1440]
+    20/137: $0\out_accumulator_reg[2047:0] [1439:1408]
+    21/137: $0\out_accumulator_reg[2047:0] [1407:1376]
+    22/137: $0\out_accumulator_reg[2047:0] [1375:1344]
+    23/137: $0\out_accumulator_reg[2047:0] [1343:1312]
+    24/137: $0\out_accumulator_reg[2047:0] [1311:1280]
+    25/137: $0\out_accumulator_reg[2047:0] [1279:1248]
+    26/137: $0\out_accumulator_reg[2047:0] [1247:1216]
+    27/137: $0\out_accumulator_reg[2047:0] [1215:1184]
+    28/137: $0\out_accumulator_reg[2047:0] [1183:1152]
+    29/137: $0\out_accumulator_reg[2047:0] [1151:1120]
+    30/137: $0\out_accumulator_reg[2047:0] [1119:1088]
+    31/137: $0\out_accumulator_reg[2047:0] [1087:1056]
+    32/137: $0\out_accumulator_reg[2047:0] [1055:1024]
+    33/137: $0\out_accumulator_reg[2047:0] [1023:992]
+    34/137: $0\out_accumulator_reg[2047:0] [991:960]
+    35/137: $0\out_accumulator_reg[2047:0] [959:928]
+    36/137: $0\out_accumulator_reg[2047:0] [927:896]
+    37/137: $0\out_accumulator_reg[2047:0] [895:864]
+    38/137: $0\out_accumulator_reg[2047:0] [863:832]
+    39/137: $0\out_accumulator_reg[2047:0] [831:800]
+    40/137: $0\out_accumulator_reg[2047:0] [799:768]
+    41/137: $0\out_accumulator_reg[2047:0] [767:736]
+    42/137: $0\out_accumulator_reg[2047:0] [735:704]
+    43/137: $0\out_accumulator_reg[2047:0] [703:672]
+    44/137: $0\out_accumulator_reg[2047:0] [671:640]
+    45/137: $0\out_accumulator_reg[2047:0] [639:608]
+    46/137: $0\out_accumulator_reg[2047:0] [607:576]
+    47/137: $0\out_accumulator_reg[2047:0] [575:544]
+    48/137: $0\out_accumulator_reg[2047:0] [543:512]
+    49/137: $0\out_accumulator_reg[2047:0] [511:480]
+    50/137: $0\out_accumulator_reg[2047:0] [479:448]
+    51/137: $0\out_accumulator_reg[2047:0] [447:416]
+    52/137: $0\out_accumulator_reg[2047:0] [415:384]
+    53/137: $0\out_accumulator_reg[2047:0] [383:352]
+    54/137: $0\out_accumulator_reg[2047:0] [351:320]
+    55/137: $0\out_accumulator_reg[2047:0] [319:288]
+    56/137: $0\out_accumulator_reg[2047:0] [287:256]
+    57/137: $0\out_accumulator_reg[2047:0] [255:224]
+    58/137: $0\out_accumulator_reg[2047:0] [223:192]
+    59/137: $0\out_accumulator_reg[2047:0] [191:160]
+    60/137: $0\out_accumulator_reg[2047:0] [159:128]
+    61/137: $0\out_accumulator_reg[2047:0] [127:96]
+    62/137: $0\out_accumulator_reg[2047:0] [95:64]
+    63/137: $0\out_accumulator_reg[2047:0] [63:32]
+    64/137: $0\out_accumulator_reg[2047:0] [31:0]
+    65/137: $2\next_accumulator[31:0]
+    66/137: $1\next_accumulator[31:0]
+    67/137: $1\index[31:0]
+    68/137: $0\next_accumulator[31:0]
+    69/137: $0\index[31:0]
+    70/137: $0\accumulator[8][31:0]
+    71/137: $0\accumulator[9][31:0]
+    72/137: $0\accumulator[10][31:0]
+    73/137: $0\accumulator[11][31:0]
+    74/137: $0\accumulator[12][31:0]
+    75/137: $0\accumulator[13][31:0]
+    76/137: $0\accumulator[14][31:0]
+    77/137: $0\accumulator[15][31:0]
+    78/137: $0\accumulator[16][31:0]
+    79/137: $0\accumulator[17][31:0]
+    80/137: $0\accumulator[18][31:0]
+    81/137: $0\accumulator[19][31:0]
+    82/137: $0\accumulator[20][31:0]
+    83/137: $0\accumulator[21][31:0]
+    84/137: $0\accumulator[22][31:0]
+    85/137: $0\accumulator[23][31:0]
+    86/137: $0\accumulator[26][31:0]
+    87/137: $0\accumulator[27][31:0]
+    88/137: $0\accumulator[28][31:0]
+    89/137: $0\accumulator[29][31:0]
+    90/137: $0\accumulator[30][31:0]
+    91/137: $0\accumulator[31][31:0]
+    92/137: $0\accumulator[24][31:0]
+    93/137: $0\accumulator[25][31:0]
+    94/137: $0\accumulator[32][31:0]
+    95/137: $0\accumulator[33][31:0]
+    96/137: $0\accumulator[34][31:0]
+    97/137: $0\accumulator[35][31:0]
+    98/137: $0\accumulator[36][31:0]
+    99/137: $0\accumulator[37][31:0]
+   100/137: $0\accumulator[38][31:0]
+   101/137: $0\accumulator[39][31:0]
+   102/137: $0\accumulator[40][31:0]
+   103/137: $0\accumulator[41][31:0]
+   104/137: $0\accumulator[42][31:0]
+   105/137: $0\accumulator[43][31:0]
+   106/137: $0\accumulator[44][31:0]
+   107/137: $0\accumulator[45][31:0]
+   108/137: $0\accumulator[49][31:0]
+   109/137: $0\accumulator[50][31:0]
+   110/137: $0\accumulator[51][31:0]
+   111/137: $0\accumulator[52][31:0]
+   112/137: $0\accumulator[46][31:0]
+   113/137: $0\accumulator[47][31:0]
+   114/137: $0\accumulator[48][31:0]
+   115/137: $0\accumulator[53][31:0]
+   116/137: $0\accumulator[54][31:0]
+   117/137: $0\accumulator[55][31:0]
+   118/137: $0\accumulator[56][31:0]
+   119/137: $0\accumulator[57][31:0]
+   120/137: $0\accumulator[58][31:0]
+   121/137: $0\accumulator[59][31:0]
+   122/137: $0\accumulator[60][31:0]
+   123/137: $0\accumulator[61][31:0]
+   124/137: $0\accumulator[62][31:0]
+   125/137: $0\accumulator[63][31:0]
+   126/137: $0\accumulator[7][31:0]
+   127/137: $0\accumulator[6][31:0]
+   128/137: $0\accumulator[5][31:0]
+   129/137: $0\accumulator[4][31:0]
+   130/137: $0\accumulator[3][31:0]
+   131/137: $0\accumulator[2][31:0]
+   132/137: $0\accumulator[1][31:0]
+   133/137: $0\accumulator[0][31:0]
+   134/137: $2\index[31:0]
+   135/137: $0\out_mask_reg[63:0]
+   136/137: $0\out_tag_reg[31:0]
+   137/137: $0\out_valid_reg[0:0]
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706'.
+     1/2: $1$mem2reg_rd$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:27$684_DATA[2177:0]$708
+     2/2: $0$mem2reg_rd$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:27$684_DATA[2177:0]$707
+Creating decoders for process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+     1/17: $2$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_ADDR[2:0]$697
+     2/17: $2$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_DATA[2177:0]$696
+     3/17: $1$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_ADDR[2:0]$695
+     4/17: $1$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_DATA[2177:0]$694
+     5/17: $0$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_ADDR[2:0]$692
+     6/17: $0$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_DATA[2177:0]$691
+     7/17: $0\storage[3][2177:0]
+     8/17: $0\storage[5][2177:0]
+     9/17: $0\storage[6][2177:0]
+    10/17: $0\storage[7][2177:0]
+    11/17: $0\storage[2][2177:0]
+    12/17: $0\storage[4][2177:0]
+    13/17: $0\storage[1][2177:0]
+    14/17: $0\count[3:0]
+    15/17: $0\write_ptr[2:0]
+    16/17: $0\read_ptr[2:0]
+    17/17: $0\storage[0][2177:0]
+
+7.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:53$406_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:54$407_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:61$408_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:94$409_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$420_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$421_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$422_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$423_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$424_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$425_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$426_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$427_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$428_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$429_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$430_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$431_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$432_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$433_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$434_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_rd$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:66$435_DATA' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.\pipe_occupancy' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:75$453'.
+No latch inferred for signal `\gtsu_dense64_abuf_wbuf_fabric.\pipe_index' from process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:75$453'.
+No latch inferred for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$mem2reg_rd$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:27$684_DATA' from process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706'.
+
+7.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\index' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4765' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_ingress_lines' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4766' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_wbuf_bank_writes' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4767' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_abuf_writes' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4768' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_wbuf_read_issues' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4769' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_wbuf_responses' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4770' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_dot4_chunks' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4771' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_output_tiles' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4772' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_fill_compute_overlap' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4773' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\count_fifo_peak' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4774' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_active' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4775' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_ready' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4776' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\expected_sequence' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4777' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\read_valid_pipe' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4778' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\write_bank' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $dff cell `$procdff$4779' with positive edge clock.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_sequence[0]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4780' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_sequence[1]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4781' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_next_quarter[0]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4782' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\slot_next_quarter[1]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4783' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\abuf[0]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4784' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\abuf[1]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4785' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\read_data_pipe[0]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4786' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\read_data_pipe[1]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4787' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\read_data_pipe[2]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4788' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[0]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4789' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[1]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4790' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[2]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4791' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[3]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4792' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[4]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4793' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[5]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4794' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[6]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4795' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[7]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4796' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[8]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4797' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[9]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4798' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[10]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4799' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[11]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4800' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[12]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4801' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[13]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4802' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[14]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4803' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[15]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4804' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[16]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4805' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[17]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4806' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[18]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4807' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[19]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4808' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[20]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4809' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[21]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4810' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[22]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4811' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[23]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4812' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[24]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4813' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[25]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4814' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[26]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4815' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[27]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4816' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[28]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4817' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[29]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4818' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[30]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4819' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.\wbuf[31]' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4820' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4821' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_sequence$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:178$410_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4822' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4823' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:179$411_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4824' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4825' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$412_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4826' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4827' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$413_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4828' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4829' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$414_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4830' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4831' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\wbuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:183$415_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4832' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4833' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\abuf$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:185$416_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4834' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4835' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:188$417_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4836' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4837' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:190$418_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4838' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_ADDR' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4839' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense64_abuf_wbuf_fabric.$mem2reg_wr$\slot_next_quarter$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:200$419_DATA' using process `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+  created $adff cell `$procdff$4840' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\out_valid_reg' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4841' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\out_tag_reg' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4842' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\out_mask_reg' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4843' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\out_accumulator_reg' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4844' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\index' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4845' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\next_accumulator' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $dff cell `$procdff$4846' with positive edge clock.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[0]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4847' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[1]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4848' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[2]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4849' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[3]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4850' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[4]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4851' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[5]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4852' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[6]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4853' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[7]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4854' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[63]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4855' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[62]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4856' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[61]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4857' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[60]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4858' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[59]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4859' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[58]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4860' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[57]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4861' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[56]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4862' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[55]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4863' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[54]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4864' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[53]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4865' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[48]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4866' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[47]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4867' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[46]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4868' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[52]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4869' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[51]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4870' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[50]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4871' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[49]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4872' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[45]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4873' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[44]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4874' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[43]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4875' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[42]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4876' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[41]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4877' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[40]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4878' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[39]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4879' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[38]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4880' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[37]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4881' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[36]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4882' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[35]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4883' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[34]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4884' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[33]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4885' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[32]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4886' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[25]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4887' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[24]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4888' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[31]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4889' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[30]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4890' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[29]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4891' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[28]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4892' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[27]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4893' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[26]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4894' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[23]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4895' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[22]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4896' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[21]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4897' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[20]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4898' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[19]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4899' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[18]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4900' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[17]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4901' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[16]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4902' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[15]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4903' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[14]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4904' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[13]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4905' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[12]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4906' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[11]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4907' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[10]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4908' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[9]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4909' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.\accumulator[8]' using process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+  created $adff cell `$procdff$4910' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[0]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4911' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\read_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $adff cell `$procdff$4912' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\write_ptr' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $adff cell `$procdff$4913' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\count' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $adff cell `$procdff$4914' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[1]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4915' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[4]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4916' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[2]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4917' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_DATA' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $adff cell `$procdff$4918' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[7]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4919' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[6]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4920' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[5]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4921' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.\storage[3]' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $dff cell `$procdff$4922' with positive edge clock.
+Creating register for signal `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$mem2reg_wr$\storage$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:37$685_ADDR' using process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+  created $adff cell `$procdff$4923' with positive edge clock and negative level reset.
+
+7.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 28 empty switches in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:139$484'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$591'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$594'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$597'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$600'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$603'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$608'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$613'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$618'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$623'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$628'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$633'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$638'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$643'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$648'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$653'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$658'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$663'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$668'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$673'.
+Found and cleaned up 1 empty switch in `\gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:3$678'.
+Removing empty process `gtsu_dense64_abuf_wbuf_fabric.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense64_abuf_wbuf_fabric.sv:75$453'.
+Found and cleaned up 67 empty switches in `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+Removing empty process `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$839'.
+Found and cleaned up 1 empty switch in `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:1$706'.
+Found and cleaned up 4 empty switches in `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+Removing empty process `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.$proc$architecture_simulator/rtl/vertical_slice/gtsu_rv_fifo.sv:30$690'.
+Cleaned up 120 empty switches.
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense64_abuf_wbuf_fabric.
+<suppressed ~118 debug messages>
+Optimizing module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+<suppressed ~3 debug messages>
+Optimizing module gtsu_dot4_pe.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense64_abuf_wbuf_fabric'.
+<suppressed ~96 debug messages>
+Finding identical cells in module `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 34 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense64_abuf_wbuf_fabric..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$3553: \line_sequence -> { \line_sequence [31:1] 1'0 }
+      Replacing known input bits on port B of cell $procmux$3544: \line_sequence -> { \line_sequence [31:1] 1'1 }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$3572.
+    dead port 2/2 on $mux $procmux$3572.
+    dead port 1/2 on $mux $procmux$3570.
+    dead port 2/2 on $mux $procmux$3570.
+    dead port 1/2 on $mux $procmux$3566.
+    dead port 2/2 on $mux $procmux$3566.
+    dead port 1/2 on $mux $procmux$3564.
+    dead port 2/2 on $mux $procmux$3564.
+    dead port 2/2 on $mux $procmux$3521.
+    dead port 1/2 on $mux $procmux$3500.
+    dead port 1/2 on $mux $procmux$1137.
+    dead port 2/2 on $mux $procmux$1137.
+    dead port 1/2 on $mux $procmux$1134.
+    dead port 2/2 on $mux $procmux$1134.
+    dead port 1/2 on $mux $procmux$1131.
+    dead port 2/2 on $mux $procmux$1131.
+    dead port 1/2 on $mux $procmux$1128.
+    dead port 2/2 on $mux $procmux$1128.
+    dead port 1/2 on $mux $procmux$1125.
+    dead port 2/2 on $mux $procmux$1125.
+    dead port 1/2 on $mux $procmux$1122.
+    dead port 2/2 on $mux $procmux$1122.
+    dead port 1/2 on $mux $procmux$1119.
+    dead port 2/2 on $mux $procmux$1119.
+    dead port 1/2 on $mux $procmux$1116.
+    dead port 2/2 on $mux $procmux$1116.
+    dead port 1/2 on $mux $procmux$1113.
+    dead port 2/2 on $mux $procmux$1113.
+    dead port 1/2 on $mux $procmux$1110.
+    dead port 2/2 on $mux $procmux$1110.
+    dead port 1/2 on $mux $procmux$1107.
+    dead port 2/2 on $mux $procmux$1107.
+    dead port 1/2 on $mux $procmux$1104.
+    dead port 2/2 on $mux $procmux$1104.
+    dead port 1/2 on $mux $procmux$1098.
+    dead port 2/2 on $mux $procmux$1098.
+    dead port 1/2 on $mux $procmux$1095.
+    dead port 2/2 on $mux $procmux$1095.
+    dead port 1/2 on $mux $procmux$1092.
+    dead port 2/2 on $mux $procmux$1092.
+    dead port 1/2 on $mux $procmux$1089.
+    dead port 2/2 on $mux $procmux$1089.
+    dead port 1/2 on $mux $procmux$1086.
+    dead port 2/2 on $mux $procmux$1086.
+    dead port 1/2 on $mux $procmux$1083.
+    dead port 2/2 on $mux $procmux$1083.
+    dead port 1/2 on $mux $procmux$1080.
+    dead port 2/2 on $mux $procmux$1080.
+    dead port 1/2 on $mux $procmux$1078.
+    dead port 2/2 on $mux $procmux$1078.
+    dead port 1/2 on $mux $procmux$1074.
+    dead port 2/2 on $mux $procmux$1074.
+    dead port 1/2 on $mux $procmux$1072.
+    dead port 2/2 on $mux $procmux$1072.
+    dead port 1/2 on $mux $procmux$1068.
+    dead port 2/2 on $mux $procmux$1068.
+    dead port 1/2 on $mux $procmux$1066.
+    dead port 2/2 on $mux $procmux$1066.
+    dead port 1/2 on $mux $procmux$1034.
+    dead port 2/2 on $mux $procmux$1034.
+    dead port 1/2 on $mux $procmux$1032.
+    dead port 2/2 on $mux $procmux$1032.
+    dead port 1/2 on $mux $procmux$1028.
+    dead port 2/2 on $mux $procmux$1028.
+    dead port 1/2 on $mux $procmux$1026.
+    dead port 2/2 on $mux $procmux$1026.
+    dead port 1/2 on $mux $procmux$1022.
+    dead port 2/2 on $mux $procmux$1022.
+    dead port 1/2 on $mux $procmux$1020.
+    dead port 2/2 on $mux $procmux$1020.
+    dead port 1/2 on $mux $procmux$1016.
+    dead port 2/2 on $mux $procmux$1016.
+    dead port 1/2 on $mux $procmux$1014.
+    dead port 2/2 on $mux $procmux$1014.
+    dead port 1/2 on $mux $procmux$1010.
+    dead port 2/2 on $mux $procmux$1010.
+    dead port 1/2 on $mux $procmux$1008.
+    dead port 2/2 on $mux $procmux$1008.
+    dead port 1/2 on $mux $procmux$976.
+    dead port 2/2 on $mux $procmux$976.
+    dead port 1/2 on $mux $procmux$973.
+    dead port 2/2 on $mux $procmux$973.
+Running muxtree optimizer on module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$4686.
+    dead port 2/2 on $mux $procmux$4686.
+    dead port 1/2 on $mux $procmux$4683.
+    dead port 2/2 on $mux $procmux$4683.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 86 multiplexer ports.
+<suppressed ~278 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense64_abuf_wbuf_fabric.
+    New ctrl vector for $mux cell $procmux$3523: { }
+    New ctrl vector for $mux cell $procmux$3502: { }
+  Optimizing cells in module \gtsu_dense64_abuf_wbuf_fabric.
+  Optimizing cells in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 2 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense64_abuf_wbuf_fabric'.
+Finding identical cells in module `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$4779 ($dff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4840 ($adff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4839 ($adff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4834 ($adff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4832 ($adff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4831 ($adff) from module gtsu_dense64_abuf_wbuf_fabric.
+Removing $procdff$4918 ($adff) from module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Removing $procdff$4923 ($adff) from module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Replaced 8 DFF cells.
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense64_abuf_wbuf_fabric..
+Finding unused cells or wires in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Removed 9 unused cells and 884 unused wires.
+<suppressed ~19 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Optimizing module gtsu_dense64_abuf_wbuf_fabric.
+<suppressed ~31 debug messages>
+Optimizing module gtsu_dot4_pe.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dense64_abuf_wbuf_fabric..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/33 on $pmux $procmux$3610.
+    dead port 2/33 on $pmux $procmux$3610.
+    dead port 3/33 on $pmux $procmux$3610.
+    dead port 4/33 on $pmux $procmux$3610.
+    dead port 5/33 on $pmux $procmux$3610.
+    dead port 6/33 on $pmux $procmux$3610.
+    dead port 7/33 on $pmux $procmux$3610.
+    dead port 8/33 on $pmux $procmux$3610.
+    dead port 9/33 on $pmux $procmux$3610.
+    dead port 10/33 on $pmux $procmux$3610.
+    dead port 11/33 on $pmux $procmux$3610.
+    dead port 12/33 on $pmux $procmux$3610.
+    dead port 13/33 on $pmux $procmux$3610.
+    dead port 14/33 on $pmux $procmux$3610.
+    dead port 15/33 on $pmux $procmux$3610.
+    dead port 17/33 on $pmux $procmux$3610.
+    dead port 18/33 on $pmux $procmux$3610.
+    dead port 19/33 on $pmux $procmux$3610.
+    dead port 20/33 on $pmux $procmux$3610.
+    dead port 21/33 on $pmux $procmux$3610.
+    dead port 22/33 on $pmux $procmux$3610.
+    dead port 23/33 on $pmux $procmux$3610.
+    dead port 24/33 on $pmux $procmux$3610.
+    dead port 25/33 on $pmux $procmux$3610.
+    dead port 26/33 on $pmux $procmux$3610.
+    dead port 27/33 on $pmux $procmux$3610.
+    dead port 28/33 on $pmux $procmux$3610.
+    dead port 29/33 on $pmux $procmux$3610.
+    dead port 30/33 on $pmux $procmux$3610.
+    dead port 31/33 on $pmux $procmux$3610.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 30 multiplexer ports.
+<suppressed ~273 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+  Optimizing cells in module \gtsu_dense64_abuf_wbuf_fabric.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8'.
+Finding identical cells in module `\gtsu_dense64_abuf_wbuf_fabric'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+Finding unused cells or wires in module \gtsu_dense64_abuf_wbuf_fabric..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Removed 0 unused cells and 31 unused wires.
+<suppressed ~1 debug messages>
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Optimizing module gtsu_dense64_abuf_wbuf_fabric.
+Optimizing module gtsu_dot4_pe.
+
+8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dense64_abuf_wbuf_fabric..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~273 debug messages>
+
+8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+  Optimizing cells in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+  Optimizing cells in module \gtsu_dense64_abuf_wbuf_fabric.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32'.
+Finding identical cells in module `$paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8'.
+Finding identical cells in module `\gtsu_dense64_abuf_wbuf_fabric'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+8.20. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+Finding unused cells or wires in module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+Finding unused cells or wires in module \gtsu_dense64_abuf_wbuf_fabric..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+
+8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32.
+Optimizing module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8.
+Optimizing module gtsu_dense64_abuf_wbuf_fabric.
+Optimizing module gtsu_dot4_pe.
+
+8.23. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing CHECK pass (checking for obvious problems).
+checking module $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32..
+checking module $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8..
+checking module gtsu_dense64_abuf_wbuf_fabric..
+checking module gtsu_dot4_pe..
+found and reported 0 problems.
+
+10. Printing statistics.
+
+=== $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32 ===
+
+   Number of wires:                414
+   Number of wire bits:          21007
+   Number of public wires:         147
+   Number of public wire bits:   10569
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                463
+     $add                           64
+     $adff                          68
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mux                          263
+     gtsu_dot4_pe                   64
+
+=== $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8 ===
+
+   Number of wires:                 65
+   Number of wire bits:          56814
+   Number of public wires:          22
+   Number of public wire bits:   21802
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 59
+     $add                            3
+     $adff                           3
+     $dff                            8
+     $eq                            16
+     $logic_and                      2
+     $logic_not                      2
+     $lt                             1
+     $mux                           20
+     $pmux                           2
+     $reduce_bool                    1
+     $sub                            1
+
+=== gtsu_dense64_abuf_wbuf_fabric ===
+
+   Number of wires:                994
+   Number of wire bits:          52375
+   Number of public wires:         100
+   Number of public wire bits:   22708
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                985
+     $add                           35
+     $adff                          54
+     $and                            3
+     $eq                           596
+     $ge                             1
+     $gt                             1
+     $logic_and                     15
+     $logic_not                     28
+     $logic_or                       1
+     $lt                             2
+     $mux                          220
+     $not                            2
+     $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32      1
+     $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8      1
+     $pmux                          20
+     $shiftx                         3
+     $shr                            1
+     $sub                            1
+
+=== gtsu_dot4_pe ===
+
+   Number of wires:                 18
+   Number of wire bits:            276
+   Number of public wires:          18
+   Number of public wire bits:     276
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $add                            3
+     $mul                            4
+
+=== design hierarchy ===
+
+   gtsu_dense64_abuf_wbuf_fabric      1
+     $paramod\gtsu_dense_dot4_tile\N_TILE=64\TAG_WIDTH=32      1
+       gtsu_dot4_pe                 64
+     $paramod\gtsu_rv_fifo\WIDTH=2178\DEPTH=8      1
+
+   Number of wires:               2625
+   Number of wire bits:         147860
+   Number of public wires:        1421
+   Number of public wire bits:   72743
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1889
+     $add                          294
+     $adff                         125
+     $and                            3
+     $dff                            8
+     $eq                           612
+     $ge                             1
+     $gt                             1
+     $logic_and                     19
+     $logic_not                     31
+     $logic_or                       2
+     $lt                             3
+     $mul                          256
+     $mux                          503
+     $not                            2
+     $pmux                          22
+     $reduce_bool                    1
+     $shiftx                         3
+     $shr                            1
+     $sub                            2
+
+11. Executing JSON backend.
+
+Warnings: 7 unique messages, 14 total
+End of script. Logfile hash: 813fac8145
+CPU: user 17.29s system 0.08s, MEM: 80.34 MB total, 74.68 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 24% 1x proc_arst (4 sec), 14% 1x proc_mux (2 sec), ...

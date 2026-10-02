@@ -303,7 +303,7 @@ Phase 37 in progress
 - [x] Connect SRAM response FIFO -> shared Dot4 tile -> parallel requant -> output backpressure
 - [x] Correlate payload/read/compute/output events, values, counters, and cycles against Python
 - [x] Prove the RTL hierarchy and keep production `N_TILE=64` multiword expansion explicit
-- **Status:** complete for the `N_TILE=3` physical slice; production 17-word gather and DRAM DMA remain pending
+- **Status:** complete for the `N_TILE=3` physical slice; its serial 17-word follow-up is superseded by the Phase 37D ABUF/WBUF fabric
 
 #### Phase 37C: DRAMsim3 DMA And BF16 Dequant Closure
 - [x] Audit `Compiler_Codes` C-model, DMU, DDR manager, and AXI master data-width/burst/backpressure contracts
@@ -314,6 +314,16 @@ Phase 37 in progress
 - [x] Add edge/random numerical tests, Icarus value/event/cycle correlation, and Yosys structure checks
 - [x] Archive strict provenance, utilization, stall, and fidelity-boundary artifacts
 - **Status:** complete for the `N_TILE=3` physical slice and standalone BF16 post-accumulator; BF16 Dense composition and production 17-word gather remain explicit later gates
+
+#### Phase 37D: Production-Width ABUF/WBUF Tensor Fabric
+- [x] Implement independent A4 broadcast storage and 16-bank x 128-bit WBUF ping-pong slots
+- [x] Fill four WBUF banks per 512-bit ingress beat and read all 16 banks in parallel
+- [x] Connect the 2048-bit weight vector to exactly 64 shared Dot4 PEs
+- [x] Model fixed read latency, response FIFO credits, K accumulation, edge-N mask, and output backpressure
+- [x] Correlate values/events/counters/cycles for a conflict/edge lock case
+- [x] Execute the complete `1x4096x4096` q-projection shape across all 4096 outputs
+- [x] Keep BF16/A8 dual output, real SmoothQuant metadata, and request-side DRAMsim3 closed-loop as separate fail-closed gates
+- **Status:** complete for deterministic production-width operand supply and full q-projection shape; real checkpoint payload and post-processing composition remain pending
 
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback

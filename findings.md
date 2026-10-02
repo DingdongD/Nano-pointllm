@@ -466,3 +466,12 @@
 - The completed DRAMsim3-to-Dense lock packs four 128-bit words per 64-byte line and therefore reaches 100% useful-line utilization. Its four requests complete at cycles 34/39/44/49 and the composed pipeline finishes at cycle 62 with exact Python/RTL events, counters, and outputs.
 - The formal DRAM stream completes in order and reaches ROB occupancy one, so a separate controlled `1,0,3,2` completion sequence is retained as the reorder correctness gate. The ROB is required by the interface contract even when one address sample does not exercise it.
 - The BF16 dequant slice computes the exact integer/FP16 product and rounds once to BF16 RNE. It matches Icarus for directed vectors and an independent Float64-to-Torch-BF16 oracle for 1,000 deterministic random vectors; it is intentionally not claimed bit-equivalent to the reference's staged FP32/BF16 rounding points.
+
+## Production-Width Dense Acceptance Correction
+- `bf2c9a4` closes a completion-driven `N_TILE=3` vertical slice, not production Dense GEMM or production W8A8. The strict coverage flags remain false.
+- A production 64-column Dot4 issue needs one broadcast A4 plus 64 independent W4 operands. Mapping the weights to 16 x 128-bit WBUF banks supplies all 256 weight bytes in one read, while a separate ABUF removes activation/weight port contention.
+- The request side must eventually participate in DRAMsim3 scheduling. A precomputed completion trace cannot propagate ROB-full backpressure into DRAM request issue and is therefore not a closed-loop memory-system simulation.
+- The new edge lock proves the replacement fabric at `N_TILE=64`: `M=2,N=70,K=16` completes in 86 cycles with exact 64+6 edge outputs. Yosys finds exactly 64 shared Dot4 instances and no direct multiplier in the fabric top.
+- The complete deterministic `1x4096x4096` q-projection shape completes in 262,150 cycles in both Python and compiled Verilator. It performs 262,144 64-byte ingress transfers, 65,536 parallel 256-byte WBUF reads, and compares all 4,096 ACC32 outputs exactly.
+- The 4:1 ingress/read-width ratio makes memory fill, not the 64-PE Dot4 array, the steady-state limiter in this configuration. This is a measured cycle-model consequence, not a roofline-only inference.
+- These results close production-width operand supply but not production W8A8: stimulus values are deterministic rather than checkpoint-backed, and dual BF16/A8 post-processing plus calibration metadata are not yet composed.

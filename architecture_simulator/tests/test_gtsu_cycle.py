@@ -59,6 +59,12 @@ from gtsu_cycle.bf16_dequant import (
     locked_bf16_dequant_vectors,
 )
 from gtsu_cycle.bf16_dequant_correlation import correlate_bf16_dequant
+from gtsu_cycle.production_dense_fabric import (
+    ProductionDenseFabricConfig, run_production_dense_fabric_model,
+)
+from gtsu_cycle.production_dense_fabric_correlation import (
+    correlate_production_dense_fabric,
+)
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -322,6 +328,45 @@ def test_dense_sram_pipeline_exactly_matches_rtl():
     assert report["functional_outputs_exact"] is True
     assert report["counters"]["read_write_overlap_cycles"] == 10
     assert report["synthesis_check"]["top_direct_multipliers"] == 0
+
+
+def test_production_dense64_model_covers_parallel_banks_and_edge_mask():
+    result = run_production_dense_fabric_model(ProductionDenseFabricConfig())
+    assert result.cycles == 86
+    assert result.counters["wbuf_bank_writes"] == 256
+    assert result.counters["wbuf_read_issues"] == 16
+    assert result.counters["dot4_chunks"] == 16
+    assert result.counters["output_values"] == 140
+    assert [len(tile) for tile in result.outputs] == [64, 6, 64, 6]
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+def test_production_dense64_edge_case_exactly_matches_icarus():
+    report = correlate_production_dense_fabric(
+        ProductionDenseFabricConfig(), rtl_root=RTL_ROOT,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["event_trace_exact"] is True
+    assert report["functional_outputs_exact"] is True
+    assert report["synthesis_check"]["dot4_instances"] == 64
+    assert report["synthesis_check"]["top_direct_multipliers"] == 0
+
+
+@pytest.mark.skipif(shutil.which("verilator") is None, reason="Verilator unavailable")
+def test_full_qproj_shape_dense64_exactly_matches_verilator():
+    config = ProductionDenseFabricConfig(
+        m=1, n=4096, k=4096, source_stall_mod=0,
+        output_stall_mod=0, max_cycles=1_000_000,
+    )
+    report = correlate_production_dense_fabric(
+        config, rtl_root=RTL_ROOT, synthesize=False,
+        simulator="verilator", internal_trace=False,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["rtl_cycles"] == 262_150
+    assert report["counters"]["output_values"] == 4096
+    assert report["functional_outputs_exact"] is True
 
 
 def test_dma_payload_source_reorders_lines_before_dense_sram():
