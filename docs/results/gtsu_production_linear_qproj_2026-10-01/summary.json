@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "correlation": {
+    "schema_version": "0.1",
+    "status": "rtl_correlated",
+    "projection": "q_proj",
+    "shape": {
+      "m": 1,
+      "n": 4096,
+      "k": 4096
+    },
+    "production_shape": true,
+    "exact": true,
+    "cycle_error": 0,
+    "cycle_model": {
+      "cycles": 997858,
+      "dma_accept": 266240,
+      "scale_bursts": 4096,
+      "weight_bursts": 262144,
+      "read_issue": 262144,
+      "compute": 262144,
+      "partial": 65536,
+      "output": 4096,
+      "bank_conflict": 0,
+      "max_rob": 32
+    },
+    "rtl": {
+      "cycles": 997858,
+      "dma_accept": 266240,
+      "scale_bursts": 4096,
+      "weight_bursts": 262144,
+      "read_issue": 262144,
+      "compute": 262144,
+      "partial": 65536,
+      "output": 4096,
+      "bank_conflict": 0,
+      "max_rob": 32
+    },
+    "config": {
+      "rob_depth": 32,
+      "sram_read_latency": 3,
+      "unpack_latency": 1,
+      "words_per_burst": 4,
+      "weight_bank_offset_words": 8,
+      "dma_ingress_per_cycle": 1,
+      "max_cycles": 20000000
+    },
+    "claim_boundary": {
+      "dram_completion_trace": true,
+      "controller_cycle_rtl_correlated": true,
+      "arithmetic_value_rtl_correlated_separately": true,
+      "full_pointllm_cycle_accurate": false
+    }
+  },
+  "dramsim3": {
+    "accelerator_cycles": 997846,
+    "dram_clock_ticks": 1202224,
+    "requests": 266240,
+    "bytes_read": 17039360,
+    "latency_min": 19,
+    "latency_median": 76.0,
+    "latency_max": 594,
+    "provenance": {
+      "bridge": "/home/PointAcc/QuickFPS/build/dramsim3-latest/libquickfps_dramsim3_bridge.so",
+      "bridge_sha256": "783bcadb9de16ec1dd98b0a9401181c1ec0ad34ee5972c828a13ab16690ff195",
+      "config": "/home/DRAMsim3/configs/DDR4_8Gb_x8_2400.ini",
+      "config_sha256": "6892161a10debdf1fdcded2d601c5cc3dcc80ed492a71ef81895ae30e51a5c26",
+      "dramsim3_source_commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+      "dram_tck_ns": 0.83,
+      "accelerator_clock_hz": 1000000000,
+      "transaction_bytes": 64,
+      "max_outstanding": 32,
+      "stream_barriers": true,
+      "reorder_window": 32
+    }
+  },
+  "dma_trace": {
+    "entries": 266240,
+    "sha256": "7c5a551d9c39c91d88737ff1d8482713dbd51af05b77d574f73d55b5ceff77ed",
+    "stored": false,
+    "regenerate_with": "architecture_simulator/scripts/run_production_linear_correlation.py"
+  },
+  "full_pointllm_cycle_accurate": false
+}

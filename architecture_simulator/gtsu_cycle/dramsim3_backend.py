@@ -249,9 +249,13 @@ def time_dram_bursts(
     accelerator_clock_hz: int = 1_000_000_000,
     max_outstanding: int = 32,
     max_cycles: int = 1_000_000,
+    stream_barriers: bool = False,
+    reorder_window: int | None = None,
 ) -> DramTimingResult:
     if max_outstanding <= 0:
         raise ValueError("max_outstanding must be positive")
+    if reorder_window is not None and reorder_window <= 0:
+        raise ValueError("reorder_window must be positive when provided")
     pending = tuple(bursts)
     if not pending:
         raise ValueError("at least one DRAM burst is required")
@@ -261,6 +265,9 @@ def time_dram_bursts(
     completions: list[DramCompletion] = []
     next_index = 0
     outstanding = 0
+    active_stream = pending[0].stream
+    retired_index = 0
+    completed_indices: set[int] = set()
     with ClockScaledDramSim3(
         paths, output_dir, accelerator_clock_hz=accelerator_clock_hz,
         transaction_bytes=pending[0].size,
@@ -268,6 +275,14 @@ def time_dram_bursts(
         for _ in range(max_cycles):
             while next_index < len(pending) and outstanding < max_outstanding:
                 burst = pending[next_index]
+                if stream_barriers and burst.stream != active_stream:
+                    if outstanding:
+                        break
+                    active_stream = burst.stream
+                    retired_index = next_index
+                    completed_indices.clear()
+                if reorder_window is not None and next_index - retired_index >= reorder_window:
+                    break
                 if burst.size != backend.transaction_bytes:
                     raise ValueError("all sampled DRAM bursts must have equal size")
                 request = DramRequest(
@@ -288,6 +303,11 @@ def time_dram_bursts(
             for completion in backend.tick():
                 completions.append(completion)
                 outstanding -= 1
+                if reorder_window is not None:
+                    completed_indices.add(completion.tag)
+                    while retired_index in completed_indices:
+                        completed_indices.remove(retired_index)
+                        retired_index += 1
                 events.append(DramEvent(
                     completion.completed_cycle, "COMPLETE", completion.tag,
                     completion.address, completion.stream, completion.latency,
@@ -326,6 +346,8 @@ def time_dram_bursts(
             "accelerator_clock_hz": accelerator_clock_hz,
             "transaction_bytes": pending[0].size,
             "max_outstanding": max_outstanding,
+            "stream_barriers": stream_barriers,
+            "reorder_window": reorder_window,
         },
     )
 

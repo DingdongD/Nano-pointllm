@@ -109,6 +109,8 @@ class DramBurst:
     tile_id: int
     output_row: int
     split_index: int
+    chunk_index: int
+    chunks_in_split: int
 
 
 @dataclass(frozen=True)
@@ -152,6 +154,7 @@ class LoweredLinear:
                     output_row * self.k + tile.k_start
                 ) * bytes_per_weight
                 remaining = tile.k_count * bytes_per_weight
+                chunk_index = 0
                 while remaining:
                     size = min(self.config.dram_burst_bytes, remaining)
                     if row_address % self.config.dram_burst_bytes:
@@ -160,9 +163,11 @@ class LoweredLinear:
                         raise AssertionError("partial weight bursts are not supported")
                     yield DramBurst(
                         sequence, row_address, size, "weight", tile.tile_id,
-                        output_row, tile.split_index,
+                        output_row, tile.split_index, chunk_index,
+                        tile.k_count * bytes_per_weight // self.config.dram_burst_bytes,
                     )
                     sequence += 1
+                    chunk_index += 1
                     row_address += size
                     remaining -= size
 
@@ -176,6 +181,8 @@ class LoweredLinear:
                 scale.base + index * self.config.dram_burst_bytes,
                 self.config.dram_burst_bytes,
                 "scale",
+                -1,
+                -1,
                 -1,
                 -1,
                 -1,

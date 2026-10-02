@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "precision": "W8A8_ACC32",
+  "dram_burst_bytes": 64,
+  "dram_max_outstanding": 32,
+  "dram_reorder_window": 32,
+  "stream_barriers": true,
+  "dma_ingress_per_cycle": 1,
+  "rob_depth": 32,
+  "sram_banks": 16,
+  "sram_word_bytes": 16,
+  "sram_read_latency": 3,
+  "unpack_latency": 1,
+  "weight_bank_offset_words": 8
+}

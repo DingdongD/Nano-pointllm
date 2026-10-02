@@ -14,10 +14,15 @@ Implemented now:
 - checkpoint-backed PointLLM decoder-linear lowering into W8 tiles, exact
   DRAM payloads/bursts, and SRAM bank/row addresses;
 - sampled request timing through the local pinned official DRAMsim3 backend.
+- production decoder-linear scale/weight streams with bounded issue/reorder,
+  SRAM bank conflicts, registered reads, unpack, Split-K partials, and outputs;
+- exact full-shape RTL-controller correlation for Q projection and non-uniform-K
+  down projection using their real DRAMsim3 completion traces.
 
-The compute slice still uses deterministic source latency and beat delivery.
-The new memory pieces are validated separately; they are not yet a DRAM-timed,
-banked-SRAM-integrated production PointLLM GEMV implementation.
+The production decoder-linear controller is now DRAM-timed and SRAM-integrated.
+Arithmetic values are checked in the separate W8 GEMV datapath slice while the
+production controller checks full-shape traffic and cycles. Dense GEMM,
+attention, vector operations, and whole-graph scheduling remain unsupported.
 
 The legacy Python estimator does not model ready/valid handshakes, queues,
 resource stalls, exact bank mapping, burst timing, or producer/consumer events.

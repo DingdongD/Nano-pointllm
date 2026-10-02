@@ -21,7 +21,7 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | 16-bank x 128-bit 1R1W SRAM: conflicts, arbitration, 3-cycle reads | Python/RTL exact correlation for locked two-client schedule |
 | PointLLM decoder linear lowering | Real safetensors shapes to W8 tiles, DRAM bursts, and SRAM bank/row addresses |
 | DRAM timing | Local pinned DRAMsim3 backend for explicit sampled requests |
-| Compute + SRAM + DRAM integrated production linear | Not implemented; fail-closed |
+| Production decoder linear controller | Q and non-uniform-K down projection exactly RTL-correlated with DRAMsim3 traces |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | FPS/KNN/dense GEMM/attention/vector/LM-head/sampling RTL | Not implemented |

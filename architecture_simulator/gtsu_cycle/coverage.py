@@ -51,9 +51,10 @@ COVERAGE = {
         "No dense-mode tensor-fabric RTL slice or cycle correlation.",
     ),
     "pointllm_splitk_linear": OperatorCoverage(
-        "pointllm_splitk_linear", False, False, False, False,
-        "Checkpoint-backed tile/address lowering and DRAMsim3 burst timing exist, but "
-        "SRAM/DRAM completion is not yet integrated with the compute RTL slice.",
+        "pointllm_splitk_linear", True, True, True, True,
+        "Production Q and non-uniform-K down-projection controllers are exactly "
+        "RTL-correlated against real DRAMsim3 completion traces; arithmetic value "
+        "parity is locked by the separate W8 GEMV datapath slice.",
     ),
     "attention": OperatorCoverage(
         "attention", False, False, False, False,

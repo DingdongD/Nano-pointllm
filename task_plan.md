@@ -231,6 +231,16 @@ Phase 31 in progress
 - [x] Lower real checkpoint-backed PointLLM decoder linears into exact tensor regions, tiles, bursts, and SRAM bank/row addresses
 - **Status:** in progress; no full-model cycle-accuracy claim is allowed yet
 
+### Phase 32: Production Decoder And Remaining Tensor Operators
+- [x] Integrate real PointLLM W8 decoder-linear lowering with DRAMsim3 completion timing, finite DMA/ROB credits, banked SRAM, unpack, Split-K compute, and reduction
+- [x] Correlate the integrated linear controller against RTL for reduced and production PointLLM projection shapes
+- [x] Emit representative Q/O and Gate/Up/Down shape-class cycle, traffic, bank-conflict, and stall evidence; LM-head reuses the N-parameterized path
+- [ ] Implement and RTL-correlate dense GEMM for PointBERT/projector/prefill shapes
+- [ ] Implement and RTL-correlate attention QK/online-softmax/AV and paged-KV paths
+- [ ] Implement and RTL-correlate vector norm/RoPE/activation/residual/sampling paths
+- [ ] Keep whole-model reports fail-closed until every phase is covered
+- **Status:** in progress; production decoder linear gate is complete, dense GEMM is next
+
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
 2. Does paged KV scheduling handle memory pressure safely, including preemption?

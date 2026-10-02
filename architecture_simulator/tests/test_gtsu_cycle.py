@@ -12,6 +12,14 @@ from gtsu_cycle.coverage import (
 from gtsu_cycle.ir import MicroOpcode, lower_splitk_gemv
 from gtsu_cycle.dramsim3_backend import DramSim3Paths, time_dram_bursts
 from gtsu_cycle.pointllm_lowering import lower_decoder_linear, lower_decoder_manifest
+from gtsu_cycle.pointllm_lowering import (
+    LinearTile, LoweredLinear, LoweringConfig, MemoryRegion, SourceTensor,
+)
+from gtsu_cycle.production_linear import (
+    DmaArrival, ProductionLinearConfig, build_runtime_bursts,
+    run_production_linear_model,
+)
+from gtsu_cycle.production_linear_correlation import correlate_production_linear
 from gtsu_cycle.sram import SramConfig, decode_sram_address, run_sram_model
 from gtsu_cycle.sram_correlation import correlate_banked_sram
 from gtsu_cycle.splitk_gemv import (
@@ -202,6 +210,58 @@ def test_decoder_manifest_uses_global_nonoverlapping_dram_layout():
 
     assert all(left[1] <= right[0] for left, right in zip(regions, regions[1:]))
     assert manifest["totals"]["global_dram_span"]["regions_nonoverlap"] is True
+
+
+def _small_production_linear():
+    config = LoweringConfig(split_k=2, output_tile=16)
+    sram = SramConfig()
+    n, k = 32, 384
+    tiles = []
+    tile_id = 0
+    for n_start in (0, 16):
+        for partition in range(2):
+            tiles.append(LinearTile(
+                tile_id=tile_id, n_start=n_start, n_count=16,
+                split_index=partition, k_start=partition * 192, k_count=192,
+                weight_payload_bytes=16 * 192, weight_bursts=48,
+                activation_sram_address=partition * 192,
+                weight_sram_address=1 << 20,
+                partial_sram_address=(3 << 20) + partition * 64,
+            ))
+            tile_id += 1
+    return LoweredLinear(
+        projection="q_proj", layer=0, token=0, m=1, n=n, k=k,
+        source=SourceTensor("synthetic", "none", "F32", (n, k), (0, n * k * 4)),
+        config=config, sram_config=sram,
+        regions=(
+            MemoryRegion("weight_w8", "dram", 1 << 32, n * k, n * k, "W8"),
+            MemoryRegion("weight_scale", "dram", (1 << 32) + n * k, 192, 4096, "FP16"),
+            MemoryRegion("activation_a8", "sram", 0, k, 384, "A8"),
+            MemoryRegion("weight_tile_w8", "sram", 1 << 20, 3072, 3072, "W8"),
+            MemoryRegion("partial_acc32", "sram", 3 << 20, 128, 128, "ACC32"),
+            MemoryRegion("output_acc32", "sram", (3 << 20) + 65536, 64, 64, "ACC32"),
+        ),
+        tiles=tuple(tiles),
+    )
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+def test_integrated_production_linear_controller_matches_rtl():
+    lowered = _small_production_linear()
+    runtime = build_runtime_bursts(lowered)
+    arrivals = tuple(
+        DmaArrival(cycle=index * 2, burst=burst)
+        for index, burst in enumerate(runtime)
+    )
+    config = ProductionLinearConfig(rob_depth=8, max_cycles=10_000)
+    model = run_production_linear_model(lowered, arrivals, config=config)
+    report = correlate_production_linear(
+        lowered, arrivals, rtl_root=RTL_ROOT, config=config,
+    )
+
+    assert model.counters["outputs"] == 32
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
 
 
 @pytest.mark.skipif(shutil.which("yosys") is None, reason="yosys unavailable")

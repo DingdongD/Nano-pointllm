@@ -199,6 +199,17 @@ compute-memory RTL pipeline，因此不报告完整 linear 或端到端 cycle/sp
 证据见
 [`docs/results/gtsu_memory_lowering_2026-10-01/`](docs/results/gtsu_memory_lowering_2026-10-01/README.md)。
 
+Production decoder linear 已进一步闭环：真实 `q_proj 4096x4096` 与
+`down_proj 4096x11008` 的 scale/weight DRAMsim3 completion、32-entry
+bounded ROB、banked SRAM、read latency、unpack、Split-K partial/output 均与
+参数化 RTL controller 精确一致，cycle error 为 0。Q projection 为
+997,858 cycles；down projection 为 2,755,501 cycles，并暴露 217,088 次
+activation/weight bank conflict。证据见
+[`docs/results/gtsu_production_linear_qproj_2026-10-01/`](docs/results/gtsu_production_linear_qproj_2026-10-01/README.md)
+和
+[`docs/results/gtsu_production_linear_downproj_2026-10-01/`](docs/results/gtsu_production_linear_downproj_2026-10-01/README.md)。
+Dense GEMM、attention 与 vector 仍保持 fail-closed。
+
 ```bash
 cd /home/nano-pointllm/architecture_simulator
 /opt/conda/envs/pointllm/bin/python -m pointllm_archsim simulate \

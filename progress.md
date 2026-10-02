@@ -402,3 +402,10 @@
 - Added a strict local DRAMsim3 adapter with accelerator/DRAM clock conversion, tagged outstanding requests, aligned 64-byte transactions, callback validation, and bridge/config hashes. The formal 64-request q-projection sample completed in 246 accelerator cycles with 34/97/158-cycle min/median/max latency.
 - Archived the SRAM traces, all decoder projection manifests, DRAMsim3 request/completion trace, coverage matrix, and fidelity boundary under `docs/results/gtsu_memory_lowering_2026-10-01/`.
 - Final memory/lowering regression passed `29` architecture tests; the full repository passed `174 passed, 1 skipped` in the locked PointLLM environment. Coverage remains fail-closed for integrated PointLLM linear and full-model cycles.
+
+## 2026-10-01: Production Decoder Linear Integration
+- Integrated scale prefetch and W8 weight requests with the pinned DRAMsim3 backend, a 32-request oldest-unretired issue window, one-burst/cycle DMA ingress, finite 32-entry reorder buffer, bank-striped SRAM vector writes/reads, three-cycle SRAM response, unpack, compute issue, Split-K partials, and output retirement.
+- A naive outstanding-only policy exposed a real reorder hazard: Q-projection callbacks reached a maximum 2,217 completed-but-not-in-order entries despite only 32 requests being outstanding. The final issue policy constrains sequence distance from the oldest unretired request and remains bounded at 32 entries.
+- Production Q projection (`4096x4096`) matches RTL exactly at `997,858` cycles with 266,240 DMA requests, 262,144 compute bursts, 65,536 partials, 4,096 outputs, zero bank conflicts, and ROB peak 32.
+- Production down projection (`4096x11008`) matches RTL exactly at `2,755,501` cycles with 715,520 DMA requests, 704,512 compute bursts, 65,536 partials, 4,096 outputs, 217,088 bank conflicts, and ROB peak 32.
+- The exact small-shape CI case exercises conflict cooldown and variable controller parameters; arithmetic output values remain independently locked by the W8 Split-K GEMV datapath RTL.
