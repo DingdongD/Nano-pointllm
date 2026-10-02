@@ -1,0 +1,270 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv; hierarchy -check -top gtsu_dense_dot4_tile; chparam -set N_TILE 3 gtsu_dense_dot4_tile; hierarchy -check -top gtsu_dense_dot4_tile; proc; opt; check -assert; stat; write_json /tmp/gtsu_dense_hnvst135/dense.json' --
+
+1. Executing Verilog-2005 frontend: /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv
+Parsing SystemVerilog input from `/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dot4_pe'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv
+Parsing SystemVerilog input from `/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dense_dot4_tile'.
+Warning: Replacing memory \accumulator with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+
+3.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_dense_dot4_tile'.
+Parameter \N_TILE = 3
+Generating RTLIL representation for module `$paramod\gtsu_dense_dot4_tile\N_TILE=3'.
+Warning: Replacing memory \accumulator with list of registers. See /home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+
+5.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$65'.
+Removing empty process `gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$65'.
+Cleaned up 1 empty switch.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55 in module gtsu_dense_dot4_tile.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_INIT pass (extract init attributes).
+
+6.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+
+6.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+     1/15: $0\out_accumulator_reg[95:0] [95:64]
+     2/15: $0\out_accumulator_reg[95:0] [63:32]
+     3/15: $0\out_accumulator_reg[95:0] [31:0]
+     4/15: $2\next_accumulator[31:0]
+     5/15: $1\next_accumulator[31:0]
+     6/15: $1\index[31:0]
+     7/15: $0\next_accumulator[31:0]
+     8/15: $0\index[31:0]
+     9/15: $0\accumulator[2][31:0]
+    10/15: $0\accumulator[1][31:0]
+    11/15: $0\accumulator[0][31:0]
+    12/15: $2\index[31:0]
+    13/15: $0\out_mask_reg[2:0]
+    14/15: $0\out_tag_reg[15:0]
+    15/15: $0\out_valid_reg[0:0]
+
+6.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_dense_dot4_tile.\out_valid_reg' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$113' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_tag_reg' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$114' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_mask_reg' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$115' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_accumulator_reg' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$116' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\index' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$117' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\next_accumulator' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $dff cell `$procdff$118' with positive edge clock.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[0]' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$119' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[1]' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$120' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[2]' using process `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+  created $adff cell `$procdff$121' with positive edge clock and negative level reset.
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 6 empty switches in `\gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+Removing empty process `gtsu_dense_dot4_tile.$proc$/home/nano-pointllm/architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$55'.
+Cleaned up 6 empty switches.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_dot4_tile..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~15 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_dot4_tile.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_dot4_tile..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Removed 5 unused cells and 46 unused wires.
+<suppressed ~9 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_dot4_tile..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~13 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_dot4_tile.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_dot4_tile..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.16. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_dense_dot4_tile..
+checking module gtsu_dot4_pe..
+found and reported 0 problems.
+
+9. Printing statistics.
+
+=== gtsu_dense_dot4_tile ===
+
+   Number of wires:                 48
+   Number of wire bits:           1102
+   Number of public wires:          25
+   Number of public wire bits:     578
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 36
+     $add                            3
+     $adff                           7
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mux                           19
+     gtsu_dot4_pe                    3
+
+=== gtsu_dot4_pe ===
+
+   Number of wires:                 18
+   Number of wire bits:            276
+   Number of public wires:          18
+   Number of public wire bits:     276
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $add                            3
+     $mul                            4
+
+=== design hierarchy ===
+
+   gtsu_dense_dot4_tile              1
+     gtsu_dot4_pe                    3
+
+   Number of wires:                102
+   Number of wire bits:           1930
+   Number of public wires:          79
+   Number of public wire bits:    1406
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 54
+     $add                           12
+     $adff                           7
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mul                           12
+     $mux                           19
+
+10. Executing JSON backend.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: 5c50eb07e1
+CPU: user 0.09s system 0.00s, MEM: 16.97 MB total, 11.09 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 17% 1x check (0 sec), 17% 2x opt_clean (0 sec), ...

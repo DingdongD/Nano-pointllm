@@ -20,15 +20,17 @@ def main() -> int:
     parser.add_argument("--rtl_root", type=Path, required=True)
     parser.add_argument("--output_dir", type=Path, required=True)
     parser.add_argument("--shape", choices=("edge", "q_proj"), default="edge")
+    parser.add_argument("--memory_lanes", type=int, choices=(1, 2, 4), default=1)
     args = parser.parse_args()
     if args.shape == "q_proj":
         config = ProductionDenseFabricConfig(
             m=1, n=4096, k=4096, source_stall_mod=0,
-            output_stall_mod=0, max_cycles=1_000_000,
+            output_stall_mod=0, memory_lanes=args.memory_lanes,
+            max_cycles=1_000_000,
         )
         simulator, internal_trace, synthesize = "verilator", False, False
     else:
-        config = ProductionDenseFabricConfig()
+        config = ProductionDenseFabricConfig(memory_lanes=args.memory_lanes)
         simulator, internal_trace, synthesize = "iverilog", True, True
     report = correlate_production_dense_fabric(
         config, rtl_root=args.rtl_root, output_dir=args.output_dir,

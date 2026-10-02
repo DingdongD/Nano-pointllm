@@ -499,3 +499,16 @@
 - Added a Verilator C++ cycle driver because the installed Verilator 4.038 lacks `--binary/--timing`; the driver is also the intended host boundary for later request-side DRAMsim3 integration.
 - Completed the full deterministic `1x4096x4096` q-projection shape at 262,150 cycles with exact counters and all 4,096 ACC32 outputs.
 - Archived the edge and full-shape evidence under `docs/results/gtsu_dense64_production_fabric_2026-10-02/`; final repository regression passes `220 passed, 1 skipped`.
+
+## 2026-10-02: Phase-Aware Dense Supply And Real Payload Start
+- Accepted the next-gate order from the architecture audit: real tensor package, balanced multi-lane supply, then high-M weight reuse before additional isolated operators.
+- Confirmed that the current Dense64 fabric reloads every 256-byte weight vector for every M row and that the real-q-projection script only correlates three selected rows through the older narrow Dot4 tile.
+- Locked fail-closed scope: synthetic production shape remains valid evidence, but it cannot unlock real W8A8 Dense coverage; dual output, 8-lane over-supply, closed-loop DRAMsim3, and SRAM/PPA remain separate gates.
+- Added a checksummed `QuantizedTensorPackage` and exported real ModelNet layer-0 q-projection A8/W8, SmoothQuant, activation, per-output weight, and calibrated output scales under `/mnt/llm_data`.
+- Extended Dense64 to accept 1/2/4 independent 64-byte lanes. Full q-projection cycles are 262,150/131,078/65,542 with exact outputs and invariant traffic counters.
+- Added K-block-resident WBUF reuse with M-tile tagged partial sums. The full PointTransformer QKV shape checks 590,976 outputs in 925,021 cycles and reduces external weight bytes by 30.176x at `M_TILE=32`.
+- Added 64-way A8 and configurable BF16 output RTL. The synthetic 8/16/32/64-lane sweep and the package-backed 4,096-value real q-projection A8/BF16 lock are exact.
+- Added a structural Dense64-to-dual-output wrapper, aggregate JSON/plot, updated coverage, and strict claim boundaries under `docs/results/gtsu_dense64_phase_aware_2026-10-02/`.
+- Final targeted regression passed `11` new/affected tests; final full repository regression passed `234 passed, 1 skipped` in 245.60 seconds.
+- Final claim audit renamed the legacy local-report flag so stream-only correlations state that they cannot unlock `dense_gemm` alone; the global operator gate remains based on the combined real-payload, high-M reuse, and dual-output evidence.
+- Final architecture/quantization regression passed `65 passed` in 256.87 seconds; every Phase 37E JSON artifact parses, all touched Python modules compile, and `git diff --check` is clean.

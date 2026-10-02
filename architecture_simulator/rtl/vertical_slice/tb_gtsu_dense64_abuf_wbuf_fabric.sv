@@ -4,6 +4,7 @@ module tb_gtsu_dense64_abuf_wbuf_fabric;
     parameter integer K = 16;
     parameter integer READ_LATENCY = 3;
     parameter integer FIFO_DEPTH = 8;
+    parameter integer N_MEM_LANES = 1;
     parameter integer SOURCE_STALL_MOD = 5;
     parameter integer SOURCE_STALL_PHASE = 2;
     parameter integer OUTPUT_STALL_MOD = 7;
@@ -28,7 +29,9 @@ module tb_gtsu_dense64_abuf_wbuf_fabric;
     wire [31:0] line_sequence = sent / 4;
     wire [1:0] line_quarter = sent % 4;
     wire [31:0] line_activation = make_activation(line_sequence);
-    wire [511:0] line_weights = make_weights(line_sequence, line_quarter);
+    wire [N_MEM_LANES*512-1:0] line_weights = make_weight_group(
+        line_sequence, line_quarter
+    );
     wire source_gate = (SOURCE_STALL_MOD == 0) ? 1'b1
         : ((cycle % SOURCE_STALL_MOD) != SOURCE_STALL_PHASE);
     wire line_valid = rst_n && sent < LINES && source_gate;
@@ -58,6 +61,20 @@ module tb_gtsu_dense64_abuf_wbuf_fabric;
         begin
             wrapped = ((value + 128) % 256 + 256) % 256 - 128;
             wrap_i8 = wrapped;
+        end
+    endfunction
+
+    function automatic [N_MEM_LANES*512-1:0] make_weight_group;
+        input [31:0] seq;
+        input [1:0] quarter;
+        integer memory_lane;
+        begin
+            make_weight_group = 0;
+            for (memory_lane = 0; memory_lane < N_MEM_LANES;
+                 memory_lane = memory_lane + 1)
+                make_weight_group[memory_lane*512 +: 512] = make_weights(
+                    seq, quarter + memory_lane
+                );
         end
     endfunction
 
@@ -119,7 +136,7 @@ module tb_gtsu_dense64_abuf_wbuf_fabric;
 
     gtsu_dense64_abuf_wbuf_fabric #(
         .M(M), .N(N), .K(K), .READ_LATENCY(READ_LATENCY),
-        .FIFO_DEPTH(FIFO_DEPTH)
+        .FIFO_DEPTH(FIFO_DEPTH), .N_MEM_LANES(N_MEM_LANES)
     ) dut (
         .clk(clk), .rst_n(rst_n), .line_valid(line_valid),
         .line_ready(line_ready), .line_sequence(line_sequence),
@@ -151,10 +168,11 @@ module tb_gtsu_dense64_abuf_wbuf_fabric;
             output_backpressure_cycles <= 0;
         end else begin
             if (line_valid && line_ready) begin
-                if (TRACE_INTERNAL)
-                    $display("TRACE %0d LINE_ACCEPT %0d %0h",
-                        cycle, sent, line_quarter);
-                sent <= sent + 1;
+                for (column = 0; column < N_MEM_LANES; column = column + 1)
+                    if (TRACE_INTERNAL)
+                        $display("TRACE %0d LINE_ACCEPT %0d %0h",
+                            cycle, sent + column, line_quarter + column);
+                sent <= sent + N_MEM_LANES;
             end
             if (line_valid && !line_ready)
                 source_backpressure_cycles <= source_backpressure_cycles + 1;

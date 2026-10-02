@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "dense64_abuf_broadcast_16bank_wbuf_dot4",
+  "config": {
+    "m": 1,
+    "n": 4096,
+    "k": 4096,
+    "n_tile": 64,
+    "banks": 16,
+    "read_latency": 3,
+    "fifo_depth": 8,
+    "memory_lanes": 2,
+    "source_stall_mod": 0,
+    "source_stall_phase": 2,
+    "output_stall_mod": 0,
+    "output_stall_phase": 3,
+    "max_cycles": 1000000,
+    "n_tiles": 64,
+    "chunks": 1024,
+    "packets": 65536,
+    "lines": 262144,
+    "output_tiles": 64
+  },
+  "cycle_model_cycles": 131078,
+  "rtl_cycles": 131078,
+  "cycle_error": 0,
+  "event_trace_exact": true,
+  "counter_trace_exact": true,
+  "functional_outputs_exact": true,
+  "simulator": "verilator",
+  "internal_event_trace_enabled": false,
+  "counters": {
+    "ingress_lines": 262144,
+    "wbuf_bank_writes": 1048576,
+    "abuf_writes": 65536,
+    "wbuf_read_issues": 65536,
+    "wbuf_responses": 65536,
+    "dot4_chunks": 65536,
+    "output_tiles": 64,
+    "output_values": 4096,
+    "fill_compute_overlap_cycles": 65535,
+    "source_backpressure_cycles": 0,
+    "output_backpressure_cycles": 0,
+    "response_fifo_peak": 1
+  },
+  "synthesis_check": {
+    "status": "not_rerun_for_shape; hierarchy locked by edge case"
+  },
+  "operand_supply": {
+    "activation": "independent_32bit_A4_broadcast_buffer",
+    "weights": "16_banks_x_128bit_parallel_read",
+    "weight_read_bits_per_issue": 2048,
+    "weight_read_bytes_per_issue": 256,
+    "memory_lanes": 2,
+    "ingress_bits_per_cycle": 1024,
+    "ingress_bytes_per_cycle": 128,
+    "ingress_beats_per_weight_vector": 2,
+    "dot4_pe_count": 64
+  },
+  "claim_boundary": {
+    "n_tile_64_operand_supply": true,
+    "full_shape_control_and_edge_mask": true,
+    "real_checkpoint_payload": false,
+    "bf16_a8_dual_output": false,
+    "smoothquant_metadata_source": false,
+    "request_side_dramsim3_closed_loop": false,
+    "standalone_report_unlocks_dense_gemm_coverage": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

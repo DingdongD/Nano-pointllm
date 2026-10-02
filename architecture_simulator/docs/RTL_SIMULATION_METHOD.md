@@ -36,6 +36,12 @@ edge-state model and synthesizable SystemVerilog.
   by both W8 Split-K GEMV and cached-norm geometry distance. Yosys additionally
   requires zero direct multipliers in the geometry top and exactly four
   multipliers in every `gtsu_dot4_pe` instance.
+- Dense64 weight stream: exact edge events and complete real `1x4096x4096`
+  q-projection ACC32 outputs at 64/128/256 bytes per cycle.
+- Dense64 high-M reuse: resident K-block weights, M-tile partial-sum state, and
+  complete PointTransformer QKV-shape output validation.
+- Dense64 dual output: 64 parallel A8 lanes, BF16 lane sweep, and package-backed
+  real q-projection scale/output correlation.
 
 The behavioral SRAM is not a foundry macro. Icarus is an RTL event simulator,
 not a post-layout timing simulator. Yosys acceptance is not a PPA result.

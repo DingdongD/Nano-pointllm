@@ -475,3 +475,18 @@
 - The complete deterministic `1x4096x4096` q-projection shape completes in 262,150 cycles in both Python and compiled Verilator. It performs 262,144 64-byte ingress transfers, 65,536 parallel 256-byte WBUF reads, and compares all 4,096 ACC32 outputs exactly.
 - The 4:1 ingress/read-width ratio makes memory fill, not the 64-PE Dot4 array, the steady-state limiter in this configuration. This is a measured cycle-model consequence, not a roofline-only inference.
 - These results close production-width operand supply but not production W8A8: stimulus values are deterministic rather than checkpoint-backed, and dual BF16/A8 post-processing plus calibration metadata are not yet composed.
+
+## Phase-Aware Dense Supply Audit
+- The current `gtsu_dense64_abuf_wbuf_fabric` stores only one 4-element K chunk per ping-pong slot. Its packet order is `(M, N-tile, K-chunk)`, so every 256-byte weight vector is transferred again for each input row.
+- A high-M reuse mode cannot use the existing single 64-lane accumulator unchanged: iterating rows within a resident K block requires tagged partial sums across K blocks. The implementation therefore needs either an accumulator SRAM or an explicit split-K partial reducer; merely changing loop order would be numerically wrong.
+- The existing real-linear validator already captures a true layer-0 q-projection activation and computes SmoothQuant-transformed activation/weight tensors, but it only sends three output rows through the narrow Dense RTL and does not persist the exact quantized bytes or scales.
+- The balanced decode supply point is structurally four 64-byte ingress lanes per cycle: one 64-column Dot4 issue consumes 256 weight bytes. Eight lanes require accepting two independent 256-byte packets per cycle and cannot be honestly represented by widening a single-packet interface.
+
+## Phase-Aware Dense64 Results
+- The canonical ModelNet layer-0 q-projection package is `/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj`. It stores real A8/W8 bytes, SmoothQuant scales, activation/per-output/output FP16 scales, metadata, and per-file SHA256 values.
+- The real `1x4096x4096` q-projection completes in 65,542 cycles at 256 bytes/cycle. All 4,096 ACC32 outputs, events, and counters match; the prior 64-byte/cycle mode takes 262,150 cycles and the 128-byte/cycle mode takes 131,078 cycles.
+- The measured supply sweep reaches 3.9997x speedup from 64 to 256 bytes/cycle with unchanged 262,144 ingress-line and 65,536 Dot4-chunk counts. This validates 256 bytes/cycle as the one-vector-per-cycle balance point rather than a scaled analytical estimate.
+- The K-block-resident `[513,384]x[384,1152]` run completes in 925,021 cycles and checks all 590,976 ACC32 outputs. With `M_TILE=32`, weight traffic is 7,520,256 bytes versus 226,934,784 bytes for repeated GEMV, a 30.176x reduction; Dot4 issues occupy 95.832% of total cycles.
+- `M_TILE=32` still reloads each unique padded weight tensor 17 times, once per M tile. This is the explicit area/traffic compromise; claiming one unique-weight read would require a 513-row partial-sum residency point or a different outer-loop schedule.
+- The dual-output adapter has 64 physical A8 requant instances and a BF16 lane sweep. Three synthetic tiles take 35/22/15/13 cycles at 8/16/32/64 BF16 lanes. A 16-lane run checks all 4,096 real q-projection A8 and BF16 outputs in 448 cycles using the same tensor package.
+- Dense64 and the dual-output adapter are directly connected by a synthesizable wrapper whose backpressure path is structurally checked. They have not yet been correlated as one composed event trace, so production W8A8 and full-model claims remain false.

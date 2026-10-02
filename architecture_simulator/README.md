@@ -178,6 +178,23 @@ python scripts/run_requant_rtl_correlation.py \
 python scripts/run_dense_sram_pipeline_rtl_correlation.py \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_dense_sram_requant_pipeline_2026-10-02
+
+# Sweep 64/128/256-byte-per-cycle production q-projection supply.
+for lanes in 1 2 4; do
+  python scripts/run_dense64_fabric_correlation.py \
+    --rtl_root rtl/vertical_slice --shape q_proj --memory_lanes "$lanes" \
+    --output_dir "../docs/results/dense64_qproj_lane${lanes}"
+done
+
+# Correlate K-block-resident high-M mode at the full PointTransformer QKV shape.
+python scripts/run_pointtransformer_weight_reuse.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/dense64_pointtransformer_reuse
+
+# Sweep 64-way A8 plus configurable BF16 post-processing.
+python scripts/run_dense64_dual_output_sweep.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/dense64_dual_output
 ```
 
 ## Output contract
@@ -231,11 +248,12 @@ python scripts/evaluate_sequential_w8a8_pointllm.py \
 This executes dense BF16/FP16 operators after QDQ and measures fidelity only;
 it does not benchmark an integer kernel.
 
-The W8 Split-K GEMV, geometry distance, shared-Dot4 dense microtile, and locked SRAM port/arbiter slices have
-executable RTL and exact event correlation. Decoder tensors now have checkpoint-backed target
-layout and memory addresses, and sampled bursts use real DRAMsim3 timing. These
-pieces are not yet one integrated compute/memory RTL pipeline, so generic
-PointLLM linear cycles and all end-to-end latency remain fail-closed.
+Production Dense64 now has two exact dataflows: a weight-stream mode for decode
+and a K-block-resident mode with tagged partial sums for high-M GEMM. The real
+layer-0 q-projection package drives all 4096 ACC32 outputs and package-backed
+A8/BF16 post-processing. The full PointTransformer QKV shape checks all 590,976
+outputs. Request-side DRAMsim3 feedback, foundry SRAM/timing, geometry,
+attention, and end-to-end PointLLM latency remain fail-closed.
 
 ## Fidelity roadmap
 

@@ -1,0 +1,94 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "milestones": {
+    "M1_real_w8a8_dense64": true,
+    "M2_balanced_weight_stream_256B_per_cycle": true,
+    "M3_weight_reuse_gemm": true,
+    "M4_dual_a8_bf16_output": true,
+    "M5_fused_fps_knn": false,
+    "M6_geometry_feature_pipeline": false,
+    "M7_request_side_dramsim3_closed_loop": false,
+    "M8_foundry_ppa_calibration": false,
+    "M9_attention_vector": false,
+    "M10_full_pointllm": false
+  },
+  "qproj_memory_lane_sweep": [
+    {
+      "memory_lanes": 1,
+      "ingress_bytes_per_cycle": 64,
+      "cycles": 262150,
+      "speedup_vs_64B": 1.0,
+      "exact": true
+    },
+    {
+      "memory_lanes": 2,
+      "ingress_bytes_per_cycle": 128,
+      "cycles": 131078,
+      "speedup_vs_64B": 1.9999542257281924,
+      "exact": true
+    },
+    {
+      "memory_lanes": 4,
+      "ingress_bytes_per_cycle": 256,
+      "cycles": 65542,
+      "speedup_vs_64B": 3.9997253669402824,
+      "exact": true
+    }
+  ],
+  "real_qproj": {
+    "tensor_package": "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj",
+    "acc32_outputs_checked": 4096,
+    "dense64_cycles_256B_per_cycle": 65542,
+    "acc32_exact": true,
+    "a8_outputs_checked": 4096,
+    "bf16_outputs_checked": 4096,
+    "dual_output_cycles_16_lanes": 448
+  },
+  "pointtransformer_weight_reuse": {
+    "shape": [
+      513,
+      384,
+      1152
+    ],
+    "cycles": 925021,
+    "acc32_outputs_checked": 590976,
+    "weight_bytes_repeated_gemv": 226934784,
+    "weight_bytes_reuse": 7520256,
+    "weight_byte_reduction_ratio": 30.176470588235293,
+    "dot4_issue_fraction": 0.9583177030575523
+  },
+  "dual_output_lane_sweep": [
+    {
+      "bf16_lanes": 8,
+      "cycles_for_three_tiles": 35,
+      "a8_lanes": 64,
+      "exact": true
+    },
+    {
+      "bf16_lanes": 16,
+      "cycles_for_three_tiles": 22,
+      "a8_lanes": 64,
+      "exact": true
+    },
+    {
+      "bf16_lanes": 32,
+      "cycles_for_three_tiles": 15,
+      "a8_lanes": 64,
+      "exact": true
+    },
+    {
+      "bf16_lanes": 64,
+      "cycles_for_three_tiles": 13,
+      "a8_lanes": 64,
+      "exact": true
+    }
+  ],
+  "claim_boundary": {
+    "dense_gemm_operator_rtl_correlated": true,
+    "full_pointllm_cycle_accurate": false,
+    "request_side_dramsim3_closed_loop": false,
+    "real_pointtransformer_payload": false,
+    "foundry_sram_sta_ppa": false
+  }
+}

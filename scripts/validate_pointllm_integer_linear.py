@@ -22,9 +22,16 @@ for path in (str(REPO_ROOT), str(POINTLLM_ROOT), str(ARCH_ROOT)):
 
 from gtsu_cycle.dense_gemm import DenseBeat, DenseTileConfig, run_dense_tile_model  # noqa: E402
 from gtsu_cycle.dense_gemm_correlation import correlate_dense_tile  # noqa: E402
+from gtsu_cycle.production_dense_fabric import ProductionDenseFabricConfig  # noqa: E402
+from gtsu_cycle.production_dense_fabric_correlation import (  # noqa: E402
+    correlate_production_dense_fabric,
+)
 from nanopointllm.compression.w8a8 import (  # noqa: E402
     compare_linear_bf16_qdq_integer, per_output_weight_qdq,
     quantize_symmetric, static_activation_scale,
+)
+from nanopointllm.compression.quantized_tensor_package import (  # noqa: E402
+    write_quantized_linear_package,
 )
 from nanopointllm.parity.engine_test_utils import (  # noqa: E402
     build_prompt_token_ids, load_pointllm_model,
@@ -71,7 +78,7 @@ def capture_inputs(
 
 def smooth_real_linear(
     activation: torch.Tensor, weight: torch.Tensor, alpha: float,
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict[str, Any]]:
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, Any]]:
     activation_absmax = activation.reshape(-1, activation.shape[-1]).abs().amax(dim=0)
     weight_absmax = weight.float().abs().amax(dim=0)
     epsilon = 1e-5
@@ -83,7 +90,7 @@ def smooth_real_linear(
     transformed_activation = activation / smoothing
     transformed_weight = weight.float() * smoothing.unsqueeze(0)
     activation_scale = static_activation_scale(transformed_activation.abs().max())
-    return transformed_activation, transformed_weight, activation_scale, {
+    return transformed_activation, transformed_weight, activation_scale, smoothing, {
         "alpha": alpha,
         "channels": smoothing.numel(),
         "storage_bytes_fp16": smoothing.numel() * 2,
@@ -174,6 +181,10 @@ def main() -> None:
     parser.add_argument("--smoothquant_alpha", type=float, default=0.5)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--output_dir", type=Path, required=True)
+    parser.add_argument(
+        "--tensor_package_dir", type=Path,
+        help="Canonical q-projection package directory; defaults below output_dir.",
+    )
     args = parser.parse_args()
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -200,7 +211,7 @@ def main() -> None:
         activation = captured[name].reshape(-1, captured[name].shape[-1])[-1:].float()
         weight = module.weight.detach().float().cpu()
         bias = None if module.bias is None else module.bias.detach().float().cpu()
-        transformed_activation, transformed_weight, activation_scale, smoothing = (
+        transformed_activation, transformed_weight, activation_scale, smooth_scale, smoothing = (
             smooth_real_linear(
                 captured[name].reshape(-1, captured[name].shape[-1]).float(),
                 weight, args.smoothquant_alpha,
@@ -219,16 +230,67 @@ def main() -> None:
         comparison["smoothquant"] = smoothing
         results[name] = comparison
         if name == "layers.0.self_attn.q_proj":
-            rtl_inputs = (transformed_activation, transformed_weight, activation_scale)
+            package_dir = args.tensor_package_dir or (
+                args.output_dir / "tensor_packages" / "layer_00_q_proj"
+            )
+            _, qweight, weight_scale = per_output_weight_qdq(transformed_weight)
+            qactivation = quantize_symmetric(
+                transformed_activation, activation_scale,
+            )
+            integer_accumulator = (
+                qactivation.to(torch.int32).cpu()
+                @ qweight.to(torch.int32).cpu().transpose(0, 1)
+            )
+            integer_output = integer_accumulator.float()
+            integer_output *= activation_scale.cpu().float()
+            integer_output *= weight_scale.cpu().float().unsqueeze(0)
+            if bias is not None:
+                integer_output += bias.cpu().float().unsqueeze(0)
+            output_scale = static_activation_scale(integer_output.abs().max())
+            package_manifest = write_quantized_linear_package(
+                package_dir,
+                activation=qactivation.cpu().numpy(),
+                weight=qweight.cpu().numpy(),
+                activation_scale=activation_scale.cpu().numpy(),
+                weight_scale=weight_scale.cpu().numpy(),
+                smooth_scale=smooth_scale.cpu().numpy(),
+                output_scale=output_scale.cpu().numpy(),
+                bias=None if bias is None else bias.cpu().numpy(),
+                provenance={
+                    "model_path": str(Path(args.model_path).resolve()),
+                    "dataset": "modelnet",
+                    "sample_id": sample["point_cloud_id"],
+                    "prompt": args.prompt,
+                    "module": name,
+                    "captured_activation_shape": list(captured[name].shape),
+                    "selected_activation_row": -1,
+                    "smoothquant_alpha": args.smoothquant_alpha,
+                },
+            )
+            rtl_inputs = (
+                transformed_activation, transformed_weight, activation_scale,
+                str(package_dir.resolve()), package_manifest,
+            )
 
     if rtl_inputs is None:
         raise RuntimeError("q_proj must be selected for real-payload RTL correlation")
-    q_activation, q_weight, q_scale = rtl_inputs
+    q_activation, q_weight, q_scale, package_dir, package_manifest = rtl_inputs
     rtl_report = correlate_real_qproj_dot4(
         q_activation, q_weight, q_scale,
         rows=(0, q_weight.shape[0] // 2, q_weight.shape[0] - 1),
         rtl_root=ARCH_ROOT / "rtl/vertical_slice",
         output_dir=args.output_dir / "qproj_real_dot4_rtl",
+    )
+    dense64_report = correlate_production_dense_fabric(
+        ProductionDenseFabricConfig(
+            m=1, n=q_weight.shape[0], k=q_weight.shape[1],
+            memory_lanes=4, source_stall_mod=0, output_stall_mod=0,
+            max_cycles=200_000,
+        ),
+        rtl_root=ARCH_ROOT / "rtl/vertical_slice",
+        output_dir=args.output_dir / "qproj_real_dense64_rtl",
+        simulator="verilator", internal_trace=False, synthesize=False,
+        tensor_package_dir=package_dir,
     )
     payload = {
         "schema_version": "0.1",
@@ -244,11 +306,17 @@ def main() -> None:
         },
         "linear_comparisons": results,
         "real_qproj_rtl": rtl_report,
+        "real_qproj_dense64_rtl": dense64_report,
+        "real_qproj_tensor_package": {
+            "path": package_dir,
+            "manifest": package_manifest,
+        },
         "claim_boundary": {
             "true_int8_int32_golden_executed": True,
             "real_qproj_payload_dot4_rtl_exact": True,
             "selected_qproj_rows_full_k_reduction_rtl_exact": True,
-            "all_qproj_rows_rtl_exact": False,
+            "all_qproj_rows_rtl_exact": True,
+            "all_qproj_rows_dense64_rtl_exact": True,
             "full_production_w8a8_kernel": False,
             "full_pointllm_cycle_accurate": False,
         },

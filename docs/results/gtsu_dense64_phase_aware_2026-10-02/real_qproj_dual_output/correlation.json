@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "real_layer0_qproj_acc32_a8_bf16",
+  "tensor_package": {
+    "path": "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj",
+    "activation_scale_fp16": 0.0124359130859375,
+    "output_scale_fp16": 0.040557861328125,
+    "tensor_sha256": {
+      "activation": "11118b91f62d1cb5abb785dfd90b1823137e4b87682d03d721e6b88111ba1c71",
+      "activation_scale": "e8ce3e65b5a45e1929d6cad835b1fa8257d29f9d2f53de1cd4c9920aed0910e9",
+      "output_scale": "d1f47e5a47cb4cb2f0639dabef187d1ed63dab221280869d910c9f60be38df47",
+      "smooth_scale": "c323d0ee2cc2ae60648f0b8a856e02c70b0501739d11195b1ff22a0b0a7de0ff",
+      "weight": "403589ea0d855199a84d7f4bafbe4d87219b7132c03f5af638ff0db194994b99",
+      "weight_scale": "f2d175334da92fa6bee423a843bb76728d2139e67b33f5281cbcb08ada1dbc35"
+    }
+  },
+  "bf16_lanes": 16,
+  "cycle_model_cycles": 448,
+  "rtl_cycles": 448,
+  "cycle_error": 0,
+  "event_trace_exact": true,
+  "counter_trace_exact": true,
+  "a8_outputs_checked": 4096,
+  "bf16_outputs_checked": 4096,
+  "dense64_wrapper_hierarchy": {
+    "status": "passed",
+    "dense64_instances": 1,
+    "dual_output_instances": 1,
+    "dense_backpressure_directly_driven_by_postprocessor": true,
+    "capacity_reduced_structure_lock": true
+  },
+  "claim_boundary": {
+    "real_qproj_a8_value_event_cycle_exact": true,
+    "real_qproj_bf16_value_event_cycle_exact": true,
+    "dense64_wrapper_structurally_composed": true,
+    "dense64_wrapper_value_event_cycle_correlated": false,
+    "full_production_w8a8_kernel": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

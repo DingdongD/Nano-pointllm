@@ -1,0 +1,124 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "dense64_acc32_a8_bf16_dual_output",
+  "a8_lanes": 64,
+  "bf16_lane_sweep": [
+    {
+      "bf16_lanes": 8,
+      "bf16_groups_per_tile": 8,
+      "status": "rtl_correlated",
+      "cycle_model_cycles": 35,
+      "rtl_cycles": 35,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true,
+      "counters": {
+        "input_tiles": 3,
+        "a8_values": 192,
+        "bf16_groups": 24,
+        "bf16_values": 192,
+        "output_tiles": 3,
+        "source_backpressure_cycles": 17,
+        "output_backpressure_cycles": 1
+      },
+      "hierarchy_check": {
+        "status": "passed",
+        "a8_requant_instances": 64,
+        "bf16_dequant_instances": 8,
+        "standalone_arithmetic_modules_already_synthesized": true,
+        "behavioral_storage_not_ppa_evidence": true
+      }
+    },
+    {
+      "bf16_lanes": 16,
+      "bf16_groups_per_tile": 4,
+      "status": "rtl_correlated",
+      "cycle_model_cycles": 22,
+      "rtl_cycles": 22,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true,
+      "counters": {
+        "input_tiles": 3,
+        "a8_values": 192,
+        "bf16_groups": 12,
+        "bf16_values": 192,
+        "output_tiles": 3,
+        "source_backpressure_cycles": 10,
+        "output_backpressure_cycles": 0
+      },
+      "hierarchy_check": {
+        "status": "passed",
+        "a8_requant_instances": 64,
+        "bf16_dequant_instances": 16,
+        "standalone_arithmetic_modules_already_synthesized": true,
+        "behavioral_storage_not_ppa_evidence": true
+      }
+    },
+    {
+      "bf16_lanes": 32,
+      "bf16_groups_per_tile": 2,
+      "status": "rtl_correlated",
+      "cycle_model_cycles": 15,
+      "rtl_cycles": 15,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true,
+      "counters": {
+        "input_tiles": 3,
+        "a8_values": 192,
+        "bf16_groups": 6,
+        "bf16_values": 192,
+        "output_tiles": 3,
+        "source_backpressure_cycles": 6,
+        "output_backpressure_cycles": 0
+      },
+      "hierarchy_check": {
+        "status": "passed",
+        "a8_requant_instances": 64,
+        "bf16_dequant_instances": 32,
+        "standalone_arithmetic_modules_already_synthesized": true,
+        "behavioral_storage_not_ppa_evidence": true
+      }
+    },
+    {
+      "bf16_lanes": 64,
+      "bf16_groups_per_tile": 1,
+      "status": "rtl_correlated",
+      "cycle_model_cycles": 13,
+      "rtl_cycles": 13,
+      "cycle_error": 0,
+      "event_trace_exact": true,
+      "counter_trace_exact": true,
+      "counters": {
+        "input_tiles": 3,
+        "a8_values": 192,
+        "bf16_groups": 3,
+        "bf16_values": 192,
+        "output_tiles": 3,
+        "source_backpressure_cycles": 5,
+        "output_backpressure_cycles": 1
+      },
+      "hierarchy_check": {
+        "status": "passed",
+        "a8_requant_instances": 64,
+        "bf16_dequant_instances": 64,
+        "standalone_arithmetic_modules_already_synthesized": true,
+        "behavioral_storage_not_ppa_evidence": true
+      }
+    }
+  ],
+  "numerical_contract": {
+    "a8": "compiled_multiplier_shift_rne_symmetric[-127,127]",
+    "bf16": "exact_ACC32_times_FP16_times_FP16_direct_BF16_RNE"
+  },
+  "claim_boundary": {
+    "a8_64way_value_event_cycle_exact": true,
+    "bf16_8_16_32_64_lane_value_event_cycle_exact": true,
+    "real_qproj_scale_payload": false,
+    "dense64_wrapper_composed": false,
+    "bias_and_nonlinearity_after_bf16": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

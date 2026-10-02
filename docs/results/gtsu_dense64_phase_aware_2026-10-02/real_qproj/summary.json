@@ -1,0 +1,323 @@
+{
+  "schema_version": "0.1",
+  "status": "real_pointllm_integer_and_rtl_correlated",
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "dataset": "modelnet",
+    "sample_id": "modelnet-test-1577",
+    "prompt": "Describe this 3D object in detail.",
+    "dtype": "bfloat16",
+    "smoothquant_alpha": 0.5,
+    "modules": [
+      "layers.0.self_attn.q_proj"
+    ]
+  },
+  "linear_comparisons": {
+    "layers.0.self_attn.q_proj": {
+      "source_device": "cpu",
+      "arithmetic_contract": {
+        "activation_quantization": "symmetric_per_tensor_int8",
+        "activation_scale_storage": "float16",
+        "weight_quantization": "symmetric_per_output_int8",
+        "weight_scale_storage": "float16",
+        "accumulation": "signed_int32",
+        "dequantization_arithmetic": "float32",
+        "bias_present": false,
+        "bias_application": "none",
+        "output_dtype": "float32"
+      },
+      "shape": {
+        "input": [
+          1,
+          4096
+        ],
+        "weight": [
+          4096,
+          4096
+        ],
+        "output": [
+          1,
+          4096
+        ]
+      },
+      "accumulator_dtype": "torch.int32",
+      "accumulator_min": -67470,
+      "accumulator_max": 85920,
+      "worst_case_accumulator_bound": 66064384,
+      "int32_safe": true,
+      "metrics": {
+        "bf16_vs_fp32": {
+          "rmse": 0.0017528739990666509,
+          "max_abs": 0.015778541564941406,
+          "mean_abs": 0.0011496200459077954,
+          "mean_relative_abs": 0.0036799784284085035
+        },
+        "qdq_bf16_vs_qdq_fp32": {
+          "rmse": 0.0019523008959367871,
+          "max_abs": 0.015053510665893555,
+          "mean_abs": 0.0012686115223914385,
+          "mean_relative_abs": 4.520673751831055
+        },
+        "integer_vs_qdq_fp32": {
+          "rmse": 1.385822514521351e-07,
+          "max_abs": 9.5367431640625e-07,
+          "mean_abs": 8.726190969809977e-08,
+          "mean_relative_abs": 0.00011685999197652563
+        },
+        "integer_vs_qdq_bf16": {
+          "rmse": 0.0019523068331182003,
+          "max_abs": 0.015053987503051758,
+          "mean_abs": 0.0012686133850365877,
+          "mean_relative_abs": 0.003940965048968792
+        },
+        "integer_vs_fp32": {
+          "rmse": 0.005983033683151007,
+          "max_abs": 0.03347182273864746,
+          "mean_abs": 0.004441411234438419,
+          "mean_relative_abs": 0.03645304590463638
+        }
+      },
+      "module": "layers.0.self_attn.q_proj",
+      "source_shape": {
+        "captured_activation": [
+          1,
+          565,
+          4096
+        ],
+        "weight": [
+          4096,
+          4096
+        ]
+      },
+      "smoothquant": {
+        "alpha": 0.5,
+        "channels": 4096,
+        "storage_bytes_fp16": 8192,
+        "activation_scale_before": 0.04083251953125,
+        "activation_scale_after": 0.0124359130859375,
+        "current_runtime_channelwise_divide": true,
+        "offline_folded": false
+      }
+    }
+  },
+  "real_qproj_rtl": {
+    "status": "rtl_correlated_integer_payload_and_accumulator",
+    "rows": [
+      0,
+      2048,
+      4095
+    ],
+    "k": 4096,
+    "chunks": 1024,
+    "activation_scale_fp16": 0.0124359130859375,
+    "weight_scales_fp16": [
+      0.0036792755126953125,
+      0.0022430419921875,
+      0.0011730194091796875
+    ],
+    "integer_golden_accumulators": [
+      30131,
+      18552,
+      -2132
+    ],
+    "rtl_dot4_accumulators": [
+      30131,
+      18552,
+      -2132
+    ],
+    "accumulator_exact": true,
+    "event_trace_exact": true,
+    "cycle_error": 0,
+    "rtl_cycles": 1025,
+    "synthesis_check": {
+      "status": "passed",
+      "top_direct_multipliers": 0,
+      "dot4_multipliers_per_instance": 4,
+      "dot4_instances": 3,
+      "total_shared_int8_multipliers": 12
+    }
+  },
+  "real_qproj_dense64_rtl": {
+    "schema_version": "0.1",
+    "status": "rtl_correlated",
+    "operator": "dense64_abuf_broadcast_16bank_wbuf_dot4",
+    "config": {
+      "m": 1,
+      "n": 4096,
+      "k": 4096,
+      "n_tile": 64,
+      "banks": 16,
+      "read_latency": 3,
+      "fifo_depth": 8,
+      "memory_lanes": 4,
+      "source_stall_mod": 0,
+      "source_stall_phase": 2,
+      "output_stall_mod": 0,
+      "output_stall_phase": 3,
+      "max_cycles": 200000,
+      "n_tiles": 64,
+      "chunks": 1024,
+      "packets": 65536,
+      "lines": 262144,
+      "output_tiles": 64
+    },
+    "cycle_model_cycles": 65542,
+    "rtl_cycles": 65542,
+    "cycle_error": 0,
+    "event_trace_exact": true,
+    "counter_trace_exact": true,
+    "functional_outputs_exact": true,
+    "simulator": "verilator",
+    "internal_event_trace_enabled": false,
+    "counters": {
+      "ingress_lines": 262144,
+      "wbuf_bank_writes": 1048576,
+      "abuf_writes": 65536,
+      "wbuf_read_issues": 65536,
+      "wbuf_responses": 65536,
+      "dot4_chunks": 65536,
+      "output_tiles": 64,
+      "output_values": 4096,
+      "fill_compute_overlap_cycles": 65535,
+      "source_backpressure_cycles": 0,
+      "output_backpressure_cycles": 0,
+      "response_fifo_peak": 1
+    },
+    "synthesis_check": {
+      "status": "not_rerun_for_shape; hierarchy locked by edge case"
+    },
+    "operand_supply": {
+      "activation": "independent_32bit_A4_broadcast_buffer",
+      "weights": "16_banks_x_128bit_parallel_read",
+      "weight_read_bits_per_issue": 2048,
+      "weight_read_bytes_per_issue": 256,
+      "memory_lanes": 4,
+      "ingress_bits_per_cycle": 2048,
+      "ingress_bytes_per_cycle": 256,
+      "ingress_beats_per_weight_vector": 1,
+      "dot4_pe_count": 64
+    },
+    "claim_boundary": {
+      "n_tile_64_operand_supply": true,
+      "full_shape_control_and_edge_mask": true,
+      "real_checkpoint_payload": true,
+      "bf16_a8_dual_output": false,
+      "smoothquant_metadata_source": true,
+      "request_side_dramsim3_closed_loop": false,
+      "standalone_report_unlocks_dense_gemm_coverage": false,
+      "full_pointllm_cycle_accurate": false
+    },
+    "tensor_package": {
+      "path": "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj",
+      "shape": {
+        "k": 4096,
+        "m": 1,
+        "n": 4096
+      },
+      "tensor_sha256": {
+        "activation": "11118b91f62d1cb5abb785dfd90b1823137e4b87682d03d721e6b88111ba1c71",
+        "activation_scale": "e8ce3e65b5a45e1929d6cad835b1fa8257d29f9d2f53de1cd4c9920aed0910e9",
+        "smooth_scale": "c323d0ee2cc2ae60648f0b8a856e02c70b0501739d11195b1ff22a0b0a7de0ff",
+        "weight": "403589ea0d855199a84d7f4bafbe4d87219b7132c03f5af638ff0db194994b99",
+        "weight_scale": "f2d175334da92fa6bee423a843bb76728d2139e67b33f5281cbcb08ada1dbc35"
+      }
+    }
+  },
+  "real_qproj_tensor_package": {
+    "path": "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj",
+    "manifest": {
+      "schema_version": "1.0",
+      "package_type": "smoothquant_static_a8_per_output_w8_linear",
+      "shape": {
+        "m": 1,
+        "n": 4096,
+        "k": 4096
+      },
+      "numerical_contract": {
+        "activation": "symmetric_per_tensor_int8[-127,127]",
+        "weight": "symmetric_per_output_int8[-127,127]",
+        "scale_storage": "IEEE754_binary16_little_endian",
+        "accumulator": "signed_int32",
+        "rounding": "round_to_nearest_ties_to_even",
+        "layout": "row_major"
+      },
+      "tensors": {
+        "activation": {
+          "file": "activation.int8",
+          "dtype": "|i1",
+          "shape": [
+            1,
+            4096
+          ],
+          "order": "C",
+          "bytes": 4096,
+          "sha256": "11118b91f62d1cb5abb785dfd90b1823137e4b87682d03d721e6b88111ba1c71"
+        },
+        "weight": {
+          "file": "weight.int8",
+          "dtype": "|i1",
+          "shape": [
+            4096,
+            4096
+          ],
+          "order": "C",
+          "bytes": 16777216,
+          "sha256": "403589ea0d855199a84d7f4bafbe4d87219b7132c03f5af638ff0db194994b99"
+        },
+        "activation_scale": {
+          "file": "activation_scale.fp16",
+          "dtype": "<f2",
+          "shape": [
+            1
+          ],
+          "order": "C",
+          "bytes": 2,
+          "sha256": "e8ce3e65b5a45e1929d6cad835b1fa8257d29f9d2f53de1cd4c9920aed0910e9"
+        },
+        "weight_scale": {
+          "file": "weight_scale.fp16",
+          "dtype": "<f2",
+          "shape": [
+            4096
+          ],
+          "order": "C",
+          "bytes": 8192,
+          "sha256": "f2d175334da92fa6bee423a843bb76728d2139e67b33f5281cbcb08ada1dbc35"
+        },
+        "smooth_scale": {
+          "file": "smooth_scale.fp16",
+          "dtype": "<f2",
+          "shape": [
+            4096
+          ],
+          "order": "C",
+          "bytes": 8192,
+          "sha256": "c323d0ee2cc2ae60648f0b8a856e02c70b0501739d11195b1ff22a0b0a7de0ff"
+        }
+      },
+      "provenance": {
+        "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+        "dataset": "modelnet",
+        "sample_id": "modelnet-test-1577",
+        "prompt": "Describe this 3D object in detail.",
+        "module": "layers.0.self_attn.q_proj",
+        "captured_activation_shape": [
+          1,
+          565,
+          4096
+        ],
+        "selected_activation_row": -1,
+        "smoothquant_alpha": 0.5
+      }
+    }
+  },
+  "claim_boundary": {
+    "true_int8_int32_golden_executed": true,
+    "real_qproj_payload_dot4_rtl_exact": true,
+    "selected_qproj_rows_full_k_reduction_rtl_exact": true,
+    "all_qproj_rows_rtl_exact": true,
+    "all_qproj_rows_dense64_rtl_exact": true,
+    "full_production_w8a8_kernel": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

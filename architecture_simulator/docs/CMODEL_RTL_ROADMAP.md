@@ -20,11 +20,17 @@ Implemented now:
   down projection using their real DRAMsim3 completion traces.
 - a shared signed INT16 3-D geometry distance tile with an elastic ready/valid
   output register, exact Python/Icarus events, values, cycles, and a Yosys gate.
+- production 64-column Dense stream mode with 1/2/4 64-byte memory lanes and
+  exact all-output real q-projection payload correlation;
+- K-block-resident high-M Dense mode with tagged partial sums and exact full
+  `[513,384]x[384,1152]` shape validation;
+- 64-way A8 plus 8/16/32/64-lane BF16 output adapters with real package scales.
 
-The production decoder-linear controller is now DRAM-timed and SRAM-integrated.
-Arithmetic values are checked in the separate W8 GEMV datapath slice while the
-production controller checks full-shape traffic and cycles. Dense GEMM,
-attention, vector operations, and whole-graph scheduling remain unsupported.
+Dense GEMM arithmetic/dataflow coverage is now enabled. It is not a claim of a
+closed-loop memory system: DRAMsim3 still supplies precomputed completions, and
+the Dense-to-dual-output wrapper has a structural rather than one-waveform
+event lock. Attention, vector operations, and whole-graph scheduling remain
+unsupported.
 
 The geometry tile is deliberately a narrower claim than FPS/KNN. At the
 PointLLM shape, each operator evaluates `8192 * 512 = 4,194,304` distances. A

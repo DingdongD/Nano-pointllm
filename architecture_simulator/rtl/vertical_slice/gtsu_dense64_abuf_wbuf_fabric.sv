@@ -6,6 +6,7 @@ module gtsu_dense64_abuf_wbuf_fabric #(
     parameter integer K = 16,
     parameter integer READ_LATENCY = 3,
     parameter integer FIFO_DEPTH = 8,
+    parameter integer N_MEM_LANES = 1,
     parameter integer N_TILE = 64,
     parameter integer BANKS = 16,
     parameter integer N_TILES = (N+N_TILE-1)/N_TILE,
@@ -22,7 +23,7 @@ module gtsu_dense64_abuf_wbuf_fabric #(
     input  wire [31:0]                  line_sequence,
     input  wire [1:0]                   line_quarter,
     input  wire [31:0]                  line_activation,
-    input  wire [511:0]                 line_weights,
+    input  wire [N_MEM_LANES*512-1:0]   line_weights,
     output wire                         output_valid,
     input  wire                         output_ready,
     output wire [31:0]                  output_tag,
@@ -52,7 +53,8 @@ module gtsu_dense64_abuf_wbuf_fabric #(
     wire fill_match = slot_active[fill_slot]
         && slot_sequence[fill_slot] == line_sequence
         && slot_next_quarter[fill_slot] == line_quarter;
-    assign line_ready = !slot_ready[fill_slot]
+    assign line_ready = line_quarter + N_MEM_LANES <= 4
+        && !slot_ready[fill_slot]
         && ((!slot_active[fill_slot] && line_quarter == 0) || fill_match);
     wire line_fire = line_valid && line_ready;
 
@@ -136,6 +138,7 @@ module gtsu_dense64_abuf_wbuf_fabric #(
 
     integer index;
     integer write_bank;
+    integer memory_lane;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             slot_active <= 0;
@@ -178,19 +181,21 @@ module gtsu_dense64_abuf_wbuf_fabric #(
                     slot_sequence[fill_slot] <= line_sequence;
                     slot_next_quarter[fill_slot] <= 0;
                 end
-                for (write_bank = 0; write_bank < 4; write_bank = write_bank + 1)
-                    wbuf[fill_slot][line_quarter*4 + write_bank]
-                        <= line_weights[write_bank*128 +: 128];
+                for (memory_lane = 0; memory_lane < N_MEM_LANES;
+                     memory_lane = memory_lane + 1)
+                    for (write_bank = 0; write_bank < 4; write_bank = write_bank + 1)
+                        wbuf[fill_slot][(line_quarter+memory_lane)*4 + write_bank]
+                            <= line_weights[(memory_lane*4+write_bank)*128 +: 128];
                 if (line_quarter == 0)
                     abuf[fill_slot] <= line_activation;
-                if (line_quarter == 3) begin
+                if (line_quarter + N_MEM_LANES == 4) begin
                     slot_ready[fill_slot] <= 1'b1;
                     slot_next_quarter[fill_slot] <= 4;
                 end else begin
-                    slot_next_quarter[fill_slot] <= line_quarter + 1'b1;
+                    slot_next_quarter[fill_slot] <= line_quarter + N_MEM_LANES;
                 end
-                count_ingress_lines <= count_ingress_lines + 1;
-                count_wbuf_bank_writes <= count_wbuf_bank_writes + 4;
+                count_ingress_lines <= count_ingress_lines + N_MEM_LANES;
+                count_wbuf_bank_writes <= count_wbuf_bank_writes + 4*N_MEM_LANES;
                 if (line_quarter == 0)
                     count_abuf_writes <= count_abuf_writes + 1;
             end
@@ -219,5 +224,7 @@ module gtsu_dense64_abuf_wbuf_fabric #(
             $error("production fabric requires N_TILE=64, BANKS=16, K%%4=0");
         if (FIFO_DEPTH <= READ_LATENCY)
             $error("response FIFO depth must exceed read latency");
+        if (!(N_MEM_LANES == 1 || N_MEM_LANES == 2 || N_MEM_LANES == 4))
+            $error("N_MEM_LANES must be 1, 2, or 4");
     end
 endmodule

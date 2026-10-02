@@ -71,10 +71,17 @@ COVERAGE = {
         "Distance tile is correlated, but exact global top-32 merge and memory integration are incomplete.",
     ),
     "dense_gemm": OperatorCoverage(
-        "dense_gemm", False, False, False, False,
-        "Shared-Dot4, M/N/K ping-pong control, SRAM, and DMA/controller slices "
-        "exist, and a three-column physical composition is correlated; production "
-        "64-column multiword payload/DMA composition remains incomplete.",
+        "dense_gemm", True, True, True, True,
+        "Production 64-column stream mode is exact for all 4096 real q-projection "
+        "outputs; K-block-resident high-M mode is exact for all 590976 outputs of "
+        "the PointTransformer QKV shape. Request-side DRAMsim3 feedback, real "
+        "PointTransformer payload, foundry SRAM, and full-graph composition remain open.",
+    ),
+    "dense64_dual_a8_bf16_output": OperatorCoverage(
+        "dense64_dual_a8_bf16_output", True, True, True, True,
+        "64-way A8 plus 8/16/32/64-lane BF16 adapter is exact; all 4096 real "
+        "q-projection outputs use package-backed FP16 scales. Dense-to-adapter "
+        "wiring is structurally checked but not yet one composed event trace.",
     ),
     "shared_dot4_dense_gemm_microtile": OperatorCoverage(
         "shared_dot4_dense_gemm_microtile", True, True, True, True,

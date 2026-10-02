@@ -1,0 +1,86 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "dense64_abuf_broadcast_16bank_wbuf_dot4",
+  "config": {
+    "m": 1,
+    "n": 4096,
+    "k": 4096,
+    "n_tile": 64,
+    "banks": 16,
+    "read_latency": 3,
+    "fifo_depth": 8,
+    "memory_lanes": 4,
+    "source_stall_mod": 0,
+    "source_stall_phase": 2,
+    "output_stall_mod": 0,
+    "output_stall_phase": 3,
+    "max_cycles": 200000,
+    "n_tiles": 64,
+    "chunks": 1024,
+    "packets": 65536,
+    "lines": 262144,
+    "output_tiles": 64
+  },
+  "cycle_model_cycles": 65542,
+  "rtl_cycles": 65542,
+  "cycle_error": 0,
+  "event_trace_exact": true,
+  "counter_trace_exact": true,
+  "functional_outputs_exact": true,
+  "simulator": "verilator",
+  "internal_event_trace_enabled": false,
+  "counters": {
+    "ingress_lines": 262144,
+    "wbuf_bank_writes": 1048576,
+    "abuf_writes": 65536,
+    "wbuf_read_issues": 65536,
+    "wbuf_responses": 65536,
+    "dot4_chunks": 65536,
+    "output_tiles": 64,
+    "output_values": 4096,
+    "fill_compute_overlap_cycles": 65535,
+    "source_backpressure_cycles": 0,
+    "output_backpressure_cycles": 0,
+    "response_fifo_peak": 1
+  },
+  "synthesis_check": {
+    "status": "not_rerun_for_shape; hierarchy locked by edge case"
+  },
+  "operand_supply": {
+    "activation": "independent_32bit_A4_broadcast_buffer",
+    "weights": "16_banks_x_128bit_parallel_read",
+    "weight_read_bits_per_issue": 2048,
+    "weight_read_bytes_per_issue": 256,
+    "memory_lanes": 4,
+    "ingress_bits_per_cycle": 2048,
+    "ingress_bytes_per_cycle": 256,
+    "ingress_beats_per_weight_vector": 1,
+    "dot4_pe_count": 64
+  },
+  "claim_boundary": {
+    "n_tile_64_operand_supply": true,
+    "full_shape_control_and_edge_mask": true,
+    "real_checkpoint_payload": true,
+    "bf16_a8_dual_output": false,
+    "smoothquant_metadata_source": true,
+    "request_side_dramsim3_closed_loop": false,
+    "standalone_report_unlocks_dense_gemm_coverage": false,
+    "full_pointllm_cycle_accurate": false
+  },
+  "tensor_package": {
+    "path": "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj",
+    "shape": {
+      "k": 4096,
+      "m": 1,
+      "n": 4096
+    },
+    "tensor_sha256": {
+      "activation": "11118b91f62d1cb5abb785dfd90b1823137e4b87682d03d721e6b88111ba1c71",
+      "activation_scale": "e8ce3e65b5a45e1929d6cad835b1fa8257d29f9d2f53de1cd4c9920aed0910e9",
+      "smooth_scale": "c323d0ee2cc2ae60648f0b8a856e02c70b0501739d11195b1ff22a0b0a7de0ff",
+      "weight": "403589ea0d855199a84d7f4bafbe4d87219b7132c03f5af638ff0db194994b99",
+      "weight_scale": "f2d175334da92fa6bee423a843bb76728d2139e67b33f5281cbcb08ada1dbc35"
+    }
+  }
+}

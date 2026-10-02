@@ -10,8 +10,11 @@ import tempfile
 from typing import Any
 
 from .production_dense_fabric import (
-    FabricEvent, ProductionDenseFabricConfig,
+    FabricEvent, ProductionDenseFabricConfig, build_fabric_lines_from_arrays,
     run_production_dense_fabric_model,
+)
+from nanopointllm.compression.quantized_tensor_package import (
+    load_quantized_linear_package,
 )
 
 
@@ -19,11 +22,21 @@ def correlate_production_dense_fabric(
     config: ProductionDenseFabricConfig, *, rtl_root: str | Path,
     output_dir: str | Path | None = None, synthesize: bool = True,
     simulator: str = "iverilog", internal_trace: bool = True,
+    tensor_package_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     if simulator not in {"iverilog", "verilator"}:
         raise ValueError("simulator must be 'iverilog' or 'verilator'")
+    package = None
+    lines = None
+    if tensor_package_dir is not None:
+        if simulator != "verilator":
+            raise ValueError("checkpoint-backed payload currently requires Verilator")
+        package = load_quantized_linear_package(tensor_package_dir)
+        lines = build_fabric_lines_from_arrays(
+            config, package.activation, package.weight,
+        )
     model = run_production_dense_fabric_model(
-        config, trace=True if internal_trace else "outputs",
+        config, lines, trace=True if internal_trace else "outputs",
     )
     root = Path(rtl_root)
     sources = (
@@ -39,6 +52,7 @@ def correlate_production_dense_fabric(
             "M": config.m, "N": config.n, "K": config.k,
             "READ_LATENCY": config.read_latency,
             "FIFO_DEPTH": config.fifo_depth,
+            "N_MEM_LANES": config.memory_lanes,
             "SOURCE_STALL_MOD": config.source_stall_mod,
             "SOURCE_STALL_PHASE": config.source_stall_phase,
             "OUTPUT_STALL_MOD": config.output_stall_mod,
@@ -64,7 +78,9 @@ def correlate_production_dense_fabric(
             )
             command.extend(
                 f"-G{parameter}={value}" for parameter, value in parameters.items()
-                if parameter in {"M", "N", "K", "READ_LATENCY", "FIFO_DEPTH"}
+                if parameter in {
+                    "M", "N", "K", "READ_LATENCY", "FIFO_DEPTH", "N_MEM_LANES",
+                }
             )
             command.extend(str(path.resolve()) for path in sources[:-1])
             driver = (root / "verilator_dense64_driver.cpp").resolve()
@@ -86,7 +102,14 @@ def correlate_production_dense_fabric(
             str(config.source_stall_mod), str(config.source_stall_phase),
             str(config.output_stall_mod), str(config.output_stall_phase),
             str(config.max_cycles), str(config.output_tiles),
+            str(config.memory_lanes),
         ]
+        if package is not None:
+            package_root = Path(tensor_package_dir).resolve()
+            run_command.extend([
+                str(package_root / package.metadata["tensors"]["activation"]["file"]),
+                str(package_root / package.metadata["tensors"]["weight"]["file"]),
+            ])
         simulated = subprocess.run(run_command, capture_output=True, text=True)
         if simulated.returncode:
             raise RuntimeError(
@@ -120,8 +143,10 @@ def correlate_production_dense_fabric(
             "weights": "16_banks_x_128bit_parallel_read",
             "weight_read_bits_per_issue": 2048,
             "weight_read_bytes_per_issue": 256,
-            "ingress_bits_per_cycle": 512,
-            "ingress_beats_per_weight_vector": 4,
+            "memory_lanes": config.memory_lanes,
+            "ingress_bits_per_cycle": 512 * config.memory_lanes,
+            "ingress_bytes_per_cycle": 64 * config.memory_lanes,
+            "ingress_beats_per_weight_vector": 4 // config.memory_lanes,
             "dot4_pe_count": 64,
         },
         "claim_boundary": {
@@ -131,10 +156,21 @@ def correlate_production_dense_fabric(
             "bf16_a8_dual_output": False,
             "smoothquant_metadata_source": False,
             "request_side_dramsim3_closed_loop": False,
-            "generic_dense_gemm_coverage": False,
+            "standalone_report_unlocks_dense_gemm_coverage": False,
             "full_pointllm_cycle_accurate": False,
         },
     }
+    if package is not None:
+        report["tensor_package"] = {
+            "path": str(Path(tensor_package_dir).resolve()),
+            "shape": package.metadata["shape"],
+            "tensor_sha256": {
+                name: entry["sha256"]
+                for name, entry in package.metadata["tensors"].items()
+            },
+        }
+        report["claim_boundary"]["real_checkpoint_payload"] = exact
+        report["claim_boundary"]["smoothquant_metadata_source"] = exact
     if output_dir is not None:
         destination = Path(output_dir)
         destination.mkdir(parents=True, exist_ok=True)
@@ -202,7 +238,8 @@ def _yosys(
     command = (
         f"read_verilog -sv {' '.join(str(source) for source in sources)}; "
         f"chparam -set M {config.m} -set N {config.n} -set K {config.k} "
-        f"-set READ_LATENCY {config.read_latency} -set FIFO_DEPTH {config.fifo_depth} {top}; "
+        f"-set READ_LATENCY {config.read_latency} -set FIFO_DEPTH {config.fifo_depth} "
+        f"-set N_MEM_LANES {config.memory_lanes} {top}; "
         f"hierarchy -check -top {top}; proc; opt; check -assert; stat; write_json {path}"
     )
     result = subprocess.run(["yosys", "-p", command], capture_output=True, text=True)

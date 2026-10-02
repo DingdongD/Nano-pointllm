@@ -16,6 +16,7 @@ class ProductionDenseFabricConfig:
     banks: int = 16
     read_latency: int = 3
     fifo_depth: int = 8
+    memory_lanes: int = 1
     source_stall_mod: int = 5
     source_stall_phase: int = 2
     output_stall_mod: int = 7
@@ -24,7 +25,8 @@ class ProductionDenseFabricConfig:
 
     def validate(self) -> None:
         if min(self.m, self.n, self.k, self.n_tile, self.banks,
-               self.read_latency, self.fifo_depth, self.max_cycles) <= 0:
+               self.read_latency, self.fifo_depth, self.memory_lanes,
+               self.max_cycles) <= 0:
             raise ValueError("fabric dimensions must be positive")
         if self.n_tile != 64 or self.banks != 16:
             raise ValueError("production fabric is locked to 64 columns and 16 banks")
@@ -32,6 +34,8 @@ class ProductionDenseFabricConfig:
             raise ValueError("K must be divisible by four")
         if self.fifo_depth <= self.read_latency:
             raise ValueError("response FIFO depth must exceed read latency")
+        if self.memory_lanes not in (1, 2, 4):
+            raise ValueError("memory_lanes must be one, two, or four")
 
     @property
     def n_tiles(self) -> int:
@@ -112,6 +116,39 @@ def build_fabric_lines(
     return tuple(lines)
 
 
+def build_fabric_lines_from_arrays(
+    config: ProductionDenseFabricConfig, activation, weight,
+) -> tuple[FabricLine, ...]:
+    """Pack caller-owned row-major INT8 tensors into physical ingress lines."""
+    config.validate()
+    if tuple(activation.shape) != (config.m, config.k):
+        raise ValueError("activation shape does not match Dense64 config")
+    if tuple(weight.shape) != (config.n, config.k):
+        raise ValueError("weight shape does not match Dense64 config")
+    lines = []
+    for sequence in range(config.packets):
+        row, n_tile_index, chunk = decode_sequence(config, sequence)
+        start = chunk * 4
+        activation_word = _pack_i8(tuple(
+            int(value) for value in activation[row, start:start + 4]
+        ))
+        for quarter in range(4):
+            packed = 0
+            for local in range(16):
+                column = n_tile_index * config.n_tile + quarter * 16 + local
+                values = (
+                    tuple(int(value) for value in weight[column, start:start + 4])
+                    if column < config.n else (0, 0, 0, 0)
+                )
+                if any(value < -127 or value > 127 for value in values):
+                    raise ValueError("physical INT8 payload is outside [-127,127]")
+                packed |= _pack_i8(values) << (local * 32)
+            lines.append(FabricLine(
+                len(lines), sequence, quarter, activation_word, packed,
+            ))
+    return tuple(lines)
+
+
 def decode_sequence(
     config: ProductionDenseFabricConfig, sequence: int,
 ) -> tuple[int, int, int]:
@@ -178,9 +215,18 @@ def run_production_dense_fabric_model(
         source_valid = line_index < len(lines) and _ready(
             cycle, config.source_stall_mod, config.source_stall_phase,
         )
-        line = lines[line_index] if source_valid else None
+        group = lines[line_index:line_index + config.memory_lanes] if source_valid else ()
+        line = group[0] if group else None
         fill_ready = False
         if line is not None:
+            if len(group) != config.memory_lanes:
+                raise AssertionError("incomplete final memory-lane group")
+            if any(
+                member.sequence != line.sequence
+                or member.quarter != line.quarter + offset
+                for offset, member in enumerate(group)
+            ):
+                raise AssertionError("memory lanes must carry consecutive quarters")
             current = slots[line.sequence & 1]
             fill_ready = current is None or (
                 current[0] == line.sequence and current[1] == line.quarter
@@ -190,8 +236,8 @@ def run_production_dense_fabric_model(
             counters["source_backpressure_cycles"] += 1
 
         if line_fire:
-            assert line is not None
-            record(cycle, "LINE_ACCEPT", line.line, line.quarter)
+            for member in group:
+                record(cycle, "LINE_ACCEPT", member.line, member.quarter)
         if read_fire:
             record(cycle, "WBUF_READ_ISSUE", expected_sequence, 0)
         if response is not None:
@@ -263,14 +309,15 @@ def run_production_dense_fabric_model(
                 current = list(current)
             if current[0] != line.sequence or current[1] != line.quarter:
                 raise AssertionError("WBUF quarter protocol mismatch")
-            current[3] |= line.weights << (line.quarter * 512)
-            current[1] += 1
+            for member in group:
+                current[3] |= member.weights << (member.quarter * 512)
+            current[1] += config.memory_lanes
             slots[slot_index] = tuple(current)
-            if line.quarter == 3:
+            if current[1] == 4:
                 slots[slot_index] = (current[0], 4, current[2], current[3])
-            line_index += 1
-            counters["ingress_lines"] += 1
-            counters["wbuf_bank_writes"] += 4
+            line_index += config.memory_lanes
+            counters["ingress_lines"] += config.memory_lanes
+            counters["wbuf_bank_writes"] += 4 * config.memory_lanes
             if line.quarter == 0:
                 counters["abuf_writes"] += 1
         if line_fire and read_fire:

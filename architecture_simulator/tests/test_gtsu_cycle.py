@@ -60,10 +60,25 @@ from gtsu_cycle.bf16_dequant import (
 )
 from gtsu_cycle.bf16_dequant_correlation import correlate_bf16_dequant
 from gtsu_cycle.production_dense_fabric import (
-    ProductionDenseFabricConfig, run_production_dense_fabric_model,
+    ProductionDenseFabricConfig, build_fabric_lines_from_arrays,
+    run_production_dense_fabric_model,
 )
 from gtsu_cycle.production_dense_fabric_correlation import (
     correlate_production_dense_fabric,
+)
+from gtsu_cycle.weight_reuse_dense import (
+    WeightReuseDenseConfig, repeated_gemv_weight_bytes,
+    run_weight_reuse_dense_model, weight_reuse_bytes,
+)
+from gtsu_cycle.weight_reuse_dense_correlation import correlate_weight_reuse_dense
+from gtsu_cycle.weight_reuse_production_correlation import (
+    correlate_pointtransformer_weight_reuse,
+)
+from gtsu_cycle.dense_dual_output import DenseDualOutputConfig, run_dense_dual_output_model
+from gtsu_cycle.dense_dual_output_correlation import correlate_dense_dual_output_sweep
+from gtsu_cycle.real_qproj_dual_output_correlation import correlate_real_qproj_dual_output
+from nanopointllm.compression.quantized_tensor_package import (
+    write_quantized_linear_package,
 )
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
@@ -75,6 +90,9 @@ from gtsu_cycle.splitk_gemv import (
 ROOT = Path(__file__).resolve().parents[1]
 RTL_ROOT = ROOT / "rtl/vertical_slice"
 CHECKPOINT = Path("/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors")
+QPROJ_PACKAGE = Path(
+    "/mnt/llm_data/nano_pointllm_quantized_tensor_packages/modelnet/layer_00_q_proj"
+)
 
 
 def test_functional_and_cycle_model_match():
@@ -340,6 +358,30 @@ def test_production_dense64_model_covers_parallel_banks_and_edge_mask():
     assert [len(tile) for tile in result.outputs] == [64, 6, 64, 6]
 
 
+def test_production_dense64_accepts_caller_owned_int8_tensors():
+    import numpy as np
+
+    config = ProductionDenseFabricConfig(
+        m=2, n=70, k=16, memory_lanes=4,
+        source_stall_mod=0, output_stall_mod=0,
+    )
+    activation = ((np.arange(config.m * config.k) * 7 + 3) % 255 - 127).astype(
+        np.int8,
+    ).reshape(config.m, config.k)
+    weight = ((np.arange(config.n * config.k) * 11 + 5) % 255 - 127).astype(
+        np.int8,
+    ).reshape(config.n, config.k)
+    lines = build_fabric_lines_from_arrays(config, activation, weight)
+    result = run_production_dense_fabric_model(config, lines)
+    actual = np.asarray([
+        tuple(value for tile in result.outputs[row * config.n_tiles:(row + 1) * config.n_tiles]
+              for value in tile)
+        for row in range(config.m)
+    ])
+    expected = activation.astype(np.int32) @ weight.astype(np.int32).T
+    np.testing.assert_array_equal(actual, expected)
+
+
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 def test_production_dense64_edge_case_exactly_matches_icarus():
     report = correlate_production_dense_fabric(
@@ -351,6 +393,125 @@ def test_production_dense64_edge_case_exactly_matches_icarus():
     assert report["functional_outputs_exact"] is True
     assert report["synthesis_check"]["dot4_instances"] == 64
     assert report["synthesis_check"]["top_direct_multipliers"] == 0
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("memory_lanes", (2, 4))
+def test_production_dense64_multilane_ingress_exactly_matches_icarus(memory_lanes):
+    config = ProductionDenseFabricConfig(memory_lanes=memory_lanes)
+    report = correlate_production_dense_fabric(config, rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["operand_supply"]["ingress_bytes_per_cycle"] == 64 * memory_lanes
+    assert report["counters"]["ingress_lines"] == config.lines
+
+
+@pytest.mark.skipif(shutil.which("verilator") is None, reason="Verilator unavailable")
+def test_production_dense64_reads_checksummed_tensor_package(tmp_path):
+    import numpy as np
+
+    config = ProductionDenseFabricConfig(
+        m=1, n=70, k=16, memory_lanes=4,
+        source_stall_mod=0, output_stall_mod=0,
+    )
+    activation = ((np.arange(config.k) * 3 + 1) % 255 - 127).astype(np.int8)[None]
+    weight = ((np.arange(config.n * config.k) * 5 + 7) % 255 - 127).astype(
+        np.int8,
+    ).reshape(config.n, config.k)
+    package_dir = tmp_path / "package"
+    write_quantized_linear_package(
+        package_dir, activation=activation, weight=weight,
+        activation_scale=np.array([0.25], dtype=np.float16),
+        weight_scale=np.ones(config.n, dtype=np.float16),
+        smooth_scale=np.ones(config.k, dtype=np.float16),
+        provenance={"source": "unit_test"},
+    )
+    report = correlate_production_dense_fabric(
+        config, rtl_root=RTL_ROOT, synthesize=False,
+        simulator="verilator", internal_trace=False,
+        tensor_package_dir=package_dir,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["functional_outputs_exact"] is True
+    assert report["claim_boundary"]["real_checkpoint_payload"] is True
+
+
+def test_weight_reuse_dense_model_preserves_partial_sums_and_reduces_traffic():
+    config = WeightReuseDenseConfig()
+    result = run_weight_reuse_dense_model(config)
+    assert result.cycles == 138
+    assert result.counters["partial_tiles"] == 20
+    assert result.counters["output_values"] == config.m * config.n
+    assert repeated_gemv_weight_bytes(config) == 15_360
+    assert weight_reuse_bytes(config) == 6_144
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None or shutil.which("yosys") is None,
+    reason="Icarus or Yosys unavailable",
+)
+def test_weight_reuse_dense_exactly_matches_rtl():
+    report = correlate_weight_reuse_dense(
+        WeightReuseDenseConfig(), rtl_root=RTL_ROOT,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["event_trace_exact"] is True
+    assert report["functional_outputs_exact"] is True
+    assert report["synthesis_check"]["dot4_instances"] == 64
+    assert report["synthesis_check"]["top_direct_multipliers"] == 0
+
+
+@pytest.mark.skipif(shutil.which("verilator") is None, reason="Verilator unavailable")
+def test_pointtransformer_shape_weight_reuse_matches_compiled_rtl():
+    report = correlate_pointtransformer_weight_reuse(rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["rtl_cycles"] == 925_021
+    assert report["checked_output_values"] == 513 * 1152
+    assert report["functional_outputs_exact"] is True
+    assert report["traffic"]["weight_byte_reduction_ratio"] > 30
+
+
+def test_dense_dual_output_model_exposes_bf16_lane_tradeoff():
+    cycles = {
+        lanes: run_dense_dual_output_model(
+            DenseDualOutputConfig(bf16_lanes=lanes),
+        ).cycles
+        for lanes in (8, 16, 32, 64)
+    }
+    assert cycles == {8: 35, 16: 22, 32: 15, 64: 13}
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None or shutil.which("yosys") is None,
+    reason="Icarus or Yosys unavailable",
+)
+def test_dense_dual_output_lane_sweep_exactly_matches_rtl():
+    report = correlate_dense_dual_output_sweep(rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert [row["rtl_cycles"] for row in report["bf16_lane_sweep"]] == [35, 22, 15, 13]
+    assert all(
+        row["hierarchy_check"]["a8_requant_instances"] == 64
+        for row in report["bf16_lane_sweep"]
+    )
+
+
+def test_production_dense_coverage_is_unlocked_without_full_model_claim():
+    require_rtl_correlated(("dense_gemm", "dense64_dual_a8_bf16_output"))
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None or not (QPROJ_PACKAGE / "metadata.json").is_file(),
+    reason="Icarus or real q-projection package unavailable",
+)
+def test_real_qproj_dual_output_uses_package_scales():
+    report = correlate_real_qproj_dual_output(
+        tensor_package_dir=QPROJ_PACKAGE, rtl_root=RTL_ROOT, bf16_lanes=16,
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["a8_outputs_checked"] == 4096
+    assert report["bf16_outputs_checked"] == 4096
+    assert report["dense64_wrapper_hierarchy"]["status"] == "passed"
 
 
 @pytest.mark.skipif(shutil.which("verilator") is None, reason="Verilator unavailable")

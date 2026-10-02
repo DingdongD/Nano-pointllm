@@ -281,13 +281,13 @@ Phase 37 in progress
 - **Status:** complete for representative q/down/LM-head tensors; full production W8A8 kernel remains fail-closed
 
 ### Phase 37: Shared Dense GEMM RTL Mode
-- [ ] Implement tiled M/N/K control using only `gtsu_dot4_pe` multiplier instances
+- [x] Implement tiled M/N/K control using only `gtsu_dot4_pe` multiplier instances
 - [x] Add finite microtile operand/accumulator/output ready-valid state and edge-column handling
 - [x] Correlate standalone M/N/K counters, edge K/N tiles, and ping-pong buffer lifecycle
 - [ ] Correlate Local Encoder, PointTransformer QKV, projector, and LLM prefill shape classes
 - [x] Prove with Yosys that the Dense GEMM microtile introduces no multiplier outside Dot4 PE
-- [ ] Enable `dense_gemm` coverage only after exact value/event/cycle correlation
-- **Status:** in progress; a three-column physical pipeline is exact, while production 64-column multiword SRAM/DMA composition is pending
+- [x] Enable `dense_gemm` coverage only after exact value/event/cycle correlation
+- **Status:** in progress; production stream/reuse arithmetic is exact, while remaining Local Encoder/projector/prefill payload classes and closed-loop memory are pending
 
 #### Phase 37A: Compiler_Codes Quant/Memory RTL Audit
 - [x] Pin and inventory synthesizable quantization, scale-buffer, DMU, GEMM-control, and SRAM RTL from `/home/Compiler_Codes`
@@ -295,7 +295,7 @@ Phase 37 in progress
 - [x] Implement a GTSU INT32-to-A8 requant RTL slice where semantics match the PointLLM W8A8 contract
 - [x] Add Python bit golden plus Icarus value/event/cycle and Yosys structure checks
 - [ ] Integrate the validated post-accumulator path with production Dense GEMM and SRAM control
-- **Status:** in progress; requant is exact, floating BF16 dequant and physical Dense/SRAM composition remain pending
+- **Status:** in progress; real-scale A8/BF16 values are exact and a Dense64 wrapper is structurally checked, but the wrapper still needs one composed event/cycle trace
 
 #### Phase 37B: Physical Dense SRAM Datapath Composition
 - [x] Pack A plus three B columns into one 128-bit SRAM word for a minimal physical slice
@@ -323,7 +323,18 @@ Phase 37 in progress
 - [x] Correlate values/events/counters/cycles for a conflict/edge lock case
 - [x] Execute the complete `1x4096x4096` q-projection shape across all 4096 outputs
 - [x] Keep BF16/A8 dual output, real SmoothQuant metadata, and request-side DRAMsim3 closed-loop as separate fail-closed gates
-- **Status:** complete for deterministic production-width operand supply and full q-projection shape; real checkpoint payload and post-processing composition remain pending
+- **Status:** complete for production-width supply and all-output real q-projection arithmetic; request-side DRAMsim3 remains pending
+
+#### Phase 37E: Phase-Aware Dense Supply And Real Tensor Package
+- [x] Define one checksummed `QuantizedTensorPackage` consumed by QDQ, integer golden, and RTL drivers
+- [x] Export real layer-0 q-projection A8/W8/SmoothQuant/FP16 scale payloads from ModelNet
+- [x] Correlate all 4096 real q-projection accumulators through Dense64 RTL
+- [x] Parameterize Dense64 weight ingress for 1/2/4 64-byte lanes per cycle and measure the 256-byte/cycle balance point
+- [x] Implement K-block-resident WBUF reuse plus tagged partial-sum state for high-M Dense GEMM
+- [x] Correlate `[513,384]x[384,1152]` values/counters and compare weight traffic against repeated GEMV
+- [x] Correlate 64-way A8 and 8/16/32/64-way BF16 exits, including all 4096 real q-projection outputs
+- [x] Keep 8-lane dual-packet ingress, request-side DRAMsim3, and foundry SRAM/PPA as explicit later gates
+- **Status:** complete; `dense_gemm` and dual-output operator coverage are unlocked without changing full-model coverage
 
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
@@ -402,6 +413,10 @@ Phase 37 in progress
 | Composed-pipeline Yosys script parameterized the top after an initial hierarchy pass removed original child modules | First Phase 37B synthesis attempt | Parameterize the top before the single hierarchy pass; Icarus compilation itself had succeeded |
 | Temporary-output cleanup used a prohibited recursive remove command | Second Phase 37B attempt, before execution | Did not retry deletion; correlation outputs are overwrite-safe, so reran directly in the existing temporary directory |
 | Yosys spent over two minutes expanding the 16x64x128 behavioral SRAM into flops | Second Phase 37B synthesis run | Interrupted the non-informative expansion; retained 16 banks/128-bit/3-cycle timing but reduced the lock model to 4 rows per bank, with production capacity delegated to an SRAM macro |
+| Weight-reuse edge RTL matched values/events/cycles but its first Yosys gate took three minutes and rejected control-address multipliers as datapath multipliers | First Phase 37E structure run | Use a capacity-reduced SRAM structure lock and distinguish controller address arithmetic from the 64 Dot4 data paths; do not report behavioral-array area |
+| Production weight-reuse Verilator rejected reset-time nonblocking writes inside parameterized SRAM loops | First compiled `[513,384]x[384,1152]` attempt | Remove unnecessary array resets: every WBUF location is filled before read and K-block zero initializes every live partial-sum row before reuse |
+| Icarus emitted malformed VVP syntax for zero-argument wide-vector testbench functions | First dual-output adapter run | Add an ignored one-bit function argument; this avoids the Icarus 12 zero-argument code-generation bug without changing stimulus |
+| Real q-projection dual-output values/events/cycles matched but summary omitted source backpressure | First real-scale dual-output run | Count the always-valid source's blocked cycles in the trace testbench; no datapath or timing behavior changed |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

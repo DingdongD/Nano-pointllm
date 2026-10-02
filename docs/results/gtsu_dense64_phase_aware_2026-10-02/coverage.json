@@ -1,0 +1,135 @@
+{
+  "schema_version": "0.1",
+  "full_pointllm_cycle_accurate": false,
+  "policy": "fail_closed",
+  "operators": [
+    {
+      "operator": "attention",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No QK/online-softmax/AV RTL slice or paged-KV memory correlation."
+    },
+    {
+      "operator": "banked_sram_2client",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Locked 16-bank/128-bit/1R1W/3-cycle slice; behavioral SRAM array, two clients, and no foundry SRAM macro characterization."
+    },
+    {
+      "operator": "dense64_dual_a8_bf16_output",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "64-way A8 plus 8/16/32/64-lane BF16 adapter is exact; all 4096 real q-projection outputs use package-backed FP16 scales. Dense-to-adapter wiring is structurally checked but not yet one composed event trace."
+    },
+    {
+      "operator": "dense_gemm",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Production 64-column stream mode is exact for all 4096 real q-projection outputs; K-block-resident high-M mode is exact for all 590976 outputs of the PointTransformer QKV shape. Request-side DRAMsim3 feedback, real PointTransformer payload, foundry SRAM, and full-graph composition remain open."
+    },
+    {
+      "operator": "dense_mnk_ping_pong_controller",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "M/N/K counters, edge masks, partial K blocks, and two-buffer lifecycle are correlated; physical banked-SRAM payload reads and DMA are not integrated."
+    },
+    {
+      "operator": "dense_sram_dot4_requant_physical_slice",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Composed 16-bank/128-bit/3-cycle behavioral SRAM, ping-pong 1R1W, response FIFO, three-column shared-Dot4 tile, and parallel requant; production 64-column multiword gather and DRAMsim3 DMA remain incomplete."
+    },
+    {
+      "operator": "fps",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "Distance tile is correlated, but persistent min/argmax feedback and memory integration are incomplete."
+    },
+    {
+      "operator": "geometry_distance_tile",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Signed INT16 3-D distance tile with elastic ready/valid only; PointLLM FP32 quantization, SRAM/DRAM, FPS min/argmax feedback, and cross-tile KNN top-k integration are not validated."
+    },
+    {
+      "operator": "int32_a8_requant",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Offline FP16-scale to multiplier/shift compilation plus INT32-domain bias, RNE, and symmetric [-127,127] saturation; floating BF16 dequant and integration with Dense GEMM/SRAM remain incomplete."
+    },
+    {
+      "operator": "knn_topk",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "Distance tile is correlated, but exact global top-32 merge and memory integration are incomplete."
+    },
+    {
+      "operator": "lm_head_sampling",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No integrated LM-head/argmax RTL slice or cycle correlation."
+    },
+    {
+      "operator": "pointllm_splitk_linear",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Production Q and non-uniform-K down-projection controllers are exactly RTL-correlated against real DRAMsim3 completion traces; arithmetic value parity is locked by the separate W8 GEMV datapath slice."
+    },
+    {
+      "operator": "shared_dot4_dense_gemm_microtile",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Output-stationary N microtile with K accumulation and edge-column mask; production M/N tiling, SRAM double buffering, and real-shape controller remain incomplete."
+    },
+    {
+      "operator": "shared_int8_dot4_feature_geometry",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Shared arithmetic slice only: INT8 dot4 plus cached-norm distance reconstruction. Point-cloud INT8 fidelity, norm SRAM, FPS control, and KNN top-k are not integrated."
+    },
+    {
+      "operator": "vector_norm_activation",
+      "functional_model": false,
+      "event_cycle_model": false,
+      "synthesizable_rtl": false,
+      "exact_rtl_cycle_correlation": false,
+      "limitation": "No GTSU vector RTL slice or bit/cycle correlation."
+    },
+    {
+      "operator": "w8_splitk_gemv_vertical_slice",
+      "functional_model": true,
+      "event_cycle_model": true,
+      "synthesizable_rtl": true,
+      "exact_rtl_cycle_correlation": true,
+      "limitation": "Locked transaction-level slice only; deterministic source timing. PointLLM lowering and DRAM timing exist separately but are not integrated."
+    }
+  ]
+}

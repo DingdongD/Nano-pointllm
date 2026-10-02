@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "pointtransformer_qkv_dense64_weight_reuse",
+  "config": {
+    "m": 513,
+    "n": 1152,
+    "k": 384,
+    "m_tile": 32,
+    "k_block": 64,
+    "n_tile": 64,
+    "banks": 16,
+    "memory_lanes": 4,
+    "read_latency": 3,
+    "fifo_depth": 8,
+    "weight_stall_mod": 0,
+    "weight_stall_phase": 2,
+    "activation_stall_mod": 0,
+    "activation_stall_phase": 3,
+    "output_stall_mod": 0,
+    "output_stall_phase": 4,
+    "max_cycles": 2000000,
+    "n_tiles": 18,
+    "m_tiles": 17,
+    "chunks": 96,
+    "block_chunks": 16,
+    "k_blocks": 6,
+    "weight_tiles": 1836,
+    "weight_lines": 117504,
+    "activation_chunks": 886464,
+    "output_tiles": 9234
+  },
+  "cycle_model_cycles": 925021,
+  "rtl_cycles": 925021,
+  "cycle_error": 0,
+  "counter_trace_exact": true,
+  "functional_outputs_exact": true,
+  "checked_output_values": 590976,
+  "output_fnv1a64": "8034666827470716803",
+  "counters": {
+    "weight_lines": 117504,
+    "wbuf_bank_writes": 470016,
+    "wbuf_load_tiles": 1836,
+    "activation_chunks": 886464,
+    "wbuf_read_issues": 886464,
+    "wbuf_responses": 886464,
+    "dot4_chunks": 886464,
+    "partial_tiles": 55404,
+    "output_tiles": 9234,
+    "output_values": 590976,
+    "response_fifo_peak": 1
+  },
+  "traffic": {
+    "repeated_gemv_weight_bytes": 226934784,
+    "weight_reuse_bytes": 7520256,
+    "weight_byte_reduction_ratio": 30.176470588235293,
+    "unique_padded_weight_bytes": 442368,
+    "resident_reload_factor": 17
+  },
+  "utilization": {
+    "dot4_issue_fraction": 0.9583177030575523,
+    "dot4_pe_count": 64
+  },
+  "claim_boundary": {
+    "pointtransformer_shape_rtl": true,
+    "all_590976_acc32_outputs_checked": true,
+    "real_pointtransformer_payload": false,
+    "request_side_dramsim3_closed_loop": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}
