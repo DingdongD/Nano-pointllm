@@ -22,7 +22,7 @@ for path in (str(REPO_ROOT), str(POINTLLM_ROOT)):
 
 from nanopointllm.compression.w8a8 import (  # noqa: E402
     CONTRACT, ActivationAbsmaxCollector, SequentialActivationQDQ,
-    apply_smoothquant_transform, apply_weight_qdq,
+    apply_smoothquant_transform, apply_weight_qdq, smoothquant_hardware_report,
 )
 from nanopointllm.parity.engine_test_utils import (  # noqa: E402
     build_prompt_token_ids, load_pointllm_model,
@@ -263,6 +263,10 @@ def main() -> None:
             }
             for name, scale in static_scales.items()
         },
+        "smoothquant_hardware": (
+            smoothquant_hardware_report(modules, input_smoothing_scales)
+            if input_smoothing_scales is not None else None
+        ),
         "guardrails": [
             "All selected weights are quantized simultaneously and activation QDQ propagates sequentially.",
             "Calibration and evaluation point-cloud IDs are disjoint.",

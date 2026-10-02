@@ -72,7 +72,13 @@ COVERAGE = {
     ),
     "dense_gemm": OperatorCoverage(
         "dense_gemm", False, False, False, False,
-        "No dense-mode tensor-fabric RTL slice or cycle correlation.",
+        "A shared-Dot4 N microtile is correlated separately, but the production "
+        "M/N controller, SRAM double buffering, DMA, and real-shape correlation "
+        "are incomplete.",
+    ),
+    "shared_dot4_dense_gemm_microtile": OperatorCoverage(
+        "shared_dot4_dense_gemm_microtile", True, True, True, True,
+        "Output-stationary N microtile with K accumulation and edge-column mask; production M/N tiling, SRAM double buffering, and real-shape controller remain incomplete.",
     ),
     "pointllm_splitk_linear": OperatorCoverage(
         "pointllm_splitk_linear", True, True, True, True,

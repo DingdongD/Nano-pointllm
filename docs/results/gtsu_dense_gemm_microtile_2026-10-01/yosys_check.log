@@ -1,0 +1,514 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv; hierarchy -check -top gtsu_dense_dot4_tile; chparam -set N_TILE 64 gtsu_dense_dot4_tile; hierarchy -check -top gtsu_dense_dot4_tile; proc; opt; check -assert; stat; write_json /tmp/gtsu_dense_ci5nto_a/dense.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dot4_pe.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dot4_pe'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dense_dot4_tile'.
+Warning: Replacing memory \accumulator with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+
+3.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_dense_dot4_tile'.
+Parameter \N_TILE = 64
+Generating RTLIL representation for module `$paramod\gtsu_dense_dot4_tile\N_TILE=64'.
+Warning: Replacing memory \accumulator with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:54
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+
+5.2. Analyzing design hierarchy..
+Top module:  \gtsu_dense_dot4_tile
+Used module:     \gtsu_dot4_pe
+Removed 0 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$309'.
+Removing empty process `gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:75$309'.
+Cleaned up 1 empty switch.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177 in module gtsu_dense_dot4_tile.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_INIT pass (extract init attributes).
+
+6.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+
+6.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+     1/137: $0\out_accumulator_reg[2047:0] [2047:2016]
+     2/137: $0\out_accumulator_reg[2047:0] [2015:1984]
+     3/137: $0\out_accumulator_reg[2047:0] [1983:1952]
+     4/137: $0\out_accumulator_reg[2047:0] [1951:1920]
+     5/137: $0\out_accumulator_reg[2047:0] [1919:1888]
+     6/137: $0\out_accumulator_reg[2047:0] [1887:1856]
+     7/137: $0\out_accumulator_reg[2047:0] [1855:1824]
+     8/137: $0\out_accumulator_reg[2047:0] [1823:1792]
+     9/137: $0\out_accumulator_reg[2047:0] [1791:1760]
+    10/137: $0\out_accumulator_reg[2047:0] [1759:1728]
+    11/137: $0\out_accumulator_reg[2047:0] [1727:1696]
+    12/137: $0\out_accumulator_reg[2047:0] [1695:1664]
+    13/137: $0\out_accumulator_reg[2047:0] [1663:1632]
+    14/137: $0\out_accumulator_reg[2047:0] [1631:1600]
+    15/137: $0\out_accumulator_reg[2047:0] [1599:1568]
+    16/137: $0\out_accumulator_reg[2047:0] [1567:1536]
+    17/137: $0\out_accumulator_reg[2047:0] [1535:1504]
+    18/137: $0\out_accumulator_reg[2047:0] [1503:1472]
+    19/137: $0\out_accumulator_reg[2047:0] [1471:1440]
+    20/137: $0\out_accumulator_reg[2047:0] [1439:1408]
+    21/137: $0\out_accumulator_reg[2047:0] [1407:1376]
+    22/137: $0\out_accumulator_reg[2047:0] [1375:1344]
+    23/137: $0\out_accumulator_reg[2047:0] [1343:1312]
+    24/137: $0\out_accumulator_reg[2047:0] [1311:1280]
+    25/137: $0\out_accumulator_reg[2047:0] [1279:1248]
+    26/137: $0\out_accumulator_reg[2047:0] [1247:1216]
+    27/137: $0\out_accumulator_reg[2047:0] [1215:1184]
+    28/137: $0\out_accumulator_reg[2047:0] [1183:1152]
+    29/137: $0\out_accumulator_reg[2047:0] [1151:1120]
+    30/137: $0\out_accumulator_reg[2047:0] [1119:1088]
+    31/137: $0\out_accumulator_reg[2047:0] [1087:1056]
+    32/137: $0\out_accumulator_reg[2047:0] [1055:1024]
+    33/137: $0\out_accumulator_reg[2047:0] [1023:992]
+    34/137: $0\out_accumulator_reg[2047:0] [991:960]
+    35/137: $0\out_accumulator_reg[2047:0] [959:928]
+    36/137: $0\out_accumulator_reg[2047:0] [927:896]
+    37/137: $0\out_accumulator_reg[2047:0] [895:864]
+    38/137: $0\out_accumulator_reg[2047:0] [863:832]
+    39/137: $0\out_accumulator_reg[2047:0] [831:800]
+    40/137: $0\out_accumulator_reg[2047:0] [799:768]
+    41/137: $0\out_accumulator_reg[2047:0] [767:736]
+    42/137: $0\out_accumulator_reg[2047:0] [735:704]
+    43/137: $0\out_accumulator_reg[2047:0] [703:672]
+    44/137: $0\out_accumulator_reg[2047:0] [671:640]
+    45/137: $0\out_accumulator_reg[2047:0] [639:608]
+    46/137: $0\out_accumulator_reg[2047:0] [607:576]
+    47/137: $0\out_accumulator_reg[2047:0] [575:544]
+    48/137: $0\out_accumulator_reg[2047:0] [543:512]
+    49/137: $0\out_accumulator_reg[2047:0] [511:480]
+    50/137: $0\out_accumulator_reg[2047:0] [479:448]
+    51/137: $0\out_accumulator_reg[2047:0] [447:416]
+    52/137: $0\out_accumulator_reg[2047:0] [415:384]
+    53/137: $0\out_accumulator_reg[2047:0] [383:352]
+    54/137: $0\out_accumulator_reg[2047:0] [351:320]
+    55/137: $0\out_accumulator_reg[2047:0] [319:288]
+    56/137: $0\out_accumulator_reg[2047:0] [287:256]
+    57/137: $0\out_accumulator_reg[2047:0] [255:224]
+    58/137: $0\out_accumulator_reg[2047:0] [223:192]
+    59/137: $0\out_accumulator_reg[2047:0] [191:160]
+    60/137: $0\out_accumulator_reg[2047:0] [159:128]
+    61/137: $0\out_accumulator_reg[2047:0] [127:96]
+    62/137: $0\out_accumulator_reg[2047:0] [95:64]
+    63/137: $0\out_accumulator_reg[2047:0] [63:32]
+    64/137: $0\out_accumulator_reg[2047:0] [31:0]
+    65/137: $2\next_accumulator[31:0]
+    66/137: $1\next_accumulator[31:0]
+    67/137: $1\index[31:0]
+    68/137: $0\next_accumulator[31:0]
+    69/137: $0\index[31:0]
+    70/137: $0\accumulator[63][31:0]
+    71/137: $0\accumulator[62][31:0]
+    72/137: $0\accumulator[61][31:0]
+    73/137: $0\accumulator[60][31:0]
+    74/137: $0\accumulator[59][31:0]
+    75/137: $0\accumulator[58][31:0]
+    76/137: $0\accumulator[57][31:0]
+    77/137: $0\accumulator[56][31:0]
+    78/137: $0\accumulator[55][31:0]
+    79/137: $0\accumulator[54][31:0]
+    80/137: $0\accumulator[53][31:0]
+    81/137: $0\accumulator[52][31:0]
+    82/137: $0\accumulator[51][31:0]
+    83/137: $0\accumulator[50][31:0]
+    84/137: $0\accumulator[49][31:0]
+    85/137: $0\accumulator[48][31:0]
+    86/137: $0\accumulator[47][31:0]
+    87/137: $0\accumulator[46][31:0]
+    88/137: $0\accumulator[45][31:0]
+    89/137: $0\accumulator[44][31:0]
+    90/137: $0\accumulator[43][31:0]
+    91/137: $0\accumulator[42][31:0]
+    92/137: $0\accumulator[41][31:0]
+    93/137: $0\accumulator[40][31:0]
+    94/137: $0\accumulator[39][31:0]
+    95/137: $0\accumulator[38][31:0]
+    96/137: $0\accumulator[37][31:0]
+    97/137: $0\accumulator[36][31:0]
+    98/137: $0\accumulator[35][31:0]
+    99/137: $0\accumulator[34][31:0]
+   100/137: $0\accumulator[33][31:0]
+   101/137: $0\accumulator[32][31:0]
+   102/137: $0\accumulator[31][31:0]
+   103/137: $0\accumulator[30][31:0]
+   104/137: $0\accumulator[29][31:0]
+   105/137: $0\accumulator[28][31:0]
+   106/137: $0\accumulator[27][31:0]
+   107/137: $0\accumulator[26][31:0]
+   108/137: $0\accumulator[25][31:0]
+   109/137: $0\accumulator[24][31:0]
+   110/137: $0\accumulator[23][31:0]
+   111/137: $0\accumulator[22][31:0]
+   112/137: $0\accumulator[21][31:0]
+   113/137: $0\accumulator[20][31:0]
+   114/137: $0\accumulator[19][31:0]
+   115/137: $0\accumulator[18][31:0]
+   116/137: $0\accumulator[17][31:0]
+   117/137: $0\accumulator[16][31:0]
+   118/137: $0\accumulator[15][31:0]
+   119/137: $0\accumulator[14][31:0]
+   120/137: $0\accumulator[13][31:0]
+   121/137: $0\accumulator[12][31:0]
+   122/137: $0\accumulator[11][31:0]
+   123/137: $0\accumulator[10][31:0]
+   124/137: $0\accumulator[9][31:0]
+   125/137: $0\accumulator[8][31:0]
+   126/137: $0\accumulator[7][31:0]
+   127/137: $0\accumulator[6][31:0]
+   128/137: $0\accumulator[5][31:0]
+   129/137: $0\accumulator[4][31:0]
+   130/137: $0\accumulator[3][31:0]
+   131/137: $0\accumulator[2][31:0]
+   132/137: $0\accumulator[1][31:0]
+   133/137: $0\accumulator[0][31:0]
+   134/137: $2\index[31:0]
+   135/137: $0\out_mask_reg[63:0]
+   136/137: $0\out_tag_reg[15:0]
+   137/137: $0\out_valid_reg[0:0]
+
+6.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_dense_dot4_tile.\out_valid_reg' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$845' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_tag_reg' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$846' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_mask_reg' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$847' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\out_accumulator_reg' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$848' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\index' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$849' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\next_accumulator' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $dff cell `$procdff$850' with positive edge clock.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[0]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$851' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[1]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$852' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[2]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$853' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[3]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$854' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[4]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$855' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[5]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$856' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[6]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$857' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[7]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$858' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[8]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$859' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[9]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$860' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[10]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$861' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[11]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$862' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[12]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$863' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[13]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$864' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[14]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$865' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[15]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$866' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[16]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$867' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[17]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$868' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[18]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$869' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[19]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$870' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[20]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$871' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[21]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$872' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[22]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$873' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[23]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$874' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[24]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$875' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[25]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$876' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[26]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$877' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[27]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$878' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[28]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$879' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[29]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$880' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[30]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$881' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[31]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$882' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[32]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$883' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[33]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$884' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[34]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$885' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[35]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$886' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[36]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$887' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[37]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$888' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[38]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$889' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[39]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$890' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[40]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$891' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[41]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$892' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[42]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$893' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[43]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$894' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[44]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$895' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[45]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$896' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[46]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$897' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[47]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$898' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[48]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$899' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[49]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$900' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[50]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$901' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[51]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$902' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[52]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$903' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[53]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$904' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[54]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$905' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[55]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$906' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[56]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$907' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[57]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$908' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[58]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$909' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[59]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$910' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[60]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$911' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[61]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$912' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[62]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$913' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dense_dot4_tile.\accumulator[63]' using process `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+  created $adff cell `$procdff$914' with positive edge clock and negative level reset.
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 67 empty switches in `\gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+Removing empty process `gtsu_dense_dot4_tile.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dense_dot4_tile.sv:47$177'.
+Cleaned up 67 empty switches.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_dot4_tile..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~198 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_dot4_tile.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_dot4_tile..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+Removed 5 unused cells and 351 unused wires.
+<suppressed ~9 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dense_dot4_tile..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gtsu_dot4_pe..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~196 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dense_dot4_tile.
+  Optimizing cells in module \gtsu_dot4_pe.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dense_dot4_tile'.
+Finding identical cells in module `\gtsu_dot4_pe'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dense_dot4_tile..
+Finding unused cells or wires in module \gtsu_dot4_pe..
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dense_dot4_tile.
+Optimizing module gtsu_dot4_pe.
+
+7.16. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_dense_dot4_tile..
+checking module gtsu_dot4_pe..
+found and reported 0 problems.
+
+9. Printing statistics.
+
+=== gtsu_dense_dot4_tile ===
+
+   Number of wires:                414
+   Number of wire bits:          20927
+   Number of public wires:         147
+   Number of public wire bits:   10521
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                463
+     $add                           64
+     $adff                          68
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mux                          263
+     gtsu_dot4_pe                   64
+
+=== gtsu_dot4_pe ===
+
+   Number of wires:                 18
+   Number of wire bits:            276
+   Number of public wires:          18
+   Number of public wire bits:     276
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $add                            3
+     $mul                            4
+
+=== design hierarchy ===
+
+   gtsu_dense_dot4_tile              1
+     gtsu_dot4_pe                   64
+
+   Number of wires:               1566
+   Number of wire bits:          38591
+   Number of public wires:        1299
+   Number of public wire bits:   28185
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                847
+     $add                          256
+     $adff                          68
+     $logic_and                      2
+     $logic_not                      1
+     $logic_or                       1
+     $mul                          256
+     $mux                          263
+
+10. Executing JSON backend.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: 1314068364
+CPU: user 1.43s system 0.03s, MEM: 38.48 MB total, 31.19 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 18% 2x opt_clean (0 sec), 13% 1x check (0 sec), ...

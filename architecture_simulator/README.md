@@ -23,9 +23,11 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | DRAM timing | Local pinned DRAMsim3 backend for explicit sampled requests |
 | Production decoder linear controller | Q and non-uniform-K down projection exactly RTL-correlated with DRAMsim3 traces |
 | Geometry distance tile | Signed INT16 3-D distance, elastic ready/valid, exact Python/Icarus event/value/cycle correlation |
+| Shared-Dot4 dense GEMM microtile | Output-stationary M/K stream, edge-column mask, elastic output, exact Python/Icarus value/event/cycle correlation |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
-| FPS min/argmax, KNN global top-k, dense GEMM, attention, vector, sampling RTL | Not implemented |
+| Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
+| FPS min/argmax, KNN global top-k, attention, vector, sampling RTL | Not implemented |
 | Full PointLLM RTL cycle correlation | Not implemented; fail-closed |
 | Characterized area/energy | Not implemented |
 
@@ -150,6 +152,13 @@ python scripts/run_shared_dot_rtl_correlation.py \
   --config configs/gtsu_shared_dot_rtl_lock.json \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_shared_dot_geometry_2026-10-01
+
+# Correlate a 64-PE dense microtile at the PointTransformer K=384 shape.
+# This covers one N tile; production M/N tiling and SRAM are still fail-closed.
+python scripts/run_dense_gemm_rtl_correlation.py \
+  --rows 5 --columns 61 --n_tile 64 --k 384 \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_dense_gemm_microtile_2026-10-01
 ```
 
 ## Output contract
@@ -203,7 +212,7 @@ python scripts/evaluate_sequential_w8a8_pointllm.py \
 This executes dense BF16/FP16 operators after QDQ and measures fidelity only;
 it does not benchmark an integer kernel.
 
-The W8 Split-K GEMV, geometry distance, and locked SRAM port/arbiter slices have
+The W8 Split-K GEMV, geometry distance, shared-Dot4 dense microtile, and locked SRAM port/arbiter slices have
 executable RTL and exact event correlation. Decoder tensors now have checkpoint-backed target
 layout and memory addresses, and sampled bursts use real DRAMsim3 timing. These
 pieces are not yet one integrated compute/memory RTL pipeline, so generic

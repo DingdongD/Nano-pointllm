@@ -452,3 +452,12 @@
 - Implemented exact SmoothQuant `x/s`, `W*s` transforms for Linear and Conv paths, with unit tests proving pre-QDQ equivalence. The alpha-0.5 ModelNet smoke improves KL mean to `0.00481`.
 - Completed dynamic per-token A8 smoke: lowest KL (`0.00250`) and RMSE (`0.26934`), but one of eight teacher-forced top-1 positions differs despite identical free generation.
 - Regenerated the five-way comparison figure and passed the full repository regression: `199 passed, 1 skipped`. No production W8A8 coverage or speedup claim is enabled.
+
+## 2026-10-01: Integer And Dense-Mode Closure Start
+- Accepted the remaining-gate order: true integer numerical closure, shared Dense GEMM RTL, fused FPS/KNN, geometry-feature composition, attention/vector/sampling, then one-layer and full-graph composition.
+- Kept full-model and production W8A8 coverage fail-closed; QDQ smoke evidence is not reclassified as integer hardware execution.
+- Added a true INT8/INT32 Linear golden and compared FP32, BF16, QDQ-FP32, QDQ-BF16, and IntegerGolden on real PointLLM q-projection, down-projection, and LM-head tensors.
+- Correlated selected real q-projection rows through the shared-Dot4 dense RTL for the full `K=4096` reduction: exact accumulators, exact event trace, and zero cycle error.
+- Added the shared-Dot4 dense GEMM microtile. A 64-PE `5x61x384` lock case with source/output stalls is exact against Icarus; Yosys confirms zero direct multipliers above the Dot4 instances.
+- Kept production shape control, SRAM double buffering, all-output-row correlation, and generic `dense_gemm` coverage disabled.
+- Passed the final repository regression: `203 passed, 1 skipped`.

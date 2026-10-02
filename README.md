@@ -208,7 +208,14 @@ activation/weight bank conflict。证据见
 [`docs/results/gtsu_production_linear_qproj_2026-10-01/`](docs/results/gtsu_production_linear_qproj_2026-10-01/README.md)
 和
 [`docs/results/gtsu_production_linear_downproj_2026-10-01/`](docs/results/gtsu_production_linear_downproj_2026-10-01/README.md)。
-Dense GEMM、attention 与 vector 仍保持 fail-closed。
+共享 Dot4 Dense GEMM microtile 也已完成 `5x61x384`、64-PE、带双向
+backpressure 的 value/event/cycle 精确相关；Yosys 确认 tile 顶层无额外乘法器。
+真实 PointLLM q-projection 的三个输出行完成了 RTL 内完整 `K=4096` INT32
+归约并与 integer golden 逐位一致。证据见
+[`docs/results/gtsu_dense_gemm_microtile_2026-10-01/`](docs/results/gtsu_dense_gemm_microtile_2026-10-01/README.md)
+和
+[`docs/results/pointllm_integer_linear_rtl_2026-10-01/`](docs/results/pointllm_integer_linear_rtl_2026-10-01/README.md)。
+完整 M/N 控制、SRAM 双缓冲、attention 与 vector 仍保持 fail-closed。
 
 ```bash
 cd /home/nano-pointllm/architecture_simulator

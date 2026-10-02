@@ -5,6 +5,7 @@ import torch.nn as nn
 from nanopointllm.compression.w8a8 import (
     CONTRACT, ActivationAbsmaxCollector, SequentialActivationQDQ,
     apply_smoothquant_transform, apply_weight_qdq, dynamic_per_token_activation_qdq,
+    compare_linear_bf16_qdq_integer, smoothquant_hardware_report,
     groupwise_weight_qdq, integer_linear_per_output_reference,
     per_output_weight_qdq, quantize_symmetric, static_activation_qdq,
     static_activation_scale,
@@ -62,6 +63,17 @@ def test_integer_linear_reference_uses_int32_accumulator():
     assert accumulator.dtype == torch.int32
     assert output.shape == (1, 2)
     assert torch.isfinite(output).all()
+
+    comparison = compare_linear_bf16_qdq_integer(
+        values, weight, activation_scale=scale, bias=torch.tensor([0.5, -0.5]),
+    )
+    assert comparison["accumulator_dtype"] == "torch.int32"
+    assert comparison["int32_safe"] is True
+    assert comparison["arithmetic_contract"]["bias_present"] is True
+    assert comparison["arithmetic_contract"]["weight_quantization"] == (
+        "symmetric_per_output_int8"
+    )
+    assert comparison["metrics"]["integer_vs_qdq_fp32"]["max_abs"] < 1e-5
 
 
 def test_sequential_activation_qdq_propagates_to_later_layer():
@@ -121,6 +133,22 @@ def test_smoothquant_transform_is_exact_before_qdq_for_linear_and_conv():
     )
     transformed = conv(conv_input / smoothing["conv"].reshape(1, 4, 1))
     torch.testing.assert_close(transformed, conv_reference, rtol=2e-3, atol=2e-3)
+
+
+def test_smoothquant_hardware_report_refuses_independent_qkv_fold_claim():
+    modules = {
+        "layers.0.self_attn.q_proj": nn.Linear(4, 4),
+        "layers.0.self_attn.k_proj": nn.Linear(4, 4),
+        "layers.0.mlp.down_proj": nn.Linear(4, 4),
+    }
+    scales = {name: torch.ones(4) for name in modules}
+    report = smoothquant_hardware_report(modules, scales)
+
+    assert report["runtime_overhead_zero"] is False
+    assert report["total_storage_bytes_fp16"] == 24
+    assert report["modules"]["layers.0.self_attn.q_proj"]["offline_fold_status"].startswith(
+        "not_foldable_independently"
+    )
 
 
 def test_invalid_contract_arguments_fail_closed():

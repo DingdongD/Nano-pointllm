@@ -8,6 +8,7 @@ from typing import Any
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 @dataclass(frozen=True)
@@ -136,6 +137,129 @@ def integer_linear_per_output_reference(
         output += bias.detach().float().cpu().unsqueeze(0)
     output = output.reshape(*values.shape[:-1], weight.shape[0])
     return output, accumulator.reshape(*values.shape[:-1], weight.shape[0])
+
+
+def compare_linear_bf16_qdq_integer(
+    values: torch.Tensor,
+    weight: torch.Tensor,
+    *,
+    activation_scale: torch.Tensor,
+    bias: torch.Tensor | None = None,
+) -> dict[str, Any]:
+    """Compare native BF16, BF16-after-QDQ, FP32 QDQ, and true INT32 paths."""
+    if values.shape[-1] != weight.shape[1] or weight.dim() != 2:
+        raise ValueError("linear input/weight shapes do not match")
+    if weight.shape[1] * CONTRACT.symmetric_max**2 >= 1 << 31:
+        raise OverflowError("worst-case dot product exceeds signed INT32")
+    original_device = values.device
+    values_cpu = values.detach().float().cpu()
+    weight_cpu = weight.detach().float().cpu()
+    bias_cpu = None if bias is None else bias.detach().float().cpu()
+    scale_cpu = activation_scale.detach().float().cpu()
+
+    qactivation = quantize_symmetric(values_cpu, scale_cpu)
+    dequant_weight, qweight, weight_scales = per_output_weight_qdq(weight_cpu)
+    dequant_activation = qactivation.float() * scale_cpu
+    fp32_reference = F.linear(values_cpu, weight_cpu, bias_cpu)
+    qdq_fp32 = F.linear(dequant_activation, dequant_weight.float(), bias_cpu)
+    bf16_reference = F.linear(
+        values_cpu.to(torch.bfloat16), weight_cpu.to(torch.bfloat16),
+        None if bias_cpu is None else bias_cpu.to(torch.bfloat16),
+    ).float()
+    qdq_bf16 = F.linear(
+        dequant_activation.to(torch.bfloat16), dequant_weight.to(torch.bfloat16),
+        None if bias_cpu is None else bias_cpu.to(torch.bfloat16),
+    ).float()
+    accumulator = (
+        qactivation.reshape(-1, qactivation.shape[-1]).to(torch.int32)
+        @ qweight.reshape(qweight.shape[0], -1).to(torch.int32).transpose(0, 1)
+    )
+    integer = accumulator.float()
+    integer *= scale_cpu
+    integer *= weight_scales.unsqueeze(0)
+    if bias_cpu is not None:
+        integer += bias_cpu.unsqueeze(0)
+    integer = integer.reshape(*values_cpu.shape[:-1], weight_cpu.shape[0])
+
+    return {
+        "source_device": str(original_device),
+        "arithmetic_contract": {
+            "activation_quantization": "symmetric_per_tensor_int8",
+            "activation_scale_storage": CONTRACT.scale_storage,
+            "weight_quantization": "symmetric_per_output_int8",
+            "weight_scale_storage": CONTRACT.scale_storage,
+            "accumulation": CONTRACT.accumulator,
+            "dequantization_arithmetic": "float32",
+            "bias_present": bias_cpu is not None,
+            "bias_application": CONTRACT.bias if bias_cpu is not None else "none",
+            "output_dtype": "float32",
+        },
+        "shape": {
+            "input": list(values.shape),
+            "weight": list(weight.shape),
+            "output": list(integer.shape),
+        },
+        "accumulator_dtype": str(accumulator.dtype),
+        "accumulator_min": int(accumulator.min().item()),
+        "accumulator_max": int(accumulator.max().item()),
+        "worst_case_accumulator_bound": weight.shape[1] * CONTRACT.symmetric_max**2,
+        "int32_safe": True,
+        "metrics": {
+            "bf16_vs_fp32": _tensor_error(fp32_reference, bf16_reference),
+            "qdq_bf16_vs_qdq_fp32": _tensor_error(qdq_fp32, qdq_bf16),
+            "integer_vs_qdq_fp32": _tensor_error(qdq_fp32, integer),
+            "integer_vs_qdq_bf16": _tensor_error(qdq_bf16, integer),
+            "integer_vs_fp32": _tensor_error(fp32_reference, integer),
+        },
+    }
+
+
+def smoothquant_hardware_report(
+    modules: dict[str, nn.Module],
+    input_smoothing_scales: dict[str, torch.Tensor],
+) -> dict[str, Any]:
+    """Report current independent-vector storage and conservative foldability."""
+    rows = {}
+    total_values = 0
+    for name, module in modules.items():
+        scale = input_smoothing_scales[name]
+        total_values += scale.numel()
+        if any(part in name for part in ("q_proj", "k_proj", "v_proj")):
+            status = "not_foldable_independently_shared_qkv_input"
+        elif any(part in name for part in ("gate_proj", "up_proj")):
+            status = "not_foldable_independently_shared_gate_up_input"
+        else:
+            status = "requires_producer_fanout_and_residual_proof"
+        rows[name] = {
+            "channels": scale.numel(),
+            "storage_bytes_fp16": scale.numel() * 2,
+            "current_runtime_channelwise_divide": True,
+            "offline_fold_status": status,
+            "module_type": type(module).__name__,
+        }
+    return {
+        "scheme": "independent_per_module_smoothing_vectors",
+        "vector_count": len(rows),
+        "total_scale_values": total_values,
+        "total_storage_bytes_fp16": total_values * 2,
+        "runtime_overhead_zero": False,
+        "reason": (
+            "independent Q/K/V and Gate/Up vectors cannot all fold into their "
+            "single shared producer; joint-group smoothing is required"
+        ),
+        "modules": rows,
+    }
+
+
+def _tensor_error(reference: torch.Tensor, candidate: torch.Tensor) -> dict[str, float]:
+    difference = candidate.float() - reference.float()
+    denominator = reference.float().abs().clamp_min(1e-8)
+    return {
+        "rmse": float(difference.square().mean().sqrt().item()),
+        "max_abs": float(difference.abs().max().item()),
+        "mean_abs": float(difference.abs().mean().item()),
+        "mean_relative_abs": float((difference.abs() / denominator).mean().item()),
+    }
 
 
 class ActivationAbsmaxCollector(AbstractContextManager):

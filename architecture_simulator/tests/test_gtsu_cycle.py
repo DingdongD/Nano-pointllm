@@ -34,6 +34,8 @@ from gtsu_cycle.shared_dot import (
     run_shared_dot_model, signed_int16_product_via_int8,
 )
 from gtsu_cycle.shared_dot_correlation import correlate_shared_dot_geometry
+from gtsu_cycle.dense_gemm import DenseTileConfig, build_dense_beats, run_dense_tile_model
+from gtsu_cycle.dense_gemm_correlation import correlate_dense_tile
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -237,6 +239,26 @@ def test_shared_dot_signed_int8_extremes_match_rtl():
 
     assert report["status"] == "rtl_correlated"
     assert report["functional_output_exact"] is True
+
+
+def test_dense_tile_functional_cycle_model():
+    config = DenseTileConfig(rows=3, columns=5, n_tile=8, k=12)
+    result = run_dense_tile_model(config, build_dense_beats(config))
+    assert len(result.outputs) == 3
+    assert all(len(row) == 5 for row in result.outputs)
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    DenseTileConfig(),
+    DenseTileConfig(rows=3, columns=4, n_tile=4, k=12, source_stall_mod=0, output_stall_mod=0),
+])
+def test_dense_tile_exactly_matches_rtl(config):
+    report = correlate_dense_tile(config, rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["functional_output_exact"] is True
+    assert report["cycle_error"] == 0
+    assert report["synthesis_check"]["top_direct_multipliers"] == 0
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")

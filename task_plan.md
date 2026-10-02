@@ -4,7 +4,7 @@
 Move `nano-pointllm` closer to the `nano-vllm` high-performance inference framework by tightening engine/scheduler/KV behavior, adding missing API surface where practical, and verifying with focused tests.
 
 ## Current Phase
-Phase 35 in progress
+Phase 37 in progress
 
 ## Phases
 
@@ -270,7 +270,49 @@ Phase 35 in progress
 - [x] Propagate QDQ outputs sequentially through PointTransformer and all 32 LLaMA layers
 - [ ] Evaluate ModelNet and Objaverse with KL/top-1/token/exact/semantic metrics (dual-dataset smoke complete; larger held-out semantic run pending)
 - [x] Keep production W8A8 RTL disabled until both integer-golden and model-fidelity gates pass
-- **Status:** in progress; executable contract and smoke gates complete, larger fidelity and integer-kernel correlation pending
+- **Status:** in progress; integer representative correlation is complete, while larger held-out fidelity remains pending
+
+### Phase 36: Production W8A8 Integer Numerical Closure
+- [x] Add BF16/QDQ/true-INT8xINT8-INT32 three-way comparison for real PointLLM Linear activations and weights
+- [x] Make per-output scale, FP16 scale storage, bias, overflow, and output-cast boundaries explicit in artifacts
+- [x] Emit SmoothQuant folding/storage/runtime-overhead analysis per module
+- [x] Correlate representative real integer payloads against shared Dot4 dense-accumulator RTL values
+- [x] Keep QDQ fidelity and integer execution evidence separate
+- **Status:** complete for representative q/down/LM-head tensors; full production W8A8 kernel remains fail-closed
+
+### Phase 37: Shared Dense GEMM RTL Mode
+- [ ] Implement tiled M/N/K control using only `gtsu_dot4_pe` multiplier instances
+- [x] Add finite microtile operand/accumulator/output ready-valid state and edge-column handling
+- [ ] Correlate Local Encoder, PointTransformer QKV, projector, and LLM prefill shape classes
+- [x] Prove with Yosys that the Dense GEMM microtile introduces no multiplier outside Dot4 PE
+- [ ] Enable `dense_gemm` coverage only after exact value/event/cycle correlation
+- **Status:** in progress; one N-tile/M-stream/K-reduction slice is exact, production M/N controller and SRAM are pending
+
+### Phase 38: Fused FPS/KNN RTL Controller
+- [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
+- [ ] Implement bounded streaming tile/global Top-32 with exact distance/index tie-break semantics
+- [ ] Reuse one distance stream for FPS update and KNN candidates where semantics permit
+- [ ] Validate INT8 geometry center equality and KNN recall on ModelNet/Objaverse
+- **Status:** pending
+
+### Phase 39: Geometry-To-Feature Composition
+- [ ] Compose center feedback, Top-32 gather, patch FIFO, local encoder, and PE-pool arbitration
+- [ ] Evaluate time-shared versus 48:16, 32:32, and 16:48 spatial PE partitions
+- [ ] Correlate producer-consumer stalls and overlap rather than summing operator latencies
+- **Status:** pending
+
+### Phase 40: Attention, Vector, And Sampling Closure
+- [ ] Correlate shared-PE QK/AV plus online softmax and paged PointKV/TextKV behavior
+- [ ] Correlate RMSNorm, RoPE, GELU/SiLU, residual, quant/requant, and scale paths
+- [ ] Correlate LM-head reduction and deterministic argmax/top-k/sampling
+- **Status:** pending
+
+### Phase 41: Decoder-Layer And Full-Graph Composition
+- [ ] Close one production decoder layer with numerical, event, traffic, and cycle exactness
+- [ ] Replicate the validated layer schedule across all 32 layers
+- [ ] Compose full PointLLM workload with no analytical fallback
+- [ ] Enable full-model cycle accuracy only when every coverage and composition gate passes
+- **Status:** pending
 
 ## Key Questions
 1. Which `nano-vllm` features are missing but practical to implement without real PointLLM-7B weights?
@@ -316,6 +358,8 @@ Phase 35 in progress
 | Generated trace CSVs failed `git diff --check` because Python CSV defaulted to CRLF | First Phase 31 commit attempt | Lock the trace writer to LF, regenerate both traces, and rerun exact comparison before commit |
 | Planning-log patch expected a shorter shared-direction bullet than the actual text | First Phase 34 audit update | Located the exact section and appended the audit findings without rewriting prior records |
 | Full regression failed collection on local namespace-package imports when invoked through standalone `pytest` entry points | First two Phase 34 full-suite attempts (base and PointLLM env) | Use `/opt/conda/envs/pointllm/bin/python -m pytest`, which preserves the repository root on `sys.path`; all source files were present and directly discoverable |
+| Dense GEMM targeted test collection found a malformed nested list comprehension | First Phase 37 test attempt | Rewrote the deterministic A/B matrix construction as explicit nested comprehensions before any RTL result was accepted |
+| Dense GEMM values/events/cycles matched but output summary was one row high | Second Phase 37 test attempt | The `#1` summary samples post-NBA counters, so removed the redundant manual increment; retained all value/event/cycle checks |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

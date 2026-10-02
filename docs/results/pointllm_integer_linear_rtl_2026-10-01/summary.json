@@ -1,0 +1,322 @@
+{
+  "schema_version": "0.1",
+  "status": "real_pointllm_integer_and_rtl_correlated",
+  "config": {
+    "model_path": "/mnt/llm_data/pointllm_ckpt/PointLLM_7B_v1.2_safetensors",
+    "dataset": "modelnet",
+    "sample_id": "modelnet-test-1577",
+    "prompt": "Describe this 3D object in detail.",
+    "dtype": "bfloat16",
+    "smoothquant_alpha": 0.5,
+    "modules": [
+      "layers.0.self_attn.q_proj",
+      "layers.0.mlp.down_proj",
+      "lm_head"
+    ]
+  },
+  "linear_comparisons": {
+    "layers.0.self_attn.q_proj": {
+      "source_device": "cpu",
+      "arithmetic_contract": {
+        "activation_quantization": "symmetric_per_tensor_int8",
+        "activation_scale_storage": "float16",
+        "weight_quantization": "symmetric_per_output_int8",
+        "weight_scale_storage": "float16",
+        "accumulation": "signed_int32",
+        "dequantization_arithmetic": "float32",
+        "bias_present": false,
+        "bias_application": "none",
+        "output_dtype": "float32"
+      },
+      "shape": {
+        "input": [
+          1,
+          4096
+        ],
+        "weight": [
+          4096,
+          4096
+        ],
+        "output": [
+          1,
+          4096
+        ]
+      },
+      "accumulator_dtype": "torch.int32",
+      "accumulator_min": -67470,
+      "accumulator_max": 85920,
+      "worst_case_accumulator_bound": 66064384,
+      "int32_safe": true,
+      "metrics": {
+        "bf16_vs_fp32": {
+          "rmse": 0.0017528739990666509,
+          "max_abs": 0.015778541564941406,
+          "mean_abs": 0.0011496200459077954,
+          "mean_relative_abs": 0.0036799784284085035
+        },
+        "qdq_bf16_vs_qdq_fp32": {
+          "rmse": 0.0019523008959367871,
+          "max_abs": 0.015053510665893555,
+          "mean_abs": 0.0012686115223914385,
+          "mean_relative_abs": 4.520673751831055
+        },
+        "integer_vs_qdq_fp32": {
+          "rmse": 1.385822514521351e-07,
+          "max_abs": 9.5367431640625e-07,
+          "mean_abs": 8.726190969809977e-08,
+          "mean_relative_abs": 0.00011685999197652563
+        },
+        "integer_vs_qdq_bf16": {
+          "rmse": 0.0019523068331182003,
+          "max_abs": 0.015053987503051758,
+          "mean_abs": 0.0012686133850365877,
+          "mean_relative_abs": 0.003940965048968792
+        },
+        "integer_vs_fp32": {
+          "rmse": 0.005983033683151007,
+          "max_abs": 0.03347182273864746,
+          "mean_abs": 0.004441411234438419,
+          "mean_relative_abs": 0.03645304590463638
+        }
+      },
+      "module": "layers.0.self_attn.q_proj",
+      "source_shape": {
+        "captured_activation": [
+          1,
+          565,
+          4096
+        ],
+        "weight": [
+          4096,
+          4096
+        ]
+      },
+      "smoothquant": {
+        "alpha": 0.5,
+        "channels": 4096,
+        "storage_bytes_fp16": 8192,
+        "activation_scale_before": 0.04083251953125,
+        "activation_scale_after": 0.0124359130859375,
+        "current_runtime_channelwise_divide": true,
+        "offline_folded": false
+      }
+    },
+    "layers.0.mlp.down_proj": {
+      "source_device": "cpu",
+      "arithmetic_contract": {
+        "activation_quantization": "symmetric_per_tensor_int8",
+        "activation_scale_storage": "float16",
+        "weight_quantization": "symmetric_per_output_int8",
+        "weight_scale_storage": "float16",
+        "accumulation": "signed_int32",
+        "dequantization_arithmetic": "float32",
+        "bias_present": false,
+        "bias_application": "none",
+        "output_dtype": "float32"
+      },
+      "shape": {
+        "input": [
+          1,
+          11008
+        ],
+        "weight": [
+          4096,
+          11008
+        ],
+        "output": [
+          1,
+          4096
+        ]
+      },
+      "accumulator_dtype": "torch.int32",
+      "accumulator_min": -12629,
+      "accumulator_max": 6684,
+      "worst_case_accumulator_bound": 177548032,
+      "int32_safe": true,
+      "metrics": {
+        "bf16_vs_fp32": {
+          "rmse": 6.993421993684024e-05,
+          "max_abs": 0.0028995275497436523,
+          "mean_abs": 3.0549730581697077e-05,
+          "mean_relative_abs": 0.008461340330541134
+        },
+        "qdq_bf16_vs_qdq_fp32": {
+          "rmse": 6.0253674746491015e-05,
+          "max_abs": 0.002851128578186035,
+          "mean_abs": 2.7868971301359124e-05,
+          "mean_relative_abs": 0.612130880355835
+        },
+        "integer_vs_qdq_fp32": {
+          "rmse": 3.5301228606954282e-09,
+          "max_abs": 1.1920928955078125e-07,
+          "mean_abs": 1.7912231697891912e-09,
+          "mean_relative_abs": 2.6116524168173783e-05
+        },
+        "integer_vs_qdq_bf16": {
+          "rmse": 6.025175389368087e-05,
+          "max_abs": 0.0028510093688964844,
+          "mean_abs": 2.7868823963217437e-05,
+          "mean_relative_abs": 0.007605823688209057
+        },
+        "integer_vs_fp32": {
+          "rmse": 0.0038798570167273283,
+          "max_abs": 0.05916154384613037,
+          "mean_abs": 0.002977833617478609,
+          "mean_relative_abs": 1.1582106351852417
+        }
+      },
+      "module": "layers.0.mlp.down_proj",
+      "source_shape": {
+        "captured_activation": [
+          1,
+          565,
+          11008
+        ],
+        "weight": [
+          4096,
+          11008
+        ]
+      },
+      "smoothquant": {
+        "alpha": 0.5,
+        "channels": 11008,
+        "storage_bytes_fp16": 22016,
+        "activation_scale_before": 0.044281005859375,
+        "activation_scale_after": 0.0169525146484375,
+        "current_runtime_channelwise_divide": true,
+        "offline_folded": false
+      }
+    },
+    "lm_head": {
+      "source_device": "cpu",
+      "arithmetic_contract": {
+        "activation_quantization": "symmetric_per_tensor_int8",
+        "activation_scale_storage": "float16",
+        "weight_quantization": "symmetric_per_output_int8",
+        "weight_scale_storage": "float16",
+        "accumulation": "signed_int32",
+        "dequantization_arithmetic": "float32",
+        "bias_present": false,
+        "bias_application": "none",
+        "output_dtype": "float32"
+      },
+      "shape": {
+        "input": [
+          1,
+          4096
+        ],
+        "weight": [
+          32003,
+          4096
+        ],
+        "output": [
+          1,
+          32003
+        ]
+      },
+      "accumulator_dtype": "torch.int32",
+      "accumulator_min": -20932,
+      "accumulator_max": 136016,
+      "worst_case_accumulator_bound": 66064384,
+      "int32_safe": true,
+      "metrics": {
+        "bf16_vs_fp32": {
+          "rmse": 0.008773558773100376,
+          "max_abs": 0.04652214050292969,
+          "mean_abs": 0.006880352273583412,
+          "mean_relative_abs": 0.02799304388463497
+        },
+        "qdq_bf16_vs_qdq_fp32": {
+          "rmse": 0.01401765551418066,
+          "max_abs": 0.09058314561843872,
+          "mean_abs": 0.011518820188939571,
+          "mean_relative_abs": 1.4812090396881104
+        },
+        "integer_vs_qdq_fp32": {
+          "rmse": 8.366577048946056e-07,
+          "max_abs": 7.62939453125e-06,
+          "mean_abs": 6.407918249351496e-07,
+          "mean_relative_abs": 6.551544356625527e-05
+        },
+        "integer_vs_qdq_bf16": {
+          "rmse": 0.014017665758728981,
+          "max_abs": 0.09058064222335815,
+          "mean_abs": 0.011518824845552444,
+          "mean_relative_abs": 0.05622222274541855
+        },
+        "integer_vs_fp32": {
+          "rmse": 0.09412510693073273,
+          "max_abs": 0.5662081241607666,
+          "mean_abs": 0.07454317063093185,
+          "mean_relative_abs": 0.31488314270973206
+        }
+      },
+      "module": "lm_head",
+      "source_shape": {
+        "captured_activation": [
+          1,
+          565,
+          4096
+        ],
+        "weight": [
+          32003,
+          4096
+        ]
+      },
+      "smoothquant": {
+        "alpha": 0.5,
+        "channels": 4096,
+        "storage_bytes_fp16": 8192,
+        "activation_scale_before": 0.407470703125,
+        "activation_scale_after": 0.036956787109375,
+        "current_runtime_channelwise_divide": true,
+        "offline_folded": false
+      }
+    }
+  },
+  "real_qproj_rtl": {
+    "status": "rtl_correlated_integer_payload_and_accumulator",
+    "rows": [
+      0,
+      2048,
+      4095
+    ],
+    "k": 4096,
+    "chunks": 1024,
+    "activation_scale_fp16": 0.0124359130859375,
+    "weight_scales_fp16": [
+      0.0036792755126953125,
+      0.0022430419921875,
+      0.0011730194091796875
+    ],
+    "integer_golden_accumulators": [
+      30131,
+      18552,
+      -2132
+    ],
+    "rtl_dot4_accumulators": [
+      30131,
+      18552,
+      -2132
+    ],
+    "accumulator_exact": true,
+    "event_trace_exact": true,
+    "cycle_error": 0,
+    "rtl_cycles": 1025,
+    "synthesis_check": {
+      "status": "passed",
+      "top_direct_multipliers": 0,
+      "dot4_multipliers_per_instance": 4,
+      "dot4_instances": 3,
+      "total_shared_int8_multipliers": 12
+    }
+  },
+  "claim_boundary": {
+    "true_int8_int32_golden_executed": true,
+    "real_qproj_payload_dot4_rtl_exact": true,
+    "selected_qproj_rows_full_k_reduction_rtl_exact": true,
+    "all_qproj_rows_rtl_exact": false,
+    "full_production_w8a8_kernel": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}
