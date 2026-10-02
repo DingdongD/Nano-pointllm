@@ -123,6 +123,7 @@ def build_payload_beats(config: DenseSramPipelineConfig) -> tuple[PayloadBeat, .
 def run_dense_sram_pipeline_model(
     config: DenseSramPipelineConfig,
     beats: tuple[PayloadBeat, ...] | None = None,
+    payload_source: object | None = None,
 ) -> DenseSramPipelineResult:
     config.validate()
     beats = beats or build_payload_beats(config)
@@ -181,10 +182,16 @@ def run_dense_sram_pipeline_model(
         read_credit = outstanding + len(fifo) < config.fifo_depth
         read_fire = read_valid and read_credit
 
-        source_valid = payload_index < len(beats) and _ready(
-            cycle, config.source_stall_mod, config.source_stall_phase,
-        )
-        beat = beats[payload_index] if source_valid else None
+        if payload_source is None:
+            source_valid = payload_index < len(beats) and _ready(
+                cycle, config.source_stall_mod, config.source_stall_phase,
+            )
+            beat = beats[payload_index] if source_valid else None
+        else:
+            payload_source.begin_cycle(cycle)
+            events.extend(payload_source.take_events())
+            beat = payload_source.peek()
+            source_valid = beat is not None
         protocol_match = beat is not None and (
             beat.sequence == next_load_sequence and beat.chunk == next_load_chunk
         )
@@ -193,6 +200,9 @@ def run_dense_sram_pipeline_model(
 
         if payload_fire:
             assert beat is not None
+            if payload_source is not None:
+                payload_source.accept(cycle)
+                events.extend(payload_source.take_events())
             events.append(DensePipelineEvent(cycle, "PAYLOAD_ACCEPT", beat.sequence, beat.chunk))
         if read_fire:
             events.append(DensePipelineEvent(cycle, "SRAM_READ_ISSUE", expected_sequence, read_chunk))
@@ -304,6 +314,8 @@ def run_dense_sram_pipeline_model(
 
     if outstanding or fifo or dense_output or requant_output:
         raise AssertionError("pipeline reported all outputs before draining")
+    if payload_source is not None:
+        counters.update(payload_source.counters())
     return DenseSramPipelineResult(cycle, tuple(events), tuple(outputs), counters)
 
 

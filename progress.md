@@ -479,3 +479,13 @@
 - The formal lock finishes in 29 cycles with zero cycle error, exact 68-event trace, exact four output vectors, and 10 true read/write overlap cycles.
 - Yosys hierarchy checks pass with one SRAM/controller/FIFO/Dense tile, three Dot4 and three requant lanes, and no composition-top multiplier.
 - Passed the full repository regression with the composed slice: `211 passed, 1 skipped`.
+
+## 2026-10-02: DRAMsim3 DMA And BF16 Dequant Start
+- Audited the pinned `Compiler_Codes@ad2c31a` software DDRManager, DMU, DDR RTL, and AXI master rather than treating its C-model copies as cycle timing.
+- Locked the relevant reference boundary: 512-bit AXI beats, INCR bursts, optional 4-KiB splitting, 1024-bit FIFO pairing, and FIFO-driven read backpressure; the reference's fixed ID/in-order response assumption will not replace a tagged DRAMsim3 completion ROB.
+- Selected a 64-byte-line to four-128-bit-word DMA contract so DRAMsim3 traffic has 100% useful payload utilization for the current physical Dense stream.
+- Started an exact no-host-floating-point BF16 dequant contract after INT32 accumulation; generic production Dense coverage remains disabled.
+- Completed the tagged 64-byte completion ROB, four-way 128-bit unpack, and direct physical Dense-pipeline composition. The real DRAMsim3 trace and RTL match at 62 cycles with 100% useful line utilization.
+- Completed exact fused INT32/FP16/FP16-to-BF16 RNE RTL and golden correlation at 20 cycles; 1,000 additional random vectors match an independent Torch BF16 oracle.
+- Archived both evidence packages under `docs/results/gtsu_dramsim_dma_pipeline_2026-10-02/` and `docs/results/gtsu_bf16_dequant_2026-10-02/`.
+- Final architecture regression passed `63 passed`; full repository regression passed `217 passed, 1 skipped`.

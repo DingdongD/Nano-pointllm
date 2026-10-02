@@ -1,0 +1,736 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv; hierarchy -check -top gtsu_dequant_int32_bf16; proc; opt; check -assert; stat; write_json /tmp/gtsu_bf16_dequant_mncgp1iz/dequant.json' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_dequant_int32_bf16'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gtsu_dequant_int32_bf16
+
+2.2. Analyzing design hierarchy..
+Top module:  \gtsu_dequant_int32_bf16
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 76 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68 in module gtsu_dequant_int32_bf16.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+     1/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$440
+     2/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$441
+     3/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$436
+     4/179: $9$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$435
+     5/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$420
+     6/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$419
+     7/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$418
+     8/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$417
+     9/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$414
+    10/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$412
+    11/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$399
+    12/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$398
+    13/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$397
+    14/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$396
+    15/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$392
+    16/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$391
+    17/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$390
+    18/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$389
+    19/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$377
+    20/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$381
+    21/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$380
+    22/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$379
+    23/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$378
+    24/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$383
+    25/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$384
+    26/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$382
+    27/179: $68$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$373
+    28/179: $67$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$370
+    29/179: $66$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$367
+    30/179: $65$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$364
+    31/179: $64$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$361
+    32/179: $63$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$358
+    33/179: $62$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$355
+    34/179: $61$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$352
+    35/179: $60$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$349
+    36/179: $59$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$346
+    37/179: $58$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$343
+    38/179: $57$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$340
+    39/179: $56$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$337
+    40/179: $55$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$334
+    41/179: $54$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$331
+    42/179: $53$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$328
+    43/179: $52$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$325
+    44/179: $51$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$322
+    45/179: $50$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$319
+    46/179: $49$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$316
+    47/179: $48$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$313
+    48/179: $47$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$310
+    49/179: $46$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$307
+    50/179: $45$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$304
+    51/179: $44$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$301
+    52/179: $43$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$298
+    53/179: $42$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$295
+    54/179: $41$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$292
+    55/179: $40$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$289
+    56/179: $39$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$286
+    57/179: $38$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$283
+    58/179: $37$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$280
+    59/179: $36$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$277
+    60/179: $35$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$274
+    61/179: $34$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$271
+    62/179: $33$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$268
+    63/179: $32$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$265
+    64/179: $31$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$262
+    65/179: $30$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$259
+    66/179: $29$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$256
+    67/179: $28$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$253
+    68/179: $27$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$250
+    69/179: $26$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$247
+    70/179: $25$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$244
+    71/179: $24$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$241
+    72/179: $23$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$238
+    73/179: $22$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$235
+    74/179: $21$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$232
+    75/179: $20$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$229
+    76/179: $19$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$226
+    77/179: $18$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$223
+    78/179: $17$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$220
+    79/179: $16$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$217
+    80/179: $15$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$214
+    81/179: $14$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$211
+    82/179: $13$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$208
+    83/179: $12$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$205
+    84/179: $11$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$202
+    85/179: $10$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$199
+    86/179: $9$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$196
+    87/179: $8$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$193
+    88/179: $7$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$190
+    89/179: $6$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$187
+    90/179: $5$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$184
+    91/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$172
+    92/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index[31:0]$181
+    93/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$180
+    94/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$179
+    95/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$178
+    96/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$177
+    97/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$176
+    98/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$175
+    99/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$174
+   100/179: $4$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$173
+   101/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$159
+   102/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index[31:0]$168
+   103/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$167
+   104/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$166
+   105/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$165
+   106/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$164
+   107/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$163
+   108/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$162
+   109/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$161
+   110/179: $3$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$160
+   111/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index[31:0]$137
+   112/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$136
+   113/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$135
+   114/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$134
+   115/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$133
+   116/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$132
+   117/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$131
+   118/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$130
+   119/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$129
+   120/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$116
+   121/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\product[63:0]$128
+   122/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\acc_magnitude[32:0]$127
+   123/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\sign_result[0:0]$120
+   124/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w[8:0]$126
+   125/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a[8:0]$125
+   126/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_w[10:0]$124
+   127/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_a[10:0]$123
+   128/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w_bits[4:0]$122
+   129/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a_bits[4:0]$121
+   130/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_w[15:0]$119
+   131/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_a[15:0]$118
+   132/179: $2$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\accumulator[31:0]$117
+   133/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index[31:0]$113
+   134/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$112
+   135/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$111
+   136/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$110
+   137/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$109
+   138/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$108
+   139/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$107
+   140/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$106
+   141/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$105
+   142/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\product[63:0]$104
+   143/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\acc_magnitude[32:0]$103
+   144/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w[8:0]$102
+   145/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a[8:0]$101
+   146/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_w[10:0]$100
+   147/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_a[10:0]$99
+   148/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w_bits[4:0]$98
+   149/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a_bits[4:0]$97
+   150/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\sign_result[0:0]$96
+   151/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_w[15:0]$95
+   152/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_a[15:0]$94
+   153/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\accumulator[31:0]$93
+   154/179: $1$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$92
+   155/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index[31:0]$90
+   156/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased[31:0]$89
+   157/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift[31:0]$88
+   158/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top[31:0]$87
+   159/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out[7:0]$86
+   160/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand[63:0]$85
+   161/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half[63:0]$84
+   162/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder[63:0]$83
+   163/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated[63:0]$82
+   164/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\product[63:0]$81
+   165/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\acc_magnitude[32:0]$80
+   166/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w[8:0]$79
+   167/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a[8:0]$78
+   168/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_w[10:0]$77
+   169/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_a[10:0]$76
+   170/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w_bits[4:0]$75
+   171/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a_bits[4:0]$74
+   172/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\sign_result[0:0]$73
+   173/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_w[15:0]$72
+   174/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_a[15:0]$71
+   175/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\accumulator[31:0]$70
+   176/179: $0$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize[15:0]$69
+   177/179: $0\out_bf16_reg[15:0]
+   178/179: $0\out_tag_reg[15:0]
+   179/179: $0\out_valid_reg[0:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_dequant_int32_bf16.\out_valid_reg' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1819' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.\out_tag_reg' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1820' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.\out_bf16_reg' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1821' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\dequantize' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1822' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\accumulator' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1823' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_a' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1824' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\scale_w' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1825' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\sign_result' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1826' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a_bits' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1827' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w_bits' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1828' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_a' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1829' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\mant_w' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1830' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_a' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1831' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exp_w' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1832' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\acc_magnitude' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1833' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\product' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1834' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\truncated' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1835' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\remainder' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1836' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\half' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1837' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\significand' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1838' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\exponent_out' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1839' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\top' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1840' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\shift' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1841' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\unbiased' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1842' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_dequant_int32_bf16.$func$\dequantize$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:132$1$\index' using process `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+  created $adff cell `$procdff$1843' with positive edge clock and negative level reset.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 76 empty switches in `\gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+Removing empty process `gtsu_dequant_int32_bf16.$proc$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:121$68'.
+Cleaned up 76 empty switches.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dequant_int32_bf16.
+<suppressed ~11 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dequant_int32_bf16'.
+<suppressed ~45 debug messages>
+Removed a total of 15 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dequant_int32_bf16..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $ternary$architecture_simulator/rtl/vertical_slice/gtsu_dequant_int32_bf16.sv:63$151: { \in_accumulator [31] \in_accumulator } -> { 2'00 \in_accumulator [30:0] }
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$1806.
+    dead port 2/2 on $mux $procmux$1806.
+    dead port 1/2 on $mux $procmux$1803.
+    dead port 2/2 on $mux $procmux$1803.
+    dead port 1/2 on $mux $procmux$1800.
+    dead port 2/2 on $mux $procmux$1800.
+    dead port 1/2 on $mux $procmux$1797.
+    dead port 2/2 on $mux $procmux$1797.
+    dead port 1/2 on $mux $procmux$1794.
+    dead port 2/2 on $mux $procmux$1794.
+    dead port 1/2 on $mux $procmux$1791.
+    dead port 2/2 on $mux $procmux$1791.
+    dead port 1/2 on $mux $procmux$1788.
+    dead port 2/2 on $mux $procmux$1788.
+    dead port 1/2 on $mux $procmux$1785.
+    dead port 2/2 on $mux $procmux$1785.
+    dead port 1/2 on $mux $procmux$1782.
+    dead port 2/2 on $mux $procmux$1782.
+    dead port 1/2 on $mux $procmux$1779.
+    dead port 2/2 on $mux $procmux$1779.
+    dead port 1/2 on $mux $procmux$1776.
+    dead port 2/2 on $mux $procmux$1776.
+    dead port 1/2 on $mux $procmux$1773.
+    dead port 2/2 on $mux $procmux$1773.
+    dead port 1/2 on $mux $procmux$1770.
+    dead port 2/2 on $mux $procmux$1770.
+    dead port 1/2 on $mux $procmux$1767.
+    dead port 2/2 on $mux $procmux$1767.
+    dead port 1/2 on $mux $procmux$1764.
+    dead port 2/2 on $mux $procmux$1764.
+    dead port 1/2 on $mux $procmux$1761.
+    dead port 2/2 on $mux $procmux$1761.
+    dead port 1/2 on $mux $procmux$1758.
+    dead port 2/2 on $mux $procmux$1758.
+    dead port 1/2 on $mux $procmux$1755.
+    dead port 2/2 on $mux $procmux$1755.
+    dead port 1/2 on $mux $procmux$1752.
+    dead port 2/2 on $mux $procmux$1752.
+    dead port 1/2 on $mux $procmux$1749.
+    dead port 2/2 on $mux $procmux$1749.
+    dead port 1/2 on $mux $procmux$1746.
+    dead port 2/2 on $mux $procmux$1746.
+    dead port 1/2 on $mux $procmux$1743.
+    dead port 2/2 on $mux $procmux$1743.
+    dead port 1/2 on $mux $procmux$1740.
+    dead port 2/2 on $mux $procmux$1740.
+    dead port 1/2 on $mux $procmux$1738.
+    dead port 2/2 on $mux $procmux$1738.
+    dead port 1/2 on $mux $procmux$1734.
+    dead port 2/2 on $mux $procmux$1734.
+    dead port 1/2 on $mux $procmux$1732.
+    dead port 2/2 on $mux $procmux$1732.
+    dead port 1/2 on $mux $procmux$1728.
+    dead port 2/2 on $mux $procmux$1728.
+    dead port 1/2 on $mux $procmux$1726.
+    dead port 2/2 on $mux $procmux$1726.
+    dead port 1/2 on $mux $procmux$1722.
+    dead port 2/2 on $mux $procmux$1722.
+    dead port 1/2 on $mux $procmux$1720.
+    dead port 2/2 on $mux $procmux$1720.
+    dead port 1/2 on $mux $procmux$1716.
+    dead port 2/2 on $mux $procmux$1716.
+    dead port 1/2 on $mux $procmux$1714.
+    dead port 2/2 on $mux $procmux$1714.
+    dead port 1/2 on $mux $procmux$1710.
+    dead port 2/2 on $mux $procmux$1710.
+    dead port 1/2 on $mux $procmux$1708.
+    dead port 2/2 on $mux $procmux$1708.
+    dead port 1/2 on $mux $procmux$1704.
+    dead port 2/2 on $mux $procmux$1704.
+    dead port 1/2 on $mux $procmux$1702.
+    dead port 2/2 on $mux $procmux$1702.
+    dead port 1/2 on $mux $procmux$1698.
+    dead port 2/2 on $mux $procmux$1698.
+    dead port 1/2 on $mux $procmux$1696.
+    dead port 2/2 on $mux $procmux$1696.
+    dead port 1/2 on $mux $procmux$1692.
+    dead port 2/2 on $mux $procmux$1692.
+    dead port 1/2 on $mux $procmux$1690.
+    dead port 2/2 on $mux $procmux$1690.
+    dead port 2/2 on $mux $procmux$1686.
+    dead port 1/2 on $mux $procmux$1680.
+    dead port 2/2 on $mux $procmux$1680.
+    dead port 1/2 on $mux $procmux$1678.
+    dead port 2/2 on $mux $procmux$1678.
+    dead port 1/2 on $mux $procmux$1675.
+    dead port 2/2 on $mux $procmux$1675.
+    dead port 1/2 on $mux $procmux$1671.
+    dead port 2/2 on $mux $procmux$1671.
+    dead port 1/2 on $mux $procmux$1669.
+    dead port 2/2 on $mux $procmux$1669.
+    dead port 1/2 on $mux $procmux$1666.
+    dead port 2/2 on $mux $procmux$1666.
+    dead port 1/2 on $mux $procmux$1662.
+    dead port 2/2 on $mux $procmux$1662.
+    dead port 1/2 on $mux $procmux$1660.
+    dead port 2/2 on $mux $procmux$1660.
+    dead port 1/2 on $mux $procmux$1657.
+    dead port 2/2 on $mux $procmux$1657.
+    dead port 1/2 on $mux $procmux$1653.
+    dead port 2/2 on $mux $procmux$1653.
+    dead port 1/2 on $mux $procmux$1651.
+    dead port 2/2 on $mux $procmux$1651.
+    dead port 1/2 on $mux $procmux$1648.
+    dead port 2/2 on $mux $procmux$1648.
+    dead port 1/2 on $mux $procmux$1644.
+    dead port 2/2 on $mux $procmux$1644.
+    dead port 1/2 on $mux $procmux$1642.
+    dead port 2/2 on $mux $procmux$1642.
+    dead port 1/2 on $mux $procmux$1639.
+    dead port 2/2 on $mux $procmux$1639.
+    dead port 1/2 on $mux $procmux$1635.
+    dead port 2/2 on $mux $procmux$1635.
+    dead port 1/2 on $mux $procmux$1633.
+    dead port 2/2 on $mux $procmux$1633.
+    dead port 1/2 on $mux $procmux$1630.
+    dead port 2/2 on $mux $procmux$1630.
+    dead port 1/2 on $mux $procmux$1626.
+    dead port 2/2 on $mux $procmux$1626.
+    dead port 1/2 on $mux $procmux$1624.
+    dead port 2/2 on $mux $procmux$1624.
+    dead port 1/2 on $mux $procmux$1621.
+    dead port 2/2 on $mux $procmux$1621.
+    dead port 1/2 on $mux $procmux$1617.
+    dead port 2/2 on $mux $procmux$1617.
+    dead port 1/2 on $mux $procmux$1615.
+    dead port 2/2 on $mux $procmux$1615.
+    dead port 1/2 on $mux $procmux$1612.
+    dead port 2/2 on $mux $procmux$1612.
+    dead port 1/2 on $mux $procmux$1608.
+    dead port 2/2 on $mux $procmux$1608.
+    dead port 1/2 on $mux $procmux$1606.
+    dead port 2/2 on $mux $procmux$1606.
+    dead port 1/2 on $mux $procmux$1603.
+    dead port 2/2 on $mux $procmux$1603.
+    dead port 2/2 on $mux $procmux$1599.
+    dead port 1/2 on $mux $procmux$1597.
+    dead port 1/2 on $mux $procmux$822.
+    dead port 2/2 on $mux $procmux$822.
+    dead port 1/2 on $mux $procmux$820.
+    dead port 2/2 on $mux $procmux$820.
+    dead port 1/2 on $mux $procmux$817.
+    dead port 2/2 on $mux $procmux$817.
+    dead port 1/2 on $mux $procmux$814.
+    dead port 2/2 on $mux $procmux$814.
+    dead port 1/2 on $mux $procmux$810.
+    dead port 2/2 on $mux $procmux$810.
+    dead port 1/2 on $mux $procmux$808.
+    dead port 2/2 on $mux $procmux$808.
+    dead port 1/2 on $mux $procmux$805.
+    dead port 2/2 on $mux $procmux$805.
+    dead port 1/2 on $mux $procmux$802.
+    dead port 2/2 on $mux $procmux$802.
+    dead port 1/2 on $mux $procmux$798.
+    dead port 2/2 on $mux $procmux$798.
+    dead port 1/2 on $mux $procmux$796.
+    dead port 2/2 on $mux $procmux$796.
+    dead port 1/2 on $mux $procmux$793.
+    dead port 2/2 on $mux $procmux$793.
+    dead port 1/2 on $mux $procmux$790.
+    dead port 2/2 on $mux $procmux$790.
+    dead port 1/2 on $mux $procmux$786.
+    dead port 2/2 on $mux $procmux$786.
+    dead port 1/2 on $mux $procmux$784.
+    dead port 2/2 on $mux $procmux$784.
+    dead port 1/2 on $mux $procmux$781.
+    dead port 2/2 on $mux $procmux$781.
+    dead port 1/2 on $mux $procmux$778.
+    dead port 2/2 on $mux $procmux$778.
+    dead port 1/2 on $mux $procmux$774.
+    dead port 2/2 on $mux $procmux$774.
+    dead port 1/2 on $mux $procmux$772.
+    dead port 2/2 on $mux $procmux$772.
+    dead port 1/2 on $mux $procmux$769.
+    dead port 2/2 on $mux $procmux$769.
+    dead port 1/2 on $mux $procmux$766.
+    dead port 2/2 on $mux $procmux$766.
+    dead port 1/2 on $mux $procmux$762.
+    dead port 2/2 on $mux $procmux$762.
+    dead port 1/2 on $mux $procmux$760.
+    dead port 2/2 on $mux $procmux$760.
+    dead port 1/2 on $mux $procmux$757.
+    dead port 2/2 on $mux $procmux$757.
+    dead port 1/2 on $mux $procmux$754.
+    dead port 2/2 on $mux $procmux$754.
+    dead port 1/2 on $mux $procmux$750.
+    dead port 2/2 on $mux $procmux$750.
+    dead port 1/2 on $mux $procmux$748.
+    dead port 2/2 on $mux $procmux$748.
+    dead port 1/2 on $mux $procmux$745.
+    dead port 2/2 on $mux $procmux$745.
+    dead port 1/2 on $mux $procmux$742.
+    dead port 2/2 on $mux $procmux$742.
+    dead port 2/2 on $mux $procmux$738.
+    dead port 1/2 on $mux $procmux$736.
+    dead port 1/2 on $mux $procmux$733.
+    dead port 1/2 on $mux $procmux$726.
+    dead port 2/2 on $mux $procmux$726.
+    dead port 1/2 on $mux $procmux$724.
+    dead port 2/2 on $mux $procmux$724.
+    dead port 1/2 on $mux $procmux$721.
+    dead port 2/2 on $mux $procmux$721.
+    dead port 1/2 on $mux $procmux$718.
+    dead port 2/2 on $mux $procmux$718.
+    dead port 1/2 on $mux $procmux$716.
+    dead port 2/2 on $mux $procmux$716.
+    dead port 1/2 on $mux $procmux$711.
+    dead port 2/2 on $mux $procmux$711.
+    dead port 1/2 on $mux $procmux$709.
+    dead port 2/2 on $mux $procmux$709.
+    dead port 1/2 on $mux $procmux$706.
+    dead port 2/2 on $mux $procmux$706.
+    dead port 1/2 on $mux $procmux$703.
+    dead port 2/2 on $mux $procmux$703.
+    dead port 1/2 on $mux $procmux$701.
+    dead port 2/2 on $mux $procmux$701.
+    dead port 1/2 on $mux $procmux$696.
+    dead port 2/2 on $mux $procmux$696.
+    dead port 1/2 on $mux $procmux$694.
+    dead port 2/2 on $mux $procmux$694.
+    dead port 1/2 on $mux $procmux$691.
+    dead port 2/2 on $mux $procmux$691.
+    dead port 1/2 on $mux $procmux$688.
+    dead port 2/2 on $mux $procmux$688.
+    dead port 1/2 on $mux $procmux$686.
+    dead port 2/2 on $mux $procmux$686.
+    dead port 1/2 on $mux $procmux$666.
+    dead port 2/2 on $mux $procmux$666.
+    dead port 1/2 on $mux $procmux$664.
+    dead port 2/2 on $mux $procmux$664.
+    dead port 1/2 on $mux $procmux$661.
+    dead port 2/2 on $mux $procmux$661.
+    dead port 1/2 on $mux $procmux$658.
+    dead port 2/2 on $mux $procmux$658.
+    dead port 1/2 on $mux $procmux$656.
+    dead port 2/2 on $mux $procmux$656.
+    dead port 1/2 on $mux $procmux$653.
+    dead port 2/2 on $mux $procmux$653.
+    dead port 1/2 on $mux $procmux$648.
+    dead port 2/2 on $mux $procmux$648.
+    dead port 1/2 on $mux $procmux$646.
+    dead port 2/2 on $mux $procmux$646.
+    dead port 1/2 on $mux $procmux$643.
+    dead port 2/2 on $mux $procmux$643.
+    dead port 1/2 on $mux $procmux$640.
+    dead port 2/2 on $mux $procmux$640.
+    dead port 1/2 on $mux $procmux$638.
+    dead port 2/2 on $mux $procmux$638.
+    dead port 1/2 on $mux $procmux$635.
+    dead port 2/2 on $mux $procmux$635.
+    dead port 1/2 on $mux $procmux$630.
+    dead port 2/2 on $mux $procmux$630.
+    dead port 1/2 on $mux $procmux$628.
+    dead port 2/2 on $mux $procmux$628.
+    dead port 1/2 on $mux $procmux$625.
+    dead port 2/2 on $mux $procmux$625.
+    dead port 1/2 on $mux $procmux$622.
+    dead port 2/2 on $mux $procmux$622.
+    dead port 1/2 on $mux $procmux$620.
+    dead port 2/2 on $mux $procmux$620.
+    dead port 1/2 on $mux $procmux$617.
+    dead port 2/2 on $mux $procmux$617.
+    dead port 2/2 on $mux $procmux$612.
+    dead port 1/2 on $mux $procmux$610.
+    dead port 1/2 on $mux $procmux$607.
+    dead port 2/2 on $mux $procmux$604.
+    dead port 1/2 on $mux $procmux$602.
+    dead port 2/2 on $mux $procmux$594.
+    dead port 1/2 on $mux $procmux$592.
+    dead port 1/2 on $mux $procmux$589.
+    dead port 2/2 on $mux $procmux$586.
+    dead port 2/2 on $mux $procmux$579.
+    dead port 1/2 on $mux $procmux$577.
+    dead port 1/2 on $mux $procmux$574.
+    dead port 2/2 on $mux $procmux$571.
+    dead port 1/2 on $mux $procmux$569.
+    dead port 1/2 on $mux $procmux$561.
+    dead port 2/2 on $mux $procmux$561.
+    dead port 1/2 on $mux $procmux$559.
+    dead port 2/2 on $mux $procmux$559.
+    dead port 1/2 on $mux $procmux$556.
+    dead port 2/2 on $mux $procmux$556.
+    dead port 1/2 on $mux $procmux$553.
+    dead port 2/2 on $mux $procmux$553.
+    dead port 1/2 on $mux $procmux$550.
+    dead port 2/2 on $mux $procmux$550.
+    dead port 1/2 on $mux $procmux$546.
+    dead port 2/2 on $mux $procmux$546.
+    dead port 1/2 on $mux $procmux$544.
+    dead port 2/2 on $mux $procmux$544.
+    dead port 1/2 on $mux $procmux$541.
+    dead port 2/2 on $mux $procmux$541.
+    dead port 1/2 on $mux $procmux$538.
+    dead port 2/2 on $mux $procmux$538.
+    dead port 1/2 on $mux $procmux$535.
+    dead port 2/2 on $mux $procmux$535.
+    dead port 1/2 on $mux $procmux$531.
+    dead port 2/2 on $mux $procmux$531.
+    dead port 1/2 on $mux $procmux$529.
+    dead port 2/2 on $mux $procmux$529.
+    dead port 1/2 on $mux $procmux$526.
+    dead port 2/2 on $mux $procmux$526.
+    dead port 1/2 on $mux $procmux$523.
+    dead port 2/2 on $mux $procmux$523.
+    dead port 1/2 on $mux $procmux$520.
+    dead port 2/2 on $mux $procmux$520.
+    dead port 2/2 on $mux $procmux$501.
+    dead port 1/2 on $mux $procmux$499.
+    dead port 1/2 on $mux $procmux$496.
+    dead port 1/2 on $mux $procmux$493.
+    dead port 1/2 on $mux $procmux$471.
+    dead port 2/2 on $mux $procmux$471.
+    dead port 1/2 on $mux $procmux$469.
+    dead port 2/2 on $mux $procmux$469.
+    dead port 1/2 on $mux $procmux$466.
+    dead port 2/2 on $mux $procmux$466.
+    dead port 1/2 on $mux $procmux$463.
+    dead port 2/2 on $mux $procmux$463.
+    dead port 1/2 on $mux $procmux$460.
+    dead port 2/2 on $mux $procmux$460.
+    dead port 2/2 on $mux $procmux$456.
+    dead port 1/2 on $mux $procmux$454.
+    dead port 1/2 on $mux $procmux$451.
+    dead port 1/2 on $mux $procmux$448.
+Removed 324 multiplexer ports.
+<suppressed ~77 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dequant_int32_bf16.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dequant_int32_bf16'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$1832 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1839 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1825 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1833 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1830 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1838 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1828 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1840 ($adff) from module gtsu_dequant_int32_bf16.
+Removing $procdff$1826 ($adff) from module gtsu_dequant_int32_bf16.
+Replaced 9 DFF cells.
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dequant_int32_bf16..
+Removed 1 unused cells and 842 unused wires.
+<suppressed ~2 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dequant_int32_bf16.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_dequant_int32_bf16..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~75 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_dequant_int32_bf16.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_dequant_int32_bf16'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_dequant_int32_bf16..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_dequant_int32_bf16.
+
+4.16. Finished OPT passes. (There is nothing left to do.)
+
+5. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_dequant_int32_bf16..
+found and reported 0 problems.
+
+6. Printing statistics.
+
+=== gtsu_dequant_int32_bf16 ===
+
+   Number of wires:                492
+   Number of wire bits:          11309
+   Number of public wires:          15
+   Number of public wire bits:     151
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                480
+     $add                            8
+     $adff                           3
+     $and                            2
+     $eq                             4
+     $ge                             3
+     $gt                             3
+     $le                             2
+     $logic_and                     67
+     $logic_not                      7
+     $logic_or                       6
+     $lt                            64
+     $mul                            2
+     $mux                          288
+     $neg                            4
+     $shl                            6
+     $shr                            2
+     $sub                            7
+     $xor                            2
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: f03a698301
+CPU: user 1.00s system 0.02s, MEM: 32.61 MB total, 25.50 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 17% 3x opt_expr (0 sec), 16% 1x check (0 sec), ...

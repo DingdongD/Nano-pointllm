@@ -1,6 +1,8 @@
 from dataclasses import replace
 from pathlib import Path
+import random
 import shutil
+import struct
 
 import pytest
 
@@ -11,6 +13,10 @@ from gtsu_cycle.coverage import (
 )
 from gtsu_cycle.ir import MicroOpcode, lower_splitk_gemv
 from gtsu_cycle.dramsim3_backend import DramSim3Paths, time_dram_bursts
+from gtsu_cycle.dram_dma import (
+    DramLineCompletion, OrderedDmaPayloadSource, pack_payload_lines,
+)
+from gtsu_cycle.dram_dma_correlation import correlate_dense_dramsim_dma
 from gtsu_cycle.pointllm_lowering import lower_decoder_linear, lower_decoder_manifest
 from gtsu_cycle.pointllm_lowering import (
     LinearTile, LoweredLinear, LoweringConfig, MemoryRegion, SourceTensor,
@@ -39,7 +45,8 @@ from gtsu_cycle.dense_gemm_correlation import correlate_dense_tile
 from gtsu_cycle.dense_controller import DenseControllerConfig, run_dense_controller_model
 from gtsu_cycle.dense_controller_correlation import correlate_dense_controller
 from gtsu_cycle.dense_sram_pipeline import (
-    DenseSramPipelineConfig, run_dense_sram_pipeline_model,
+    DenseSramPipelineConfig, build_payload_beats,
+    run_dense_sram_pipeline_model,
 )
 from gtsu_cycle.dense_sram_pipeline_correlation import correlate_dense_sram_pipeline
 from gtsu_cycle.requant import (
@@ -47,6 +54,11 @@ from gtsu_cycle.requant import (
     requantize_int32,
 )
 from gtsu_cycle.requant_correlation import correlate_requant
+from gtsu_cycle.bf16_dequant import (
+    Bf16DequantConfig, Bf16DequantVector, dequantize_int32_to_bf16,
+    locked_bf16_dequant_vectors,
+)
+from gtsu_cycle.bf16_dequant_correlation import correlate_bf16_dequant
 from gtsu_cycle.splitk_gemv import (
     SplitKGemvConfig,
     functional_outputs,
@@ -312,6 +324,44 @@ def test_dense_sram_pipeline_exactly_matches_rtl():
     assert report["synthesis_check"]["top_direct_multipliers"] == 0
 
 
+def test_dma_payload_source_reorders_lines_before_dense_sram():
+    config = DenseSramPipelineConfig(source_stall_mod=0)
+    beats = build_payload_beats(config)
+    lines = pack_payload_lines(beats)
+    completions = (
+        DramLineCompletion(2, lines[1]), DramLineCompletion(3, lines[0]),
+        DramLineCompletion(5, lines[3]), DramLineCompletion(6, lines[2]),
+    )
+    source = OrderedDmaPayloadSource(
+        completions, payload_count=len(beats),
+        block_chunks=config.block_chunks, rob_depth=4,
+    )
+    result = run_dense_sram_pipeline_model(config, beats, payload_source=source)
+    baseline = run_dense_sram_pipeline_model(config, beats)
+    assert result.outputs == baseline.outputs
+    assert result.counters["dma_completion_accepts"] == 4
+    assert result.counters["dma_words"] == 16
+    assert result.counters["dma_rob_peak"] >= 2
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None
+    or not DramSim3Paths.local_default().library.is_file()
+    or not DramSim3Paths.local_default().config.is_file(),
+    reason="Icarus or local DRAMsim3 unavailable",
+)
+def test_real_dramsim3_dma_dense_pipeline_exactly_matches_rtl(tmp_path):
+    report = correlate_dense_dramsim_dma(
+        DenseSramPipelineConfig(), rtl_root=RTL_ROOT,
+        dramsim_paths=DramSim3Paths.local_default(),
+        dramsim_output_dir=tmp_path / "dramsim3",
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["event_trace_exact"] is True
+    assert report["cycle_error"] == 0
+    assert report["traffic"]["line_utilization"] == 1.0
+
+
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
 @pytest.mark.parametrize("config", [
     DenseTileConfig(),
@@ -346,6 +396,48 @@ def test_requant_exactly_matches_rtl(config):
     assert report["status"] == "rtl_correlated"
     assert report["cycle_error"] == 0
     assert report["synthesis_check"]["multipliers"] == 1
+    assert report["synthesis_check"]["dividers"] == 0
+
+
+def test_bf16_dequant_locked_vectors_cover_sign_range_and_subnormals():
+    outputs = tuple(
+        dequantize_int32_to_bf16(vector)
+        for vector in locked_bf16_dequant_vectors()
+    )
+    assert outputs[:3] == (0x0000, 0x3F80, 0xBF80)
+    assert outputs[6] == 0xCF00
+    assert all(0 <= value < (1 << 16) for value in outputs)
+
+
+def test_bf16_dequant_matches_independent_float64_to_torch_bf16():
+    import torch
+
+    generator = random.Random(20261002)
+    for tag in range(1000):
+        accumulator = generator.randint(-(1 << 31), (1 << 31) - 1)
+        scale_a = generator.randrange(0x0001, 0x7C00) | (generator.randrange(2) << 15)
+        scale_w = generator.randrange(0x0001, 0x7C00) | (generator.randrange(2) << 15)
+        value_a = struct.unpack("e", struct.pack("H", scale_a))[0]
+        value_w = struct.unpack("e", struct.pack("H", scale_w))[0]
+        expected = int(torch.tensor(
+            accumulator * value_a * value_w, dtype=torch.float64,
+        ).to(torch.bfloat16).view(torch.uint16).item())
+        actual = dequantize_int32_to_bf16(Bf16DequantVector(
+            tag, accumulator, scale_a, scale_w,
+        ))
+        assert actual == expected
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog unavailable")
+@pytest.mark.parametrize("config", [
+    Bf16DequantConfig(),
+    Bf16DequantConfig(source_stall_mod=0, output_stall_mod=0),
+])
+def test_bf16_dequant_exactly_matches_rtl(config):
+    report = correlate_bf16_dequant(rtl_root=RTL_ROOT, config=config)
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["synthesis_check"]["multipliers"] == 2
     assert report["synthesis_check"]["dividers"] == 0
 
 

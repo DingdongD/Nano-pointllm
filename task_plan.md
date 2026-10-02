@@ -305,6 +305,16 @@ Phase 37 in progress
 - [x] Prove the RTL hierarchy and keep production `N_TILE=64` multiword expansion explicit
 - **Status:** complete for the `N_TILE=3` physical slice; production 17-word gather and DRAM DMA remain pending
 
+#### Phase 37C: DRAMsim3 DMA And BF16 Dequant Closure
+- [x] Audit `Compiler_Codes` C-model, DMU, DDR manager, and AXI master data-width/burst/backpressure contracts
+- [x] Pack four 128-bit Dense payload words into each aligned 64-byte DRAMsim3 transaction
+- [x] Compose real DRAMsim3 completion timing with a finite completion ROB and one-word/cycle DMA unpack
+- [x] Correlate the completion-trace-driven DMA-to-SRAM pipeline against synthesizable RTL
+- [x] Implement bit-exact `INT32 x FP16 x FP16 -> BF16` round-to-nearest-even dequantization
+- [x] Add edge/random numerical tests, Icarus value/event/cycle correlation, and Yosys structure checks
+- [x] Archive strict provenance, utilization, stall, and fidelity-boundary artifacts
+- **Status:** complete for the `N_TILE=3` physical slice and standalone BF16 post-accumulator; BF16 Dense composition and production 17-word gather remain explicit later gates
+
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
 - [ ] Implement bounded streaming tile/global Top-32 with exact distance/index tie-break semantics
