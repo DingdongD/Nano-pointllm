@@ -338,10 +338,11 @@ Phase 37 in progress
 
 ### Phase 38: Fused FPS/KNN RTL Controller
 - [ ] Integrate coordinate/norm SRAM traffic, persistent min state, deterministic argmax, and center feedback
-- [ ] Implement bounded streaming tile/global Top-32 with exact distance/index tie-break semantics
+- [x] Implement bounded streaming tile/global Top-K with exact distance/index tie-break semantics in the lock-case controller
 - [ ] Reuse one distance stream for FPS update and KNN candidates where semantics permit
 - [ ] Validate INT8 geometry center equality and KNN recall on ModelNet/Objaverse
-- **Status:** pending
+- [x] Correlate a conflict/tie/backpressure lock before attempting the 8192-point, 512-round production run
+- **Status:** M5a complete; production 8192x512, composed value/cycle, real-data fidelity, and SRAM macro gates remain, so coverage is disabled
 
 ### Phase 39: Geometry-To-Feature Composition
 - [ ] Compose center feedback, Top-32 gather, patch FIFO, local encoder, and PE-pool arbitration
@@ -417,6 +418,7 @@ Phase 37 in progress
 | Production weight-reuse Verilator rejected reset-time nonblocking writes inside parameterized SRAM loops | First compiled `[513,384]x[384,1152]` attempt | Remove unnecessary array resets: every WBUF location is filled before read and K-block zero initializes every live partial-sum row before reuse |
 | Icarus emitted malformed VVP syntax for zero-argument wide-vector testbench functions | First dual-output adapter run | Add an ignored one-bit function argument; this avoids the Icarus 12 zero-argument code-generation bug without changing stimulus |
 | Real q-projection dual-output values/events/cycles matched but summary omitted source backpressure | First real-scale dual-output run | Count the always-valid source's blocked cycles in the trace testbench; no datapath or timing behavior changed |
+| First fused FPS/KNN correlation had exact centers, Top-K values, and cycles but differed in one source-backpressure count and an unused input event field | First M5a lock run | Stop presenting a source beat after the final trace entry and canonicalize input events without an unobservable center field; datapath outputs were unchanged |
 
 ## Notes
 - Preserve user/untracked work; the repository has many untracked files and at least one modified tracked file.

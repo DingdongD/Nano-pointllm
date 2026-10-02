@@ -490,3 +490,9 @@
 - `M_TILE=32` still reloads each unique padded weight tensor 17 times, once per M tile. This is the explicit area/traffic compromise; claiming one unique-weight read would require a 513-row partial-sum residency point or a different outer-loop schedule.
 - The dual-output adapter has 64 physical A8 requant instances and a BF16 lane sweep. Three synthetic tiles take 35/22/15/13 cycles at 8/16/32/64 BF16 lanes. A 16-lane run checks all 4,096 real q-projection A8 and BF16 outputs in 448 cycles using the same tensor package.
 - Dense64 and the dual-output adapter are directly connected by a synthesizable wrapper whose backpressure path is structurally checked. They have not yet been correlated as one composed event trace, so production W8A8 and full-model claims remain false.
+
+## Fused FPS/KNN M5a Findings
+- FPS and KNN can share each center-to-point distance stream exactly: raw distance feeds the per-round nearest-neighbor ordering, while `min(previous_min, distance)` feeds the persistent FPS state and deterministic farthest-point reduction.
+- The 16-point/5-center lock intentionally duplicates point 0 at point 1. RTL and Python therefore prove lower-index tie behavior rather than relying on tie-free random data.
+- A flat `(K+LANES)` bubble-sort network is acceptable only as a correctness lock. Yosys expands the lock-case min table and sorting network; production Top-32 needs lane-local candidates plus a pipelined merge tree, and min state needs explicit banked SRAM macros.
+- Structural shared-Dot composition is not a substitute for one composed value/event/cycle trace. Production coverage remains disabled until the 8192-point/512-round compiled RTL and real point-cloud quantization gates pass.

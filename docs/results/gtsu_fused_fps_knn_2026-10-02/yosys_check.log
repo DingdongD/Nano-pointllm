@@ -1,0 +1,934 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv; chparam -set POINTS 16 -set CENTERS 5 -set K 4 -set LANES 4 -set DIST_WIDTH 18 gtsu_fused_fps_knn_controller; hierarchy -check -top gtsu_fused_fps_knn_controller; proc; memory; opt; check -assert; stat' --
+
+1. Executing Verilog-2005 frontend: architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv
+Parsing SystemVerilog input from `architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv' to AST representation.
+Generating RTLIL representation for module `\gtsu_fused_fps_knn_controller'.
+Warning: Replacing memory \min_state with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142
+Warning: Replacing memory \top_index with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:121
+Warning: Replacing memory \top_distance with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:120
+Warning: Replacing memory \updated_min with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:69, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:64
+Warning: Replacing memory \sort_index with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:85, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:57
+Warning: Replacing memory \sort_distance with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:83, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:56
+Successfully finished Verilog frontend.
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\gtsu_fused_fps_knn_controller'.
+Parameter \POINTS = 16
+Parameter \CENTERS = 5
+Parameter \K = 4
+Parameter \LANES = 4
+Parameter \DIST_WIDTH = 18
+Generating RTLIL representation for module `$paramod\gtsu_fused_fps_knn_controller\POINTS=16\CENTERS=5\K=4\LANES=4\DIST_WIDTH=18'.
+Warning: Replacing memory \min_state with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142
+Warning: Replacing memory \top_index with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:121
+Warning: Replacing memory \top_distance with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:120
+Warning: Replacing memory \updated_min with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:69, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:64
+Warning: Replacing memory \sort_index with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:85, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:57
+Warning: Replacing memory \sort_distance with list of registers. See architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:83, architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:56
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \gtsu_fused_fps_knn_controller
+
+3.2. Analyzing design hierarchy..
+Top module:  \gtsu_fused_fps_knn_controller
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:165$1062'.
+Removing empty process `gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:165$1062'.
+Cleaned up 2 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 13 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016 in module gtsu_fused_fps_knn_controller.
+Removed 8 dead cases from process $proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636 in module gtsu_fused_fps_knn_controller.
+Marked 76 switch rules as full_case in process $proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636 in module gtsu_fused_fps_knn_controller.
+Removed a total of 8 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+     1/84: $4\slot[31:0]
+     2/84: $0\out_distances_reg[71:0] [71:54]
+     3/84: $0\out_distances_reg[71:0] [53:36]
+     4/84: $0\out_indices_reg[15:0] [11:8]
+     5/84: $0\out_distances_reg[71:0] [35:18]
+     6/84: $0\out_indices_reg[15:0] [7:4]
+     7/84: $0\out_distances_reg[71:0] [17:0]
+     8/84: $0\out_indices_reg[15:0] [3:0]
+     9/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_DATA[17:0]$1057
+    10/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_ADDR[3:0]$1053
+    11/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_DATA[17:0]$1054
+    12/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_ADDR[3:0]$1050
+    13/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_DATA[17:0]$1051
+    14/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_ADDR[3:0]$1047
+    15/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_DATA[17:0]$1048
+    16/84: $3\slot[31:0]
+    17/84: $3\lane[31:0]
+    18/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_DATA[17:0]$1046
+    19/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_ADDR[3:0]$1045
+    20/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_DATA[17:0]$1044
+    21/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_ADDR[3:0]$1043
+    22/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_DATA[17:0]$1042
+    23/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_ADDR[3:0]$1041
+    24/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_DATA[17:0]$1040
+    25/84: $2$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_ADDR[3:0]$1039
+    26/84: $3\reset_slot[31:0]
+    27/84: $2\reset_slot[31:0]
+    28/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_DATA[17:0]$1033
+    29/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_ADDR[3:0]$1032
+    30/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_DATA[17:0]$1031
+    31/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_ADDR[3:0]$1030
+    32/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_DATA[17:0]$1029
+    33/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_ADDR[3:0]$1028
+    34/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_DATA[17:0]$1027
+    35/84: $1$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_ADDR[3:0]$1026
+    36/84: $2\slot[31:0]
+    37/84: $2\lane[31:0]
+    38/84: $1\reset_slot[31:0]
+    39/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_DATA[17:0]$1024
+    40/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_ADDR[3:0]$1023
+    41/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_DATA[17:0]$1022
+    42/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_ADDR[3:0]$1021
+    43/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_DATA[17:0]$1020
+    44/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_ADDR[3:0]$1019
+    45/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_DATA[17:0]$1018
+    46/84: $0$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_ADDR[3:0]$1017
+    47/84: $0\reset_slot[31:0]
+    48/84: $1\slot[31:0]
+    49/84: $1\lane[31:0]
+    50/84: $0\min_state[15][17:0]
+    51/84: $0\min_state[14][17:0]
+    52/84: $0\min_state[13][17:0]
+    53/84: $0\min_state[12][17:0]
+    54/84: $0\min_state[11][17:0]
+    55/84: $0\min_state[10][17:0]
+    56/84: $0\min_state[9][17:0]
+    57/84: $0\min_state[8][17:0]
+    58/84: $0\min_state[7][17:0]
+    59/84: $0\min_state[6][17:0]
+    60/84: $0\min_state[5][17:0]
+    61/84: $0\min_state[4][17:0]
+    62/84: $0\min_state[3][17:0]
+    63/84: $0\min_state[2][17:0]
+    64/84: $0\min_state[1][17:0]
+    65/84: $0\min_state[0][17:0]
+    66/84: $0\top_index[3][3:0]
+    67/84: $0\top_index[2][3:0]
+    68/84: $0\top_index[1][3:0]
+    69/84: $0\top_index[0][3:0]
+    70/84: $0\top_distance[3][17:0]
+    71/84: $0\top_distance[2][17:0]
+    72/84: $0\top_distance[1][17:0]
+    73/84: $0\top_distance[0][17:0]
+    74/84: $0\out_indices_reg[15:0] [15:12]
+    75/84: $3$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_ADDR[3:0]$1056
+    76/84: $0\out_next_center_reg[3:0]
+    77/84: $0\out_center_reg[3:0]
+    78/84: $0\done_reg[0:0]
+    79/84: $0\out_valid_reg[0:0]
+    80/84: $0\round_index[2:0]
+    81/84: $0\tile_index[1:0]
+    82/84: $0\current_center[3:0]
+    83/84: $0\max_index[3:0]
+    84/84: $0\max_distance[17:0]
+Creating decoders for process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+     1/444: $9\sort_index[7][3:0]
+     2/444: $9\sort_distance[7][17:0]
+     3/444: $17\sort_index[6][3:0]
+     4/444: $17\sort_distance[6][17:0]
+     5/444: $56\swap_index[3:0]
+     6/444: $56\swap_distance[17:0]
+     7/444: $16\sort_index[6][3:0]
+     8/444: $16\sort_distance[6][17:0]
+     9/444: $17\sort_index[5][3:0]
+    10/444: $17\sort_distance[5][17:0]
+    11/444: $55\swap_index[3:0]
+    12/444: $55\swap_distance[17:0]
+    13/444: $16\sort_index[5][3:0]
+    14/444: $16\sort_distance[5][17:0]
+    15/444: $17\sort_index[4][3:0]
+    16/444: $17\sort_distance[4][17:0]
+    17/444: $54\swap_index[3:0]
+    18/444: $54\swap_distance[17:0]
+    19/444: $16\sort_index[4][3:0]
+    20/444: $16\sort_distance[4][17:0]
+    21/444: $16\sort_index[3][3:0]
+    22/444: $16\sort_distance[3][17:0]
+    23/444: $53\swap_index[3:0]
+    24/444: $53\swap_distance[17:0]
+    25/444: $15\sort_index[3][3:0]
+    26/444: $15\sort_distance[3][17:0]
+    27/444: $16\sort_index[2][3:0]
+    28/444: $16\sort_distance[2][17:0]
+    29/444: $52\swap_index[3:0]
+    30/444: $52\swap_distance[17:0]
+    31/444: $15\sort_index[2][3:0]
+    32/444: $15\sort_distance[2][17:0]
+    33/444: $16\sort_index[1][3:0]
+    34/444: $16\sort_distance[1][17:0]
+    35/444: $51\swap_index[3:0]
+    36/444: $51\swap_distance[17:0]
+    37/444: $15\sort_index[1][3:0]
+    38/444: $15\sort_distance[1][17:0]
+    39/444: $8\sort_index[0][3:0]
+    40/444: $8\sort_distance[0][17:0]
+    41/444: $50\swap_index[3:0]
+    42/444: $50\swap_distance[17:0]
+    43/444: $8\sort_index[7][3:0]
+    44/444: $8\sort_distance[7][17:0]
+    45/444: $15\sort_index[6][3:0]
+    46/444: $15\sort_distance[6][17:0]
+    47/444: $49\swap_index[3:0]
+    48/444: $49\swap_distance[17:0]
+    49/444: $14\sort_index[6][3:0]
+    50/444: $14\sort_distance[6][17:0]
+    51/444: $15\sort_index[5][3:0]
+    52/444: $15\sort_distance[5][17:0]
+    53/444: $48\swap_index[3:0]
+    54/444: $48\swap_distance[17:0]
+    55/444: $14\sort_index[5][3:0]
+    56/444: $14\sort_distance[5][17:0]
+    57/444: $15\sort_index[4][3:0]
+    58/444: $15\sort_distance[4][17:0]
+    59/444: $47\swap_index[3:0]
+    60/444: $47\swap_distance[17:0]
+    61/444: $14\sort_index[4][3:0]
+    62/444: $14\sort_distance[4][17:0]
+    63/444: $14\sort_index[3][3:0]
+    64/444: $14\sort_distance[3][17:0]
+    65/444: $46\swap_index[3:0]
+    66/444: $46\swap_distance[17:0]
+    67/444: $13\sort_index[3][3:0]
+    68/444: $13\sort_distance[3][17:0]
+    69/444: $14\sort_index[2][3:0]
+    70/444: $14\sort_distance[2][17:0]
+    71/444: $45\swap_index[3:0]
+    72/444: $45\swap_distance[17:0]
+    73/444: $13\sort_index[2][3:0]
+    74/444: $13\sort_distance[2][17:0]
+    75/444: $14\sort_index[1][3:0]
+    76/444: $14\sort_distance[1][17:0]
+    77/444: $44\swap_index[3:0]
+    78/444: $44\swap_distance[17:0]
+    79/444: $13\sort_index[1][3:0]
+    80/444: $13\sort_distance[1][17:0]
+    81/444: $7\sort_index[0][3:0]
+    82/444: $7\sort_distance[0][17:0]
+    83/444: $43\swap_index[3:0]
+    84/444: $43\swap_distance[17:0]
+    85/444: $7\sort_index[7][3:0]
+    86/444: $7\sort_distance[7][17:0]
+    87/444: $13\sort_index[6][3:0]
+    88/444: $13\sort_distance[6][17:0]
+    89/444: $42\swap_index[3:0]
+    90/444: $42\swap_distance[17:0]
+    91/444: $12\sort_index[6][3:0]
+    92/444: $12\sort_distance[6][17:0]
+    93/444: $13\sort_index[5][3:0]
+    94/444: $13\sort_distance[5][17:0]
+    95/444: $41\swap_index[3:0]
+    96/444: $41\swap_distance[17:0]
+    97/444: $12\sort_index[5][3:0]
+    98/444: $12\sort_distance[5][17:0]
+    99/444: $13\sort_index[4][3:0]
+   100/444: $13\sort_distance[4][17:0]
+   101/444: $40\swap_index[3:0]
+   102/444: $40\swap_distance[17:0]
+   103/444: $12\sort_index[4][3:0]
+   104/444: $12\sort_distance[4][17:0]
+   105/444: $12\sort_index[3][3:0]
+   106/444: $12\sort_distance[3][17:0]
+   107/444: $39\swap_index[3:0]
+   108/444: $39\swap_distance[17:0]
+   109/444: $11\sort_index[3][3:0]
+   110/444: $11\sort_distance[3][17:0]
+   111/444: $12\sort_index[2][3:0]
+   112/444: $12\sort_distance[2][17:0]
+   113/444: $38\swap_index[3:0]
+   114/444: $38\swap_distance[17:0]
+   115/444: $11\sort_index[2][3:0]
+   116/444: $11\sort_distance[2][17:0]
+   117/444: $12\sort_index[1][3:0]
+   118/444: $12\sort_distance[1][17:0]
+   119/444: $37\swap_index[3:0]
+   120/444: $37\swap_distance[17:0]
+   121/444: $11\sort_index[1][3:0]
+   122/444: $11\sort_distance[1][17:0]
+   123/444: $6\sort_index[0][3:0]
+   124/444: $6\sort_distance[0][17:0]
+   125/444: $36\swap_index[3:0]
+   126/444: $36\swap_distance[17:0]
+   127/444: $6\sort_index[7][3:0]
+   128/444: $6\sort_distance[7][17:0]
+   129/444: $11\sort_index[6][3:0]
+   130/444: $11\sort_distance[6][17:0]
+   131/444: $35\swap_index[3:0]
+   132/444: $35\swap_distance[17:0]
+   133/444: $10\sort_index[6][3:0]
+   134/444: $10\sort_distance[6][17:0]
+   135/444: $11\sort_index[5][3:0]
+   136/444: $11\sort_distance[5][17:0]
+   137/444: $34\swap_index[3:0]
+   138/444: $34\swap_distance[17:0]
+   139/444: $10\sort_index[5][3:0]
+   140/444: $10\sort_distance[5][17:0]
+   141/444: $11\sort_index[4][3:0]
+   142/444: $11\sort_distance[4][17:0]
+   143/444: $33\swap_index[3:0]
+   144/444: $33\swap_distance[17:0]
+   145/444: $10\sort_index[4][3:0]
+   146/444: $10\sort_distance[4][17:0]
+   147/444: $10\sort_index[3][3:0]
+   148/444: $10\sort_distance[3][17:0]
+   149/444: $32\swap_index[3:0]
+   150/444: $32\swap_distance[17:0]
+   151/444: $9\sort_index[3][3:0]
+   152/444: $9\sort_distance[3][17:0]
+   153/444: $10\sort_index[2][3:0]
+   154/444: $10\sort_distance[2][17:0]
+   155/444: $31\swap_index[3:0]
+   156/444: $31\swap_distance[17:0]
+   157/444: $9\sort_index[2][3:0]
+   158/444: $9\sort_distance[2][17:0]
+   159/444: $10\sort_index[1][3:0]
+   160/444: $10\sort_distance[1][17:0]
+   161/444: $30\swap_index[3:0]
+   162/444: $30\swap_distance[17:0]
+   163/444: $9\sort_index[1][3:0]
+   164/444: $9\sort_distance[1][17:0]
+   165/444: $5\sort_index[0][3:0]
+   166/444: $5\sort_distance[0][17:0]
+   167/444: $29\swap_index[3:0]
+   168/444: $29\swap_distance[17:0]
+   169/444: $5\sort_index[7][3:0]
+   170/444: $5\sort_distance[7][17:0]
+   171/444: $9\sort_index[6][3:0]
+   172/444: $9\sort_distance[6][17:0]
+   173/444: $28\swap_index[3:0]
+   174/444: $28\swap_distance[17:0]
+   175/444: $8\sort_index[6][3:0]
+   176/444: $8\sort_distance[6][17:0]
+   177/444: $9\sort_index[5][3:0]
+   178/444: $9\sort_distance[5][17:0]
+   179/444: $27\swap_index[3:0]
+   180/444: $27\swap_distance[17:0]
+   181/444: $8\sort_index[5][3:0]
+   182/444: $8\sort_distance[5][17:0]
+   183/444: $9\sort_index[4][3:0]
+   184/444: $9\sort_distance[4][17:0]
+   185/444: $26\swap_index[3:0]
+   186/444: $26\swap_distance[17:0]
+   187/444: $8\sort_index[4][3:0]
+   188/444: $8\sort_distance[4][17:0]
+   189/444: $8\sort_index[3][3:0]
+   190/444: $8\sort_distance[3][17:0]
+   191/444: $25\swap_index[3:0]
+   192/444: $25\swap_distance[17:0]
+   193/444: $7\sort_index[3][3:0]
+   194/444: $7\sort_distance[3][17:0]
+   195/444: $8\sort_index[2][3:0]
+   196/444: $8\sort_distance[2][17:0]
+   197/444: $24\swap_index[3:0]
+   198/444: $24\swap_distance[17:0]
+   199/444: $7\sort_index[2][3:0]
+   200/444: $7\sort_distance[2][17:0]
+   201/444: $8\sort_index[1][3:0]
+   202/444: $8\sort_distance[1][17:0]
+   203/444: $23\swap_index[3:0]
+   204/444: $23\swap_distance[17:0]
+   205/444: $7\sort_index[1][3:0]
+   206/444: $7\sort_distance[1][17:0]
+   207/444: $4\sort_index[0][3:0]
+   208/444: $4\sort_distance[0][17:0]
+   209/444: $22\swap_index[3:0]
+   210/444: $22\swap_distance[17:0]
+   211/444: $4\sort_index[7][3:0]
+   212/444: $4\sort_distance[7][17:0]
+   213/444: $7\sort_index[6][3:0]
+   214/444: $7\sort_distance[6][17:0]
+   215/444: $21\swap_index[3:0]
+   216/444: $21\swap_distance[17:0]
+   217/444: $6\sort_index[6][3:0]
+   218/444: $6\sort_distance[6][17:0]
+   219/444: $7\sort_index[5][3:0]
+   220/444: $7\sort_distance[5][17:0]
+   221/444: $20\swap_index[3:0]
+   222/444: $20\swap_distance[17:0]
+   223/444: $6\sort_index[5][3:0]
+   224/444: $6\sort_distance[5][17:0]
+   225/444: $7\sort_index[4][3:0]
+   226/444: $7\sort_distance[4][17:0]
+   227/444: $19\swap_index[3:0]
+   228/444: $19\swap_distance[17:0]
+   229/444: $6\sort_index[4][3:0]
+   230/444: $6\sort_distance[4][17:0]
+   231/444: $6\sort_index[3][3:0]
+   232/444: $6\sort_distance[3][17:0]
+   233/444: $18\swap_index[3:0]
+   234/444: $18\swap_distance[17:0]
+   235/444: $5\sort_index[3][3:0]
+   236/444: $5\sort_distance[3][17:0]
+   237/444: $6\sort_index[2][3:0]
+   238/444: $6\sort_distance[2][17:0]
+   239/444: $17\swap_index[3:0]
+   240/444: $17\swap_distance[17:0]
+   241/444: $5\sort_index[2][3:0]
+   242/444: $5\sort_distance[2][17:0]
+   243/444: $6\sort_index[1][3:0]
+   244/444: $6\sort_distance[1][17:0]
+   245/444: $16\swap_index[3:0]
+   246/444: $16\swap_distance[17:0]
+   247/444: $5\sort_index[1][3:0]
+   248/444: $5\sort_distance[1][17:0]
+   249/444: $3\sort_index[0][3:0]
+   250/444: $3\sort_distance[0][17:0]
+   251/444: $15\swap_index[3:0]
+   252/444: $15\swap_distance[17:0]
+   253/444: $3\sort_index[7][3:0]
+   254/444: $3\sort_distance[7][17:0]
+   255/444: $5\sort_index[6][3:0]
+   256/444: $5\sort_distance[6][17:0]
+   257/444: $14\swap_index[3:0]
+   258/444: $14\swap_distance[17:0]
+   259/444: $4\sort_index[6][3:0]
+   260/444: $4\sort_distance[6][17:0]
+   261/444: $5\sort_index[5][3:0]
+   262/444: $5\sort_distance[5][17:0]
+   263/444: $13\swap_index[3:0]
+   264/444: $13\swap_distance[17:0]
+   265/444: $4\sort_index[5][3:0]
+   266/444: $4\sort_distance[5][17:0]
+   267/444: $5\sort_index[4][3:0]
+   268/444: $5\sort_distance[4][17:0]
+   269/444: $12\swap_index[3:0]
+   270/444: $12\swap_distance[17:0]
+   271/444: $4\sort_index[4][3:0]
+   272/444: $4\sort_distance[4][17:0]
+   273/444: $4\sort_index[3][3:0]
+   274/444: $4\sort_distance[3][17:0]
+   275/444: $11\swap_index[3:0]
+   276/444: $11\swap_distance[17:0]
+   277/444: $3\sort_index[3][3:0]
+   278/444: $3\sort_distance[3][17:0]
+   279/444: $4\sort_index[2][3:0]
+   280/444: $4\sort_distance[2][17:0]
+   281/444: $10\swap_index[3:0]
+   282/444: $10\swap_distance[17:0]
+   283/444: $3\sort_index[2][3:0]
+   284/444: $3\sort_distance[2][17:0]
+   285/444: $4\sort_index[1][3:0]
+   286/444: $4\sort_distance[1][17:0]
+   287/444: $9\swap_index[3:0]
+   288/444: $9\swap_distance[17:0]
+   289/444: $3\sort_index[1][3:0]
+   290/444: $3\sort_distance[1][17:0]
+   291/444: $2\sort_index[0][3:0]
+   292/444: $2\sort_distance[0][17:0]
+   293/444: $8\swap_index[3:0]
+   294/444: $8\swap_distance[17:0]
+   295/444: $2\sort_index[7][3:0]
+   296/444: $2\sort_distance[7][17:0]
+   297/444: $3\sort_index[6][3:0]
+   298/444: $3\sort_distance[6][17:0]
+   299/444: $7\swap_index[3:0]
+   300/444: $7\swap_distance[17:0]
+   301/444: $2\sort_index[6][3:0]
+   302/444: $2\sort_distance[6][17:0]
+   303/444: $3\sort_index[5][3:0]
+   304/444: $3\sort_distance[5][17:0]
+   305/444: $6\swap_index[3:0]
+   306/444: $6\swap_distance[17:0]
+   307/444: $2\sort_index[5][3:0]
+   308/444: $2\sort_distance[5][17:0]
+   309/444: $3\sort_index[4][3:0]
+   310/444: $3\sort_distance[4][17:0]
+   311/444: $5\swap_index[3:0]
+   312/444: $5\swap_distance[17:0]
+   313/444: $2\sort_index[4][3:0]
+   314/444: $2\sort_distance[4][17:0]
+   315/444: $2\sort_index[3][3:0]
+   316/444: $2\sort_distance[3][17:0]
+   317/444: $4\swap_index[3:0]
+   318/444: $4\swap_distance[17:0]
+   319/444: $1\sort_index[3][3:0]
+   320/444: $1\sort_distance[3][17:0]
+   321/444: $2\sort_index[2][3:0]
+   322/444: $2\sort_distance[2][17:0]
+   323/444: $3\swap_index[3:0]
+   324/444: $3\swap_distance[17:0]
+   325/444: $1\sort_index[2][3:0]
+   326/444: $1\sort_distance[2][17:0]
+   327/444: $2\sort_index[1][3:0]
+   328/444: $2\sort_distance[1][17:0]
+   329/444: $2\swap_index[3:0]
+   330/444: $2\swap_distance[17:0]
+   331/444: $1\sort_index[1][3:0]
+   332/444: $1\sort_distance[1][17:0]
+   333/444: $1\sort_index[0][3:0]
+   334/444: $1\sort_distance[0][17:0]
+   335/444: $1\swap_index[3:0]
+   336/444: $1\swap_distance[17:0]
+   337/444: $8\max_index_next[3:0]
+   338/444: $8\max_distance_next[17:0]
+   339/444: $3$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_DATA[17:0]$727
+   340/444: $2\updated_min[3][17:0]
+   341/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_DATA[17:0]$725
+   342/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_ADDR[3:0]$724
+   343/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_DATA[17:0]$720
+   344/444: $7\max_index_next[3:0]
+   345/444: $7\max_distance_next[17:0]
+   346/444: $1\sort_index[7][3:0]
+   347/444: $1\sort_distance[7][17:0]
+   348/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_DATA[17:0]$718
+   349/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_ADDR[3:0]$717
+   350/444: $1\updated_min[3][17:0]
+   351/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_DATA[17:0]$716
+   352/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_ADDR[3:0]$715
+   353/444: $6\max_index_next[3:0]
+   354/444: $6\max_distance_next[17:0]
+   355/444: $3$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_DATA[17:0]$707
+   356/444: $2\updated_min[2][17:0]
+   357/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_DATA[17:0]$705
+   358/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_ADDR[3:0]$704
+   359/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_DATA[17:0]$700
+   360/444: $5\max_index_next[3:0]
+   361/444: $5\max_distance_next[17:0]
+   362/444: $1\sort_index[6][3:0]
+   363/444: $1\sort_distance[6][17:0]
+   364/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_DATA[17:0]$698
+   365/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_ADDR[3:0]$697
+   366/444: $1\updated_min[2][17:0]
+   367/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_DATA[17:0]$696
+   368/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_ADDR[3:0]$695
+   369/444: $4\max_index_next[3:0]
+   370/444: $4\max_distance_next[17:0]
+   371/444: $3$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_DATA[17:0]$687
+   372/444: $2\updated_min[1][17:0]
+   373/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_ADDR[3:0]$685
+   374/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_DATA[17:0]$684
+   375/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_DATA[17:0]$680
+   376/444: $3\max_index_next[3:0]
+   377/444: $3\max_distance_next[17:0]
+   378/444: $1\sort_index[5][3:0]
+   379/444: $1\sort_distance[5][17:0]
+   380/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_ADDR[3:0]$676
+   381/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_DATA[17:0]$675
+   382/444: $1\updated_min[1][17:0]
+   383/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_DATA[17:0]$678
+   384/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_ADDR[3:0]$677
+   385/444: $2\max_index_next[3:0]
+   386/444: $2\max_distance_next[17:0]
+   387/444: $3$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_DATA[17:0]$667
+   388/444: $2\updated_min[0][17:0]
+   389/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_ADDR[3:0]$665
+   390/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_DATA[17:0]$664
+   391/444: $2$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_DATA[17:0]$660
+   392/444: $1\max_index_next[3:0]
+   393/444: $1\max_distance_next[17:0]
+   394/444: $1\sort_index[4][3:0]
+   395/444: $1\sort_distance[4][17:0]
+   396/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_ADDR[3:0]$658
+   397/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_DATA[17:0]$657
+   398/444: $1\updated_min[0][17:0]
+   399/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_DATA[17:0]$656
+   400/444: $1$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_ADDR[3:0]$655
+   401/444: $0\pass[31:0]
+   402/444: $0\slot[31:0]
+   403/444: $0\sort_index[7][3:0]
+   404/444: $0\sort_index[6][3:0]
+   405/444: $0\sort_distance[7][17:0]
+   406/444: $0\sort_distance[6][17:0]
+   407/444: $0\swap_index[3:0]
+   408/444: $0\swap_distance[17:0]
+   409/444: $0\sort_index[5][3:0]
+   410/444: $0\sort_distance[5][17:0]
+   411/444: $0\sort_index[4][3:0]
+   412/444: $0\sort_distance[4][17:0]
+   413/444: $0\sort_index[3][3:0]
+   414/444: $0\sort_distance[3][17:0]
+   415/444: $0\sort_index[2][3:0]
+   416/444: $0\sort_distance[2][17:0]
+   417/444: $0\sort_index[1][3:0]
+   418/444: $0\sort_distance[1][17:0]
+   419/444: $0\sort_index[0][3:0]
+   420/444: $0\sort_distance[0][17:0]
+   421/444: $0\lane[31:0]
+   422/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_DATA[17:0]$652
+   423/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_ADDR[3:0]$651
+   424/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_DATA[17:0]$650
+   425/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_ADDR[3:0]$649
+   426/444: $0\updated_min[3][17:0]
+   427/444: $0\max_index_next[3:0]
+   428/444: $0\max_distance_next[17:0]
+   429/444: $0\point_number[31:0]
+   430/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_DATA[17:0]$648
+   431/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_ADDR[3:0]$647
+   432/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_DATA[17:0]$646
+   433/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_ADDR[3:0]$639
+   434/444: $0\updated_min[2][17:0]
+   435/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_DATA[17:0]$644
+   436/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_ADDR[3:0]$643
+   437/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_ADDR[3:0]$638
+   438/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_DATA[17:0]$637
+   439/444: $0\updated_min[1][17:0]
+   440/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_ADDR[3:0]$645
+   441/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_DATA[17:0]$642
+   442/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_DATA[17:0]$641
+   443/444: $0$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_ADDR[3:0]$640
+   444/444: $0\updated_min[0][17:0]
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\max_distance_next' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\max_index_next' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\lane' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\slot' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\pass' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\point_number' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[0]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[1]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[2]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[3]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[4]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[5]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[6]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_distance[7]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[0]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[1]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[2]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[3]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[4]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[5]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[6]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\sort_index[7]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\updated_min[0]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\updated_min[1]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\updated_min[2]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.\updated_min[3]' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$627_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$624_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$626_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$625_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$628_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$629_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:63$630_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_ADDR' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+No latch inferred for signal `\gtsu_fused_fps_knn_controller.$mem2reg_rd$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:66$631_DATA' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+Latch inferred for signal `\gtsu_fused_fps_knn_controller.\swap_distance' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636': $auto$proc_dlatch.cc:409:proc_dlatch$4044
+Latch inferred for signal `\gtsu_fused_fps_knn_controller.\swap_index' from process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636': $auto$proc_dlatch.cc:409:proc_dlatch$4047
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gtsu_fused_fps_knn_controller.\max_distance' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4048' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\max_index' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4049' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\current_center' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4050' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\tile_index' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4051' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\round_index' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4052' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\out_valid_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4053' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\done_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4054' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\out_center_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4055' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\out_next_center_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4056' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\out_indices_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4057' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\out_distances_reg' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4058' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\lane' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4059' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\slot' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4060' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\reset_slot' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4061' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_distance[0]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4062' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_distance[1]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4063' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_distance[2]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4064' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_distance[3]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4065' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_index[0]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4066' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_index[1]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4067' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_index[2]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4068' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\top_index[3]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4069' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[0]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4070' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[1]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4071' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[2]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4072' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[3]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4073' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[4]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4074' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[5]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4075' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[6]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4076' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[7]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4077' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[8]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4078' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[9]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4079' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[10]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4080' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[11]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4081' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[12]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4082' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[13]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4083' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[14]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4084' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.\min_state[15]' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $dff cell `$procdff$4085' with positive edge clock.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_ADDR' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4086' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$632_DATA' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4087' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_ADDR' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4088' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$633_DATA' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4089' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_ADDR' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4090' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$634_DATA' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4091' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_ADDR' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4092' with positive edge clock and negative level reset.
+Creating register for signal `\gtsu_fused_fps_knn_controller.$mem2reg_wr$\min_state$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:142$635_DATA' using process `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+  created $adff cell `$procdff$4093' with positive edge clock and negative level reset.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 12 empty switches in `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+Removing empty process `gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:106$1016'.
+Found and cleaned up 76 empty switches in `\gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+Removing empty process `gtsu_fused_fps_knn_controller.$proc$architecture_simulator/rtl/vertical_slice/gtsu_fused_fps_knn_controller.sv:52$636'.
+Cleaned up 88 empty switches.
+
+5. Executing MEMORY pass.
+
+5.1. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+5.2. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_fused_fps_knn_controller..
+Removed 476 unused cells and 1637 unused wires.
+<suppressed ~488 debug messages>
+
+5.3. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_fused_fps_knn_controller..
+
+5.5. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.6. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_fused_fps_knn_controller.
+<suppressed ~28 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_fused_fps_knn_controller'.
+<suppressed ~417 debug messages>
+Removed a total of 139 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_fused_fps_knn_controller..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$3198.
+    dead port 2/2 on $mux $procmux$3204.
+    dead port 1/2 on $mux $procmux$3225.
+    dead port 2/2 on $mux $procmux$3227.
+    dead port 2/2 on $mux $procmux$3286.
+    dead port 2/2 on $mux $procmux$3298.
+    dead port 2/2 on $mux $procmux$3304.
+    dead port 1/2 on $mux $procmux$3325.
+    dead port 2/2 on $mux $procmux$3327.
+    dead port 2/2 on $mux $procmux$3386.
+    dead port 2/2 on $mux $procmux$3398.
+    dead port 2/2 on $mux $procmux$3404.
+    dead port 1/2 on $mux $procmux$3425.
+    dead port 2/2 on $mux $procmux$3427.
+    dead port 2/2 on $mux $procmux$3486.
+    dead port 2/2 on $mux $procmux$3498.
+    dead port 2/2 on $mux $procmux$3504.
+    dead port 1/2 on $mux $procmux$3525.
+    dead port 2/2 on $mux $procmux$3527.
+Removed 19 multiplexer ports.
+<suppressed ~310 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_fused_fps_knn_controller.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_fused_fps_knn_controller'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_fused_fps_knn_controller..
+Removed 0 unused cells and 168 unused wires.
+<suppressed ~3 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_fused_fps_knn_controller.
+<suppressed ~36 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_fused_fps_knn_controller..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/17 on $pmux $procmux$3507.
+    dead port 2/17 on $pmux $procmux$3507.
+    dead port 3/17 on $pmux $procmux$3507.
+    dead port 4/17 on $pmux $procmux$3507.
+    dead port 5/17 on $pmux $procmux$3507.
+    dead port 6/17 on $pmux $procmux$3507.
+    dead port 7/17 on $pmux $procmux$3507.
+    dead port 8/17 on $pmux $procmux$3507.
+    dead port 9/17 on $pmux $procmux$3507.
+    dead port 10/17 on $pmux $procmux$3507.
+    dead port 11/17 on $pmux $procmux$3507.
+    dead port 12/17 on $pmux $procmux$3507.
+Removed 12 multiplexer ports.
+<suppressed ~299 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_fused_fps_knn_controller.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_fused_fps_knn_controller'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_fused_fps_knn_controller..
+Removed 0 unused cells and 36 unused wires.
+<suppressed ~1 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_fused_fps_knn_controller.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gtsu_fused_fps_knn_controller..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~299 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gtsu_fused_fps_knn_controller.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gtsu_fused_fps_knn_controller'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gtsu_fused_fps_knn_controller..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gtsu_fused_fps_knn_controller.
+
+6.23. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing CHECK pass (checking for obvious problems).
+checking module gtsu_fused_fps_knn_controller..
+found and reported 0 problems.
+
+8. Printing statistics.
+
+=== gtsu_fused_fps_knn_controller ===
+
+   Number of wires:                806
+   Number of wire bits:           6765
+   Number of public wires:          66
+   Number of public wire bits:     994
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                797
+     $add                           10
+     $adff                          19
+     $dff                           16
+     $eq                           104
+     $gt                           104
+     $logic_and                     57
+     $logic_not                      7
+     $logic_or                      58
+     $lt                             8
+     $mux                          410
+     $pmux                           4
+
+Warnings: 6 unique messages, 12 total
+End of script. Logfile hash: 81d81dd3cd
+CPU: user 20.89s system 0.03s, MEM: 29.41 MB total, 23.29 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 89% 1x proc_dlatch (18 sec), 2% 5x opt_clean (0 sec), ...

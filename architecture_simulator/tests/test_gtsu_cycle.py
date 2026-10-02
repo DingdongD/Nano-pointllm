@@ -34,6 +34,10 @@ from gtsu_cycle.geometry import (
     run_geometry_model,
 )
 from gtsu_cycle.geometry_correlation import correlate_geometry_distance
+from gtsu_cycle.fused_fps_knn import (
+    FusedFpsKnnConfig, golden_fps_knn, run_fused_fps_knn_model,
+)
+from gtsu_cycle.fused_fps_knn_correlation import correlate_fused_fps_knn
 from gtsu_cycle.shared_dot import (
     SharedDotBeat, SharedDotConfig, SharedDotLane, build_shared_dot_beats,
     functional_outputs as shared_outputs, pointllm_shared_geometry_mapping,
@@ -237,6 +241,27 @@ def test_geometry_distance_signed_int16_extremes_match_rtl():
 
     assert report["status"] == "rtl_correlated"
     assert report["functional_output_exact"] is True
+
+
+def test_fused_fps_knn_cycle_model_matches_functional_golden():
+    config = FusedFpsKnnConfig()
+    result = run_fused_fps_knn_model(config)
+    assert result.outputs == golden_fps_knn(config)
+    assert result.counters["round_outputs"] == config.centers
+    assert result.counters["distance_values"] == config.points * config.centers
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None or shutil.which("yosys") is None,
+    reason="Icarus or Yosys unavailable",
+)
+def test_fused_fps_knn_selection_exactly_matches_rtl():
+    report = correlate_fused_fps_knn(FusedFpsKnnConfig(), rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["cycle_error"] == 0
+    assert report["event_trace_exact"] is True
+    assert report["center_sequence_exact"] is True
+    assert report["topk_exact"] is True
 
 
 def test_shared_dot_functional_and_cycle_outputs_match():

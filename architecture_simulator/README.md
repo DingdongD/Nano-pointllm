@@ -27,10 +27,11 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | Dense M/N/K ping-pong controller | Exact counter, edge-tile, K-block, and two-buffer lifecycle correlation for representative PointLLM K classes |
 | INT32-to-A8 requant | Offline FP16-scale compiler, INT32 bias, multiplier/shift RNE, symmetric saturation, exact Python/Icarus correlation |
 | Physical Dense SRAM composition | 16-bank/128-bit/3-cycle SRAM payload, ping-pong 1R1W, response FIFO, 3-column Dot4 plus requant; exact value/event/cycle correlation |
+| Fused FPS/KNN selection controller | Persistent min-state, deterministic argmax and bounded Top-K exactly correlated for a tie/stall lock; production and real-data gates remain disabled |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
-| FPS min/argmax, KNN global top-k, attention, vector, sampling RTL | Not implemented |
+| Production FPS/KNN, attention, vector, sampling RTL | Not implemented |
 | Full PointLLM RTL cycle correlation | Not implemented; fail-closed |
 | Characterized area/energy | Not implemented |
 
@@ -149,6 +150,12 @@ python scripts/run_geometry_rtl_correlation.py \
   --rtl_root rtl/vertical_slice \
   --output_dir ../docs/results/gtsu_geometry_distance_2026-10-01
 
+# Correlate persistent FPS state, deterministic center feedback, and per-center
+# Top-K selection. This M5a lock does not enable production FPS/KNN coverage.
+python scripts/run_fused_fps_knn_correlation.py \
+  --rtl_root rtl/vertical_slice \
+  --output_dir ../docs/results/gtsu_fused_fps_knn_2026-10-02
+
 # Correlate alternating feature and cached-norm geometry operations on the
 # same signed INT8 SIMD4 PE hierarchy.
 python scripts/run_shared_dot_rtl_correlation.py \
@@ -230,9 +237,9 @@ tests/              shape, conservation, mapping, and CLI contracts
 The shared geometry path uses
 `||p-c||^2 = ||p||^2 + ||c||^2 - 2 p^T c`. Point norms are precomputed on the
 same dot fabric and stored as 16-bit values; the steady-state distance path
-reads norms and uses only the shared dot, add, subtract, and shift. This is a
-claim of shared multiplication resources only. FPS min/argmax and KNN top-k
-remain specialized structures.
+reads norms and uses only the shared dot, add, subtract, and shift. The M5a
+selection controller now implements persistent FPS min/argmax and deterministic
+KNN Top-K, but the 8192x512 production and real-point-cloud gates remain open.
 
 The matching fidelity-side W8A8 contract is implemented in
 `nanopointllm/compression/w8a8.py`. A small sequential-QDQ run can be launched
@@ -257,8 +264,8 @@ attention, and end-to-end PointLLM latency remain fail-closed.
 
 ## Fidelity roadmap
 
-1. Connect the geometry tile to resident point/min-distance SRAM, then correlate
-   the persistent FPS min/argmax loop and KNN cross-tile top-32 merge.
+1. Replace the M5a lock network with explicit point/norm/min SRAM banks and a
+   hierarchical Top-32 merge, then correlate the 8192x512 production run.
 2. Connect the implemented tile/address lowering, correlated SRAM ports, and
    DRAMsim3 completions to the Split-K RTL producer/consumer pipeline.
 3. Add production-size multi-client SRAM scheduling and DMA outstanding-credit

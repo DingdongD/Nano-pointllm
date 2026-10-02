@@ -512,3 +512,11 @@
 - Final targeted regression passed `11` new/affected tests; final full repository regression passed `234 passed, 1 skipped` in 245.60 seconds.
 - Final claim audit renamed the legacy local-report flag so stream-only correlations state that they cannot unlock `dense_gemm` alone; the global operator gate remains based on the combined real-payload, high-M reuse, and dual-output evidence.
 - Final architecture/quantization regression passed `65 passed` in 256.87 seconds; every Phase 37E JSON artifact parses, all touched Python modules compile, and `git diff --check` is clean.
+
+## 2026-10-02: Fused FPS/KNN Controller Start
+- Started M5 with a fail-closed split between fused selection control and shared-Dot distance generation; neither `fps` nor `knn_topk` coverage will be enabled from a standalone distance tile.
+- Locked deterministic semantics: initial center zero, persistent nearest-center distance, farthest-point argmax with lower-index tie break, and per-center nearest-neighbor ordering by `(distance, point_index)`.
+- Added a banked persistent-min controller, bounded Top-K merge, center feedback, Python golden/cycle model, Icarus trace correlation, and Yosys structural gate.
+- The tie/stall lock completes five rounds over 16 points in 33 cycles; all 80 distance updates, center choices, neighbor indices/distances, events, counters, and cycles match exactly.
+- Added a synthesizable shared-Dot-to-selection wrapper. Hierarchy composition passes, but a single composed value/event/cycle trace and the production 8192x512 run remain explicit gates.
+- Final repository regression passed `236 passed, 1 skipped` in 375.31 seconds; strict coverage continues to reject both `fps` and `knn_topk`.

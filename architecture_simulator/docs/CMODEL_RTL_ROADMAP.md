@@ -32,12 +32,15 @@ the Dense-to-dual-output wrapper has a structural rather than one-waveform
 event lock. Attention, vector operations, and whole-graph scheduling remain
 unsupported.
 
-The geometry tile is deliberately a narrower claim than FPS/KNN. At the
+The geometry distance tile is deliberately a narrower claim than FPS/KNN. At the
 PointLLM shape, each operator evaluates `8192 * 512 = 4,194,304` distances. A
 64-lane tile issues 65,536 tiles in the no-stall lower bound. FPS additionally
 requires 512 serial persistent-min updates and argmax barriers; KNN additionally
-requires exact top-32 merging over 128 point tiles per center. Neither reduction
-path nor the point/min-state SRAM path is correlated yet.
+requires exact top-32 merging over 128 point tiles per center. A tie/stall M5a
+selection lock now correlates persistent min-state, argmax, and bounded Top-K
+for 16 points and five rounds. The production reduction tree, point/norm/min
+SRAM path, composed distance-to-selection waveform, and real-data fidelity are
+not correlated yet, so strict FPS/KNN coverage remains disabled.
 
 The legacy Python estimator does not model ready/valid handshakes, queues,
 resource stalls, exact bank mapping, burst timing, or producer/consumer events.
