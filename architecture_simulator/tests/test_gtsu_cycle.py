@@ -39,6 +39,11 @@ from gtsu_cycle.fused_fps_knn import (
 )
 from gtsu_cycle.fused_fps_knn_correlation import correlate_fused_fps_knn
 from gtsu_cycle.fused_fps_knn_production import correlate_production_fps_knn
+from gtsu_cycle.geometry_sram_correlation import correlate_geometry_sram
+from gtsu_cycle.geometry_dram import (
+    correlate_axi_burst_splitter, split_axi64_bursts,
+)
+from gtsu_cycle.geometry_dma_sram_correlation import correlate_geometry_dma_sram
 from gtsu_cycle.shared_dot import (
     SharedDotBeat, SharedDotConfig, SharedDotLane, build_shared_dot_beats,
     functional_outputs as shared_outputs, pointllm_shared_geometry_mapping,
@@ -272,6 +277,48 @@ def test_production_fps_knn_selector_matches_compiled_rtl():
     assert report["input_beats"] == 512 * 128
     assert report["neighbor_values"] == 512 * 32
     assert report["mismatches"] == 0
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="Icarus unavailable")
+def test_geometry_sram_fabric_matches_rtl():
+    report = correlate_geometry_sram(rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["value_checks"] == 384
+    assert report["read_latency_exact"] is True
+
+
+def test_compiler_style_axi_split_respects_4k_boundaries():
+    bursts = split_axi64_bursts(0x1FC0, 66)
+    assert [(burst.address, burst.beats) for burst in bursts] == [
+        (0x1FC0, 1), (0x2000, 64), (0x3000, 1),
+    ]
+    for burst in bursts:
+        assert burst.address >> 12 == (
+            burst.address + burst.beats * 64 - 1
+        ) >> 12
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="Icarus unavailable")
+def test_compiler_style_axi_splitter_matches_rtl():
+    report = correlate_axi_burst_splitter(rtl_root=RTL_ROOT)
+    assert report["status"] == "rtl_correlated"
+    assert report["value_exact"] is True
+
+
+@pytest.mark.skipif(
+    shutil.which("iverilog") is None
+    or not DramSim3Paths.local_default().library.is_file()
+    or not DramSim3Paths.local_default().config.is_file(),
+    reason="Icarus or local DRAMsim3 unavailable",
+)
+def test_geometry_dramsim_dma_sram_payload_matches_rtl(tmp_path):
+    report = correlate_geometry_dma_sram(
+        rtl_root=RTL_ROOT,
+        dramsim_output_dir=tmp_path / "dramsim3",
+    )
+    assert report["status"] == "rtl_correlated"
+    assert report["dma_event_trace_exact"] is True
+    assert report["sram_value_mismatches"] == 0
 
 
 def test_shared_dot_functional_and_cycle_outputs_match():

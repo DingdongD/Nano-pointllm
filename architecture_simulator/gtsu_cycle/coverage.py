@@ -64,11 +64,11 @@ COVERAGE = {
     ),
     "fps": OperatorCoverage(
         "fps", False, False, False, False,
-        "Production min/argmax selection is correlated with real payloads, but the IEEE FP32 FMA frontend, explicit coordinate/min SRAM, and composed memory timing are incomplete.",
+        "Production selection and Compiler-style SRAM behavior are correlated; a reduced DRAMsim3 DMA-to-SRAM payload lock passes, but IEEE FP32 FMA, production payload composition, and foundry memory timing remain incomplete.",
     ),
     "knn_topk": OperatorCoverage(
         "knn_topk", False, False, False, False,
-        "Production global Top-32 selection is correlated with real payloads, but the PointLLM FP32 distance frontend, explicit SRAM, and composed memory timing are incomplete.",
+        "Production global Top-32 selection and Compiler-style SRAM behavior are correlated, but the PointLLM FP32 distance frontend, production payload composition, and foundry memory timing remain incomplete.",
     ),
     "dense_gemm": OperatorCoverage(
         "dense_gemm", True, True, True, True,

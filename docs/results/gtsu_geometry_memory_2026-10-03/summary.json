@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "status": "memory_contract_correlated",
+  "sram_status": "rtl_correlated",
+  "axi_splitter_status": "rtl_correlated",
+  "dramsim3_status": "dramsim3_closed_loop",
+  "dma_sram_status": "rtl_correlated",
+  "geometry_sram_bytes": 163840,
+  "dram_preload_bytes": 131072,
+  "dram_preload_cycles": 9343,
+  "claim_boundary": {
+    "sram_behavior_correlated": true,
+    "axi_request_splitter_correlated": true,
+    "dramsim3_request_side_closed_loop": true,
+    "payload_dma_to_sram_rtl_composed": true,
+    "payload_dma_to_sram_scope": "128-point reduced RTL lock",
+    "fp32_arithmetic_and_selector_composed": false,
+    "foundry_sram_sta_ppa": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

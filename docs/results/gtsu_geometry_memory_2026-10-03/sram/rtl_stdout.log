@@ -1,0 +1,8 @@
+TRACE 130 ISSUE 0 0
+TRACE 131 ISSUE 1 1
+TRACE 133 RESPONSE 0
+TRACE 134 RESPONSE 1
+TRACE 136 ISSUE 2 0
+TRACE 139 RESPONSE 2
+SUMMARY 142 128 2 3 3 0 0
+architecture_simulator/rtl/vertical_slice/tb_gtsu_geometry_sram_fabric.sv:128: $finish called at 1445 (1s)

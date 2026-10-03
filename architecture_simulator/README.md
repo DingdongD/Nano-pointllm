@@ -28,6 +28,8 @@ remain disabled until characterized RTL/PTPX/CACTI values are supplied.
 | INT32-to-A8 requant | Offline FP16-scale compiler, INT32 bias, multiplier/shift RNE, symmetric saturation, exact Python/Icarus correlation |
 | Physical Dense SRAM composition | 16-bank/128-bit/3-cycle SRAM payload, ping-pong 1R1W, response FIFO, 3-column Dot4 plus requant; exact value/event/cycle correlation |
 | Fused FPS/KNN selection controller | Tie/stall lock plus production `8192x512xTop32` compiled RTL; real ModelNet/Objaverse FP32 payloads exactly match deployed FPS centers and KNN sets |
+| Geometry SRAM fabric | Four 16-bank point/norm groups plus one 16-bank packed-min group; 128-bit words, byte enables, 1R1W, and three-cycle reads exactly RTL-correlated |
+| Geometry DRAM request path | 64-byte AXI splitter, 4-KiB boundary enforcement, finite-credit DRAMsim3 timing, and reduced payload DMA-to-SRAM RTL lock |
 | Full PointLLM event-level resource occupancy and stalls | Not implemented |
 | C++/SystemC C-model | Not implemented |
 | Full M/N/K GEMM controller and SRAM double buffering | Not implemented; microtile only |
@@ -241,8 +243,12 @@ with one FP32 multiply and two RNE FMAs and masks `||p||^2 <= 1e-3`; KNN uses
 the norm/dot expression and keeps every point. M5b therefore shares point
 fetches while carrying independent FP32 distance streams and validity masks.
 The selector is exact for production shape and real ModelNet/Objaverse
-payloads; the synthesizable FP32 arithmetic frontend and explicit SRAM macros
-remain open gates.
+payloads; the synthesizable FP32 arithmetic frontend and foundry SRAM macros
+remain open gates. The SRAM behavior interface is now implemented using a
+clean-room contract derived from `Compiler_Codes`: four 16-bank point/norm
+groups and one 16-bank packed-min group total 160 KiB at production capacity.
+Its reduced payload path is correlated from DRAMsim3 completion through a
+tagged ROB into SRAM, but no foundry macro timing/PPA is claimed.
 
 The matching fidelity-side W8A8 contract is implemented in
 `nanopointllm/compression/w8a8.py`. A small sequential-QDQ run can be launched

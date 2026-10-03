@@ -529,3 +529,13 @@
 - Kept `fps`, `knn_topk`, and full-model coverage disabled because the FP32 arithmetic frontend and explicit coordinate/norm/min-state SRAM macros are not yet composed.
 - Architecture and geometry regression passed `82 passed` in 376.88 seconds after the dual-distance/dual-mask interface change.
 - Full repository regression passed `239 passed, 1 skipped` in 348.64 seconds; coverage remains fail-closed for complete FPS/KNN and full-model cycles.
+
+## 2026-10-03: Compiler-Style Geometry SRAM And DRAM Contract
+- Added a clean-room 16-bank x 128-bit byte-enabled 1R1W SRAM behavior model with a fixed three-cycle read contract, based on the externally visible `Compiler_Codes` LBUF organization.
+- Composed four point/norm groups and one packed-min group for 64 point lanes; production logical capacity is 160 KiB.
+- Correlated 384 SRAM values plus read/update events and cycles with zero mismatch and zero same-address collision.
+- Added a synthesizable 64-byte AXI burst splitter with 4-KiB enforcement and exact Python/Icarus/Yosys correlation.
+- Timed all 2,048 production point/norm preload transactions through pinned DRAMsim3 with one submit/cycle and finite 32-entry outstanding/reorder credits: 9,343 cycles, 33/159/584-cycle min/median/max latency.
+- Composed a reduced 128-point DRAMsim3 completion -> tagged ROB -> 512-to-128-bit unpack -> point SRAM lock with exact DMA events and 256 exact SRAM value checks.
+- Added explicit AXI coverage for both 4-KiB splitting and the 256-beat limit; the three lock commands produce eight exact bursts with zero mismatch.
+- Full repository regression passed `243 passed, 1 skipped` in 407.61 seconds; complete FPS/KNN, foundry SRAM PPA, and full-model cycle coverage remain fail-closed.

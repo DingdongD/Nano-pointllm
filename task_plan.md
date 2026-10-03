@@ -346,6 +346,16 @@ Phase 38 in progress
 - [ ] Implement and correlate the deployed IEEE FP32 MUL/FMA distance frontend and explicit coordinate/norm/min-state SRAM macros
 - **Status:** M5b selector complete; real payloads are exact, while arithmetic-generation/SRAM composition remains fail-closed, so operator coverage is disabled
 
+#### Phase 38A: Compiler-Style Geometry SRAM And DRAM Request Contract
+- [x] Implement a replaceable 16-bank x 128-bit, byte-enabled, 1R1W, three-cycle SRAM macro behavior model
+- [x] Compose four point/norm SRAM groups and one packed min-state SRAM group for one 64-point tile per request
+- [x] Correlate load/read/update values, events, masks, and response cycles against Python
+- [x] Implement and correlate 64-byte AXI burst splitting with 256-beat and 4-KiB boundaries
+- [x] Drive the split geometry preload requests through the pinned DRAMsim3 backend with finite outstanding credits
+- [x] Correlate a reduced DRAMsim3 completion -> tagged DMA ROB -> point SRAM payload lock
+- [x] Keep foundry SRAM PPA and full FPS/KNN coverage false until arithmetic, SRAM, selector, and DRAM are composed
+- **Status:** behavior/request contract complete; production payload composition, FP32 arithmetic, foundry SRAM, and full operator composition remain fail-closed
+
 ### Phase 39: Geometry-To-Feature Composition
 - [ ] Compose center feedback, Top-32 gather, patch FIFO, local encoder, and PE-pool arbitration
 - [ ] Evaluate time-shared versus 48:16, 32:32, and 16:48 spatial PE partitions

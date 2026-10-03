@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "status": "rtl_correlated",
+  "operator": "dramsim3_dma_geometry_sram_loader",
+  "config": {
+    "points": 128,
+    "dram_lines": 32,
+    "rob_depth": 8,
+    "sram_lanes": 64,
+    "sram_read_latency": 3
+  },
+  "dram_timing": {
+    "accelerator_cycles": 188,
+    "requests": 32,
+    "bytes_read": 2048,
+    "latency_min": 34,
+    "latency_median": 40.0,
+    "latency_max": 62,
+    "provenance": {
+      "bridge": "/home/PointAcc/QuickFPS/build/dramsim3-latest/libquickfps_dramsim3_bridge.so",
+      "bridge_sha256": "783bcadb9de16ec1dd98b0a9401181c1ec0ad34ee5972c828a13ab16690ff195",
+      "config": "/home/DRAMsim3/configs/DDR4_8Gb_x8_2400.ini",
+      "config_sha256": "6892161a10debdf1fdcded2d601c5cc3dcc80ed492a71ef81895ae30e51a5c26",
+      "dramsim3_source_commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+      "dram_tck_ns": 0.83,
+      "accelerator_clock_hz": 1000000000,
+      "transaction_bytes": 64,
+      "max_outstanding": 8,
+      "stream_barriers": false,
+      "reorder_window": 8,
+      "max_submissions_per_cycle": 1
+    }
+  },
+  "dma_event_trace_exact": true,
+  "sram_value_checks": 256,
+  "sram_value_mismatches": 0,
+  "sram_read_latency_exact": true,
+  "summary": {
+    "cycles": 201,
+    "dma_completion_accepts": 32,
+    "point_words": 128,
+    "sram_responses": 2,
+    "value_mismatches": 0,
+    "dma_protocol_error": 0,
+    "sram_collision": 0
+  },
+  "claim_boundary": {
+    "real_dramsim3_completion_timing": true,
+    "actual_payload_dma_to_sram_rtl_correlated": true,
+    "finite_completion_rob": true,
+    "production_8192_point_payload_rtl_run": false,
+    "fp32_arithmetic_and_selector_composed": false,
+    "foundry_sram_sta_ppa": false,
+    "full_pointllm_cycle_accurate": false
+  }
+}

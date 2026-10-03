@@ -251,11 +251,14 @@ def time_dram_bursts(
     max_cycles: int = 1_000_000,
     stream_barriers: bool = False,
     reorder_window: int | None = None,
+    max_submissions_per_cycle: int | None = None,
 ) -> DramTimingResult:
     if max_outstanding <= 0:
         raise ValueError("max_outstanding must be positive")
     if reorder_window is not None and reorder_window <= 0:
         raise ValueError("reorder_window must be positive when provided")
+    if max_submissions_per_cycle is not None and max_submissions_per_cycle <= 0:
+        raise ValueError("max_submissions_per_cycle must be positive when provided")
     pending = tuple(bursts)
     if not pending:
         raise ValueError("at least one DRAM burst is required")
@@ -273,7 +276,14 @@ def time_dram_bursts(
         transaction_bytes=pending[0].size,
     ) as backend:
         for _ in range(max_cycles):
-            while next_index < len(pending) and outstanding < max_outstanding:
+            submissions_this_cycle = 0
+            while (
+                next_index < len(pending) and outstanding < max_outstanding
+                and (
+                    max_submissions_per_cycle is None
+                    or submissions_this_cycle < max_submissions_per_cycle
+                )
+            ):
                 burst = pending[next_index]
                 if stream_barriers and burst.stream != active_stream:
                     if outstanding:
@@ -300,6 +310,7 @@ def time_dram_bursts(
                 ))
                 next_index += 1
                 outstanding += 1
+                submissions_this_cycle += 1
             for completion in backend.tick():
                 completions.append(completion)
                 outstanding -= 1
@@ -348,6 +359,7 @@ def time_dram_bursts(
             "max_outstanding": max_outstanding,
             "stream_barriers": stream_barriers,
             "reorder_window": reorder_window,
+            "max_submissions_per_cycle": max_submissions_per_cycle,
         },
     )
 
